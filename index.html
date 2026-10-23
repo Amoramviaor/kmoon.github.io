@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>K-Moon Launcher v7.0.0</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; user-select:none; }
+body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
+
+#splash { position:fixed; inset:0; z-index:1000; background: radial-gradient(circle at center, #1a1a3e 0%, #0a0a15 70%); display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 1s, visibility 1s; }
+#splash.hide { opacity:0; visibility:hidden; }
+.logo { font-size:80px; font-weight:900; letter-spacing:8px; background: linear-gradient(90deg, #ffd700, #ff6b00, #ffd700); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation: shine 3s linear infinite, pulse 2s ease-in-out infinite; }
+@keyframes shine { to { background-position:200% center; } }
+@keyframes pulse { 50% { transform:scale(1.05); } }
+.logo-moon { font-size:100px; margin-bottom:10px; filter: drop-shadow(0 0 30px #ffd700); }
+.tagline { color:#8a8ab0; margin-top:10px; letter-spacing:4px; font-size:14px; }
+.version-tag { color:#ffd700; margin-top:5px; font-size:11px; letter-spacing:3px; }
+.loader { margin-top:60px; width:300px; height:4px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden; }
+.loader-bar { height:100%; width:0%; background: linear-gradient(90deg, #ffd700, #ff6b00); box-shadow: 0 0 10px #ffd700; animation: load 3s ease forwards; }
+@keyframes load { to { width:100%; } }
+.loader-text { margin-top:15px; color:#6a6a8a; font-size:12px; letter-spacing:2px; }
+
+#launcher { display:none; height:100vh; flex-direction:column; background: radial-gradient(circle at 20% 20%, rgba(255,215,0,0.08), transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,107,0,0.08), transparent 40%), #0a0a15; }
+#launcher.show { display:flex; }
+.titlebar { height:36px; background:rgba(0,0,0,0.4); backdrop-filter:blur(10px); display:flex; align-items:center; justify-content:space-between; padding:0 15px; border-bottom:1px solid rgba(255,255,255,0.05); }
+.titlebar-left { display:flex; align-items:center; gap:10px; }
+.app-icon { width:20px; height:20px; border-radius:4px; background: linear-gradient(135deg, #ffd700, #ff6b00); box-shadow: 0 0 8px rgba(255,215,0,0.6); display:flex; align-items:center; justify-content:center; font-size:12px; }
+.app-title { font-size:13px; color:#c0c0e0; letter-spacing:1px; }
+.window-controls { display:flex; gap:8px; }
+.win-btn { width:14px; height:14px; border-radius:50%; cursor:pointer; transition: transform 0.2s; }
+.win-btn:hover { transform:scale(1.2); }
+.win-min { background:#ffbd2e; }
+.win-max { background:#27c93f; }
+.win-close { background:#ff5f57; }
+
+.nav { display:flex; align-items:center; padding:20px 40px; background:rgba(0,0,0,0.3); backdrop-filter:blur(10px); border-bottom:1px solid rgba(255,255,255,0.05); flex-wrap:wrap; gap:10px; }
+.nav-logo { font-size:22px; font-weight:900; margin-right:30px; background: linear-gradient(90deg, #ffd700, #ff6b00); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.nav-item { padding:8px 18px; margin:0 4px; border-radius:6px; color:#8a8ab0; cursor:pointer; font-size:14px; transition: all 0.3s; position:relative; }
+.nav-item:hover { color:#fff; background:rgba(255,255,255,0.05); }
+.nav-item.active { color:#ffd700; background:rgba(255,215,0,0.1); }
+.nav-item.active::after { content:''; position:absolute; bottom:-21px; left:50%; transform:translateX(-50%); width:30px; height:2px; background: linear-gradient(90deg, #ffd700, #ff6b00); border-radius:2px; box-shadow: 0 0 8px #ffd700; }
+.nav-right { margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.balance-display { padding:6px 14px; border-radius:20px; background: linear-gradient(90deg, rgba(255,215,0,0.2), rgba(255,107,0,0.2)); border:1px solid #ffd700; color:#ffd700; font-weight:700; font-size:13px; display:flex; align-items:center; gap:6px; cursor:pointer; transition: all 0.3s; }
+.balance-display:hover { transform:translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.3); }
+.nav-search { padding:8px 16px; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; width:200px; outline:none; }
+.nav-search:focus { border-color:#ffd700; box-shadow:0 0 10px rgba(255,215,0,0.3); }
+.btn-admin { padding:8px 16px; border-radius:6px; background:rgba(255,0,230,0.2); border:1px solid #ff00e6; color:#ff00e6; cursor:pointer; font-size:13px; font-weight:600; transition: all 0.3s; }
+.btn-admin:hover { background:#ff00e6; color:#fff; }
+.lang-select { padding:6px 12px; border-radius:6px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; outline:none; cursor:pointer; font-size:12px; }
+.user-avatar-small { width:36px; height:36px; border-radius:50%; background: linear-gradient(135deg, #ffd700, #ff6b00); display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px solid rgba(255,215,0,0.3); overflow:hidden; font-size:18px; }
+.user-avatar-small img { width:100%; height:100%; object-fit:cover; }
+
+.content { flex:1; overflow-y:auto; padding:30px 40px; position:relative; }
+.content::-webkit-scrollbar { width:8px; }
+.content::-webkit-scrollbar-track { background:transparent; }
+.content::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:4px; }
+.page { display:none; animation: pageIn 0.5s ease; }
+.page.active { display:block; }
+@keyframes pageIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.section-title { font-size:24px; font-weight:700; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.section-title::before { content:''; width:4px; height:24px; background: linear-gradient(180deg, #ffd700, #ff6b00); border-radius:2px; }
+.section-subtitle { color:#8a8ab0; font-size:13px; margin-bottom:25px; }
+
+.games-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px; }
+.game-card { position:relative; border-radius:12px; overflow:hidden; cursor:pointer; background:#15152a; border:1px solid rgba(255,255,255,0.05); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); animation: cardIn 0.6s ease backwards; }
+@keyframes cardIn { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+.game-card:hover { transform:translateY(-8px) scale(1.02); box-shadow: 0 20px 40px rgba(255,215,0,0.2), 0 0 0 1px rgba(255,215,0,0.3); border-color:rgba(255,215,0,0.5); }
+.game-cover { height:200px; position:relative; overflow:hidden; background-size:cover; background-position:center; }
+.game-cover::after { content:''; position:absolute; inset:0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.9)); }
+.game-cover.blur-18 { filter: blur(15px); }
+.game-cover.blur-18::before { content:'🔞'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:60px; z-index:2; filter:none; }
+.game-info { padding:16px; }
+.game-title { font-size:18px; font-weight:700; margin-bottom:4px; }
+.game-genre { font-size:12px; color:#8a8ab0; margin-bottom:10px; text-transform:capitalize; }
+.game-price { display:inline-block; padding:4px 10px; border-radius:4px; background: linear-gradient(90deg, #ffd700, #ff6b00); font-size:12px; font-weight:700; }
+.game-price.free { background: linear-gradient(90deg, #27c93f, #00f0ff); }
+.play-badge { position:absolute; top:10px; right:10px; padding:4px 10px; background:rgba(255,215,0,0.2); backdrop-filter:blur(5px); border:1px solid #ffd700; border-radius:4px; font-size:11px; color:#ffd700; font-weight:700; z-index:2; }
+.age-badge { position:absolute; top:10px; left:10px; padding:4px 8px; background:rgba(255,0,0,0.8); border:1px solid #ff0000; border-radius:4px; font-size:10px; color:#fff; font-weight:900; z-index:2; }
+.lib-meta { display:flex; gap:12px; margin-top:10px; font-size:11px; color:#8a8ab0; }
+.lib-meta span { display:flex; align-items:center; gap:4px; }
+
+.library-layout { display:grid; grid-template-columns:220px 1fr; gap:30px; }
+.lib-sidebar { background:rgba(0,0,0,0.3); border-radius:12px; padding:20px; border:1px solid rgba(255,255,255,0.05); height:fit-content; position:sticky; top:0; }
+.lib-filter-title { font-size:12px; color:#8a8ab0; letter-spacing:2px; margin-bottom:10px; }
+.lib-filter { padding:10px 14px; margin-bottom:4px; border-radius:6px; color:#c0c0e0; cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:space-between; transition: all 0.2s; }
+.lib-filter:hover { background:rgba(255,255,255,0.05); }
+.lib-filter.active { background:rgba(255,215,0,0.1); color:#ffd700; border-left:2px solid #ffd700; }
+.lib-filter .count { background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:10px; font-size:11px; }
+.lib-sort { margin-top:20px; padding:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#fff; width:100%; outline:none; cursor:pointer; }
+
+.profile-header { display:grid; grid-template-columns:auto 1fr auto; gap:30px; padding:30px; background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,107,0,0.1)); border-radius:16px; border:1px solid rgba(255,215,0,0.2); margin-bottom:25px; position:relative; overflow:hidden; }
+.profile-header::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 80% 50%, rgba(255,107,0,0.15), transparent 50%); }
+.avatar-big { width:120px; height:120px; border-radius:50%; background: linear-gradient(135deg, #ffd700, #ff6b00); display:flex; align-items:center; justify-content:center; font-size:60px; position:relative; box-shadow: 0 0 40px rgba(255,215,0,0.4); animation: avatarGlow 3s ease-in-out infinite; overflow:hidden; }
+.avatar-big img { width:100%; height:100%; object-fit:cover; }
+@keyframes avatarGlow { 0%,100% { box-shadow: 0 0 40px rgba(255,215,0,0.4); } 50% { box-shadow: 0 0 60px rgba(255,107,0,0.6); } }
+.avatar-level { position:absolute; bottom:-5px; right:-5px; background: linear-gradient(135deg, #ff6b00, #ff0066); padding:4px 12px; border-radius:20px; font-size:12px; font-weight:900; border:2px solid #0a0a15; z-index:2; }
+.profile-info { position:relative; z-index:1; }
+.profile-name { font-size:32px; font-weight:900; margin-bottom:4px; }
+.profile-tag { color:#8a8ab0; font-size:13px; margin-bottom:15px; }
+.profile-bio { color:#c0c0e0; font-size:13px; line-height:1.6; max-width:500px; }
+.xp-bar-container { margin-top:15px; }
+.xp-label { display:flex; justify-content:space-between; font-size:11px; color:#8a8ab0; margin-bottom:6px; }
+.xp-bar { height:8px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden; }
+.xp-fill { height:100%; background: linear-gradient(90deg, #ffd700, #ff6b00); border-radius:4px; box-shadow: 0 0 10px rgba(255,215,0,0.6); animation: xpPulse 2s ease-in-out infinite; transition: width 0.5s ease; }
+@keyframes xpPulse { 50% { box-shadow: 0 0 20px rgba(255,107,0,0.8); } }
+.profile-actions { position:relative; z-index:1; display:flex; flex-direction:column; gap:10px; }
+.btn-profile { padding:10px 20px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; transition: all 0.3s; border:1px solid rgba(255,215,0,0.3); background:rgba(255,215,0,0.1); color:#ffd700; text-align:center; }
+.btn-profile:hover { background:#ffd700; color:#000; transform:translateY(-2px); }
+.btn-profile.primary { background: linear-gradient(90deg, #ffd700, #ff6b00); border:none; color:#fff; }
+
+.balance-card { display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px; margin-bottom:25px; }
+.balance-item { background:rgba(0,0,0,0.3); border-radius:12px; padding:20px; border:1px solid rgba(255,215,0,0.2); position:relative; overflow:hidden; }
+.balance-item::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, #ffd700, #ff6b00); }
+.balance-item-icon { font-size:28px; margin-bottom:8px; }
+.balance-item-value { font-size:28px; font-weight:900; margin-bottom:4px; background: linear-gradient(90deg, #ffd700, #ff6b00); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.balance-item-label { font-size:12px; color:#8a8ab0; }
+.btn-daily { padding:12px 24px; border:none; border-radius:8px; background: linear-gradient(90deg, #ffd700, #ff6b00); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition: all 0.3s; margin-top:10px; width:100%; box-shadow: 0 5px 20px rgba(255,215,0,0.3); }
+.btn-daily:hover:not(:disabled) { transform:translateY(-2px); box-shadow: 0 10px 30px rgba(255,215,0,0.5); }
+.btn-daily:disabled { opacity:0.5; cursor:not-allowed; }
+.daily-timer { font-size:11px; color:#8a8ab0; margin-top:6px; text-align:center; }
+
+.stats-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:15px; margin-bottom:25px; }
+.stat-card { background:rgba(0,0,0,0.3); border-radius:12px; padding:20px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s; position:relative; overflow:hidden; }
+.stat-card:hover { transform:translateY(-4px); border-color:rgba(255,215,0,0.3); }
+.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, var(--c1, #ffd700), var(--c2, #ff6b00)); }
+.stat-icon { font-size:28px; margin-bottom:8px; }
+.stat-value { font-size:28px; font-weight:900; margin-bottom:4px; background: linear-gradient(90deg, var(--c1, #ffd700), var(--c2, #ff6b00)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.stat-label { font-size:12px; color:#8a8ab0; }
+.stat-change { font-size:11px; color:#27c93f; margin-top:4px; }
+
+.badges-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:15px; }
+.badge-card { background:rgba(0,0,0,0.3); border-radius:12px; padding:20px 15px; text-align:center; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s; cursor:pointer; position:relative; }
+.badge-card:hover { transform:translateY(-4px) scale(1.03); border-color:rgba(255,215,0,0.5); box-shadow: 0 10px 30px rgba(255,215,0,0.15); }
+.badge-icon { font-size:40px; margin-bottom:10px; filter: drop-shadow(0 0 10px currentColor); }
+.badge-name { font-size:13px; font-weight:700; margin-bottom:4px; }
+.badge-desc { font-size:10px; color:#8a8ab0; line-height:1.4; margin-bottom:8px; }
+.badge-reward { display:inline-block; padding:3px 10px; border-radius:12px; background: linear-gradient(90deg, #ffd700, #ff6b00); color:#fff; font-size:11px; font-weight:700; }
+.badge-claim { display:block; margin-top:8px; padding:4px 12px; border-radius:6px; background:rgba(39,201,63,0.2); border:1px solid #27c93f; color:#27c93f; font-size:10px; font-weight:700; cursor:pointer; transition: all 0.3s; }
+.badge-claim:hover { background:#27c93f; color:#fff; }
+.badge-claim.claimed { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.2); color:#8a8ab0; cursor:default; }
+.badge-card.locked { opacity:0.4; filter:grayscale(1); }
+.badge-card.locked .badge-icon { filter:none; }
+.badge-difficulty { position:absolute; top:8px; right:8px; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700; }
+.diff-easy { background:rgba(39,201,63,0.2); color:#27c93f; }
+.diff-medium { background:rgba(255,149,0,0.2); color:#ff9500; }
+.diff-hard { background:rgba(255,0,230,0.2); color:#ff00e6; }
+.diff-epic { background:rgba(153,0,255,0.2); color:#9900ff; }
+.diff-legendary { background:rgba(255,215,0,0.2); color:#ffd700; }
+
+.activity-list { display:flex; flex-direction:column; gap:10px; }
+.activity-item { display:flex; align-items:center; gap:15px; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px; transition: all 0.2s; }
+.activity-item:hover { background:rgba(255,215,0,0.05); }
+.activity-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.activity-info { flex:1; }
+.activity-title { font-size:14px; font-weight:600; margin-bottom:2px; }
+.activity-time { font-size:11px; color:#8a8ab0; }
+
+.modal-overlay { position:fixed; inset:0; z-index:900; background:rgba(0,0,0,0.9); backdrop-filter:blur(10px); display:none; align-items:center; justify-content:center; }
+.modal-overlay.show { display:flex; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.modal-box { width:90%; max-width:1200px; max-height:90vh; background: linear-gradient(180deg, #15152a, #0a0a15); border-radius:16px; overflow:hidden; border:1px solid rgba(255,215,0,0.2); box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(255,215,0,0.15); animation: modalIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); display:flex; flex-direction:column; }
+.modal-box.admin { border-color:rgba(255,0,230,0.3); box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(255,0,230,0.2); }
+.modal-box.small { max-width:500px; }
+@keyframes modalIn { from { opacity:0; transform:scale(0.9) translateY(30px); } to { opacity:1; transform:scale(1) translateY(0); } }
+
+.modal-header { padding:20px 30px; background:rgba(0,0,0,0.4); border-bottom:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; }
+.modal-title-bar { font-size:24px; font-weight:900; }
+.modal-title-bar.admin { color:#ff00e6; }
+.modal-close { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: all 0.3s; }
+.modal-close:hover { background:#ff5f57; transform:rotate(90deg); }
+.modal-body { padding:30px; overflow-y:auto; flex:1; }
+.modal-body::-webkit-scrollbar { width:6px; }
+.modal-body::-webkit-scrollbar-thumb { background:rgba(255,215,0,0.3); border-radius:3px; }
+
+.form-group { margin-bottom:20px; }
+.form-label { display:block; font-size:12px; color:#8a8ab0; margin-bottom:8px; letter-spacing:1px; }
+.form-input { width:100%; padding:12px 16px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:14px; outline:none; transition: all 0.3s; font-family:inherit; }
+.form-input:focus { border-color:#ffd700; box-shadow:0 0 10px rgba(255,215,0,0.3); }
+.form-textarea { min-height:100px; resize:vertical; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+.btn-primary { padding:14px 40px; border:none; border-radius:8px; background: linear-gradient(90deg, #ffd700, #ff6b00); color:#fff; font-size:16px; font-weight:700; letter-spacing:2px; cursor:pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255,215,0,0.3); }
+.btn-primary:hover { transform:translateY(-2px); box-shadow: 0 15px 40px rgba(255,107,0,0.5); }
+.btn-secondary { padding:14px 40px; border:1px solid rgba(255,255,255,0.2); border-radius:8px; background:rgba(255,255,255,0.05); color:#fff; font-size:14px; font-weight:600; cursor:pointer; transition: all 0.3s; }
+.btn-secondary:hover { background:rgba(255,255,255,0.1); }
+
+.image-upload { border:2px dashed rgba(255,215,0,0.3); border-radius:8px; padding:30px; text-align:center; cursor:pointer; transition: all 0.3s; background:rgba(255,215,0,0.05); }
+.image-upload:hover { border-color:#ffd700; background:rgba(255,215,0,0.1); }
+.image-preview { max-width:100%; max-height:200px; border-radius:6px; margin-top:10px; }
+
+.gallery-upload-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:10px; margin-top:10px; }
+.gallery-thumb { position:relative; aspect-ratio:1; border-radius:8px; overflow:hidden; background-size:cover; background-position:center; }
+.gallery-thumb-remove { position:absolute; top:4px; right:4px; width:24px; height:24px; border-radius:50%; background:rgba(255,0,0,0.8); color:#fff; border:none; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; }
+
+.admin-tabs { display:flex; gap:4px; margin-bottom:25px; border-bottom:1px solid rgba(255,255,255,0.1); flex-wrap:wrap; }
+.admin-tab { padding:12px 24px; cursor:pointer; color:#8a8ab0; font-size:14px; border-bottom:2px solid transparent; transition: all 0.3s; font-weight:600; }
+.admin-tab:hover { color:#fff; }
+.admin-tab.active { color:#ff00e6; border-bottom-color:#ff00e6; }
+.admin-panel { display:none; animation: fadeIn 0.4s; }
+.admin-panel.active { display:block; }
+
+.admin-game-list { display:flex; flex-direction:column; gap:15px; }
+.admin-game-item { display:grid; grid-template-columns:80px 1fr auto; gap:20px; padding:15px; background:rgba(255,255,255,0.03); border-radius:10px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s; align-items:center; }
+.admin-game-item:hover { background:rgba(255,0,230,0.05); border-color:rgba(255,0,230,0.3); }
+.admin-game-cover { width:80px; height:80px; border-radius:8px; background-size:cover; background-position:center; }
+.admin-game-info h3 { font-size:16px; margin-bottom:4px; }
+.admin-game-info p { font-size:12px; color:#8a8ab0; margin-bottom:8px; }
+.admin-game-actions { display:flex; gap:10px; }
+.btn-edit, .btn-delete { padding:8px 16px; border-radius:6px; border:none; font-size:12px; font-weight:600; cursor:pointer; transition: all 0.3s; }
+.btn-edit { background:rgba(0,240,255,0.2); color:#00f0ff; border:1px solid #00f0ff; }
+.btn-edit:hover { background:#00f0ff; color:#000; }
+.btn-delete { background:rgba(255,95,87,0.2); color:#ff5f57; border:1px solid #ff5f57; }
+.btn-delete:hover { background:#ff5f57; color:#fff; }
+
+.io-section { margin-bottom:30px; padding:20px; background:rgba(255,255,255,0.03); border-radius:10px; }
+.io-title { font-size:16px; font-weight:700; margin-bottom:15px; color:#ffd700; }
+.btn-io { padding:12px 24px; border-radius:8px; border:none; font-size:14px; font-weight:600; cursor:pointer; transition: all 0.3s; margin-right:10px; margin-bottom:10px; }
+.btn-export { background: linear-gradient(90deg, #27c93f, #00f0ff); color:#fff; }
+.btn-import { background: linear-gradient(90deg, #ff9500, #ff5e00); color:#fff; }
+.btn-io:hover { transform:translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+.game-modal-header { height:300px; position:relative; overflow:hidden; background-size:cover; background-position:center; }
+.game-modal-header::after { content:''; position:absolute; inset:0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.9)); }
+.game-modal-header.blur-18 { filter: blur(20px); }
+.game-modal-body { padding:30px 40px; overflow-y:auto; flex:1; }
+.game-modal-title { font-size:36px; font-weight:900; margin-bottom:8px; }
+.game-modal-subtitle { color:#8a8ab0; margin-bottom:20px; font-size:14px; }
+.game-modal-tabs { display:flex; gap:4px; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.1); flex-wrap:wrap; }
+.game-modal-tab { padding:10px 20px; cursor:pointer; color:#8a8ab0; font-size:14px; border-bottom:2px solid transparent; transition: all 0.3s; }
+.game-modal-tab:hover { color:#fff; }
+.game-modal-tab.active { color:#ffd700; border-bottom-color:#ffd700; }
+.tab-content { display:none; animation: fadeIn 0.4s; }
+.tab-content.active { display:block; }
+.gallery { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:12px; margin-bottom:20px; }
+.gallery-img { height:150px; border-radius:8px; overflow:hidden; background-size:cover; background-position:center; cursor:pointer; transition: transform 0.3s; }
+.gallery-img:hover { transform:scale(1.05); }
+.rules-list { list-style:none; }
+.rules-list li { padding:12px 16px; margin-bottom:8px; background:rgba(255,255,255,0.03); border-left:3px solid #ffd700; border-radius:4px; color:#c0c0e0; line-height:1.6; }
+.rules-list li strong { color:#ffd700; }
+.manual { background:rgba(255,255,255,0.03); padding:20px; border-radius:8px; line-height:1.8; color:#c0c0e0; }
+.manual h3 { color:#ff6b00; margin:15px 0 8px; font-size:16px; }
+.manual h3:first-child { margin-top:0; }
+.key { display:inline-block; padding:2px 8px; margin:0 2px; background:rgba(255,215,0,0.15); border:1px solid #ffd700; border-radius:4px; font-family:monospace; font-size:12px; color:#ffd700; }
+
+.game-modal-sidebar { margin-top:20px; padding:20px; background:rgba(0,0,0,0.3); border-radius:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:15px; }
+.price-big { font-size:32px; font-weight:900; background: linear-gradient(90deg, #ffd700, #ff6b00); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.game-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.btn-play { padding:14px 30px; border:none; border-radius:8px; background: linear-gradient(90deg, #ffd700, #ff6b00); color:#fff; font-size:16px; font-weight:700; letter-spacing:2px; cursor:pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255,215,0,0.3); }
+.btn-play:hover { transform:translateY(-2px); box-shadow: 0 15px 40px rgba(255,107,0,0.5); }
+.btn-buy { padding:14px 30px; border:none; border-radius:8px; background: linear-gradient(90deg, #ff9500, #ff5e00); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition: all 0.3s; }
+.btn-buy:hover { transform:translateY(-2px); }
+.btn-buy-balance { padding:14px 30px; border:none; border-radius:8px; background: linear-gradient(90deg, #27c93f, #00f0ff); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition: all 0.3s; }
+.btn-buy-balance:hover { transform:translateY(-2px); }
+.btn-buy-balance:disabled { opacity:0.5; cursor:not-allowed; }
+.btn-demo { padding:14px 30px; border:1px solid #ffd700; border-radius:8px; background:transparent; color:#ffd700; font-size:14px; font-weight:700; cursor:pointer; transition: all 0.3s; }
+.btn-demo:hover { background:#ffd700; color:#000; }
+
+#gameScreen { position:fixed; inset:0; z-index:800; background:#000; display:none; flex-direction:column; }
+#gameScreen.show { display:flex; }
+.game-topbar { height:40px; background:rgba(0,0,0,0.8); display:flex; align-items:center; padding:0 15px; border-bottom:1px solid rgba(255,215,0,0.2); gap:10px; }
+.game-topbar-title { flex:1; color:#ffd700; font-weight:700; letter-spacing:2px; }
+.btn-back, .btn-fullscreen { padding:6px 16px; border:1px solid #ffd700; border-radius:4px; background:transparent; color:#ffd700; cursor:pointer; transition: all 0.3s; font-size:13px; }
+.btn-back:hover, .btn-fullscreen:hover { background:#ffd700; color:#000; }
+.game-frame { flex:1; border:none; background:#000; }
+
+.age-modal { text-align:center; padding:40px; }
+.age-icon { font-size:100px; margin-bottom:20px; animation: ageShake 2s ease-in-out infinite; }
+@keyframes ageShake { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-5deg); } 75% { transform:rotate(5deg); } }
+.age-title { font-size:28px; font-weight:900; margin-bottom:15px; color:#ff0066; }
+.age-text { color:#c0c0e0; margin-bottom:30px; line-height:1.8; font-size:15px; }
+.age-buttons { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+.btn-age-yes { padding:16px 40px; border:none; border-radius:10px; background: linear-gradient(90deg, #27c93f, #00f0ff); color:#fff; font-size:16px; font-weight:700; cursor:pointer; transition: all 0.3s; box-shadow: 0 10px 30px rgba(39,201,63,0.3); }
+.btn-age-yes:hover { transform:translateY(-3px); }
+.btn-age-no { padding:16px 40px; border:2px solid #ff5f57; border-radius:10px; background:transparent; color:#ff5f57; font-size:16px; font-weight:700; cursor:pointer; transition: all 0.3s; }
+.btn-age-no:hover { background:#ff5f57; color:#fff; }
+
+.buy-options { display:grid; grid-template-columns:repeat(3, 1fr); gap:15px; margin-top:20px; }
+.buy-option { padding:20px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); text-align:center; cursor:pointer; transition: all 0.3s; text-decoration:none; color:#fff; }
+.buy-option:hover { transform:translateY(-4px); border-color:rgba(255,215,0,0.5); }
+.buy-option-icon { font-size:40px; margin-bottom:10px; }
+.buy-option-name { font-size:14px; font-weight:700; margin-bottom:4px; }
+.buy-option-handle { font-size:11px; color:#8a8ab0; }
+
+.register-form { max-width:500px; margin:0 auto; }
+.avatar-upload { width:120px; height:120px; border-radius:50%; background: linear-gradient(135deg, #ffd700, #ff6b00); display:flex; align-items:center; justify-content:center; font-size:50px; cursor:pointer; margin:0 auto 20px; position:relative; overflow:hidden; border:3px dashed rgba(255,215,0,0.5); }
+.avatar-upload img { width:100%; height:100%; object-fit:cover; }
+.avatar-upload-hint { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.7); padding:4px; font-size:10px; text-align:center; }
+
+.login-screen { max-width:500px; margin:0 auto; text-align:center; }
+.login-screen-icon { font-size:80px; margin-bottom:20px; }
+.login-tabs { display:flex; gap:10px; margin-bottom:30px; justify-content:center; }
+.login-tab { padding:10px 24px; border-radius:8px; cursor:pointer; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#8a8ab0; font-weight:600; transition: all 0.3s; }
+.login-tab.active { background:rgba(255,215,0,0.1); border-color:#ffd700; color:#ffd700; }
+.login-panel { display:none; }
+.login-panel.active { display:block; animation: fadeIn 0.4s; }
+
+.toast { position:fixed; bottom:30px; right:30px; padding:16px 24px; background:rgba(0,0,0,0.9); border:1px solid #ffd700; border-radius:8px; color:#fff; font-size:14px; z-index:2000; animation: toastIn 0.3s ease; box-shadow: 0 10px 30px rgba(255,215,0,0.3); max-width:400px; }
+.toast.success { border-color:#27c93f; box-shadow: 0 10px 30px rgba(39,201,63,0.3); }
+.toast.error { border-color:#ff5f57; box-shadow: 0 10px 30px rgba(255,95,87,0.3); }
+.toast.warning { border-color:#ff9500; box-shadow: 0 10px 30px rgba(255,149,0,0.3); }
+.toast.reward { border-color:#ffd700; box-shadow: 0 10px 30px rgba(255,215,0,0.5); background:linear-gradient(90deg, rgba(255,215,0,0.2), rgba(255,107,0,0.2)); }
+@keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+.particles { position:fixed; inset:0; pointer-events:none; z-index:1; }
+.particle { position:absolute; width:3px; height:3px; border-radius:50%; background:#ffd700; opacity:0.5; animation: float 15s linear infinite; }
+@keyframes float { from { transform:translateY(100vh) translateX(0); opacity:0; } 10% { opacity:0.5; } 90% { opacity:0.5; } to { transform:translateY(-10vh) translateX(100px); opacity:0; } }
+
+@media (max-width: 900px) {
+  .library-layout { grid-template-columns:1fr; }
+  .stats-grid, .balance-card { grid-template-columns:repeat(2, 1fr); }
+  .profile-header { grid-template-columns:1fr; text-align:center; }
+  .avatar-big { margin:0 auto; }
+  .form-row { grid-template-columns:1fr; }
+  .admin-game-item { grid-template-columns:60px 1fr; }
+  .admin-game-actions { grid-column:1/-1; }
+  .buy-options { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="logo-moon">🌙</div>
+  <div class="logo">K-MOON</div>
+  <div class="tagline" data-i18n="tagline">GAME LAUNCHER</div>
+  <div class="version-tag">VERSION 7.0.0</div>
+  <div class="loader"><div class="loader-bar"></div></div>
+  <div class="loader-text" id="loadText" data-i18n="loading">Sistem başlatılıyor...</div>
+</div>
+
+<div class="particles" id="particles"></div>
+
+<div id="launcher">
+  <div class="titlebar">
+    <div class="titlebar-left">
+      <div class="app-icon">🌙</div>
+      <div class="app-title">K-Moon Launcher v7.0.0</div>
+    </div>
+    <div class="window-controls">
+      <div class="win-btn win-min"></div>
+      <div class="win-btn win-max"></div>
+      <div class="win-btn win-close" onclick="if(confirm(t('exitConfirm'))) window.close()"></div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-logo">🌙 K-MOON</div>
+    <div class="nav-item active" data-page="store" data-i18n="navStore">🏪 MAĞAZA</div>
+    <div class="nav-item" data-page="library" data-i18n="navLibrary">📚 KÜTÜPHANE</div>
+    <div class="nav-item" data-page="profile" data-i18n="navProfile">👤 PROFİL</div>
+    <div class="nav-right">
+      <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+        <option value="tr">🇹🇷 Türkçe</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="ka">🇬🇪 ქართული</option>
+        <option value="az">🇦🇿 Azərbaycan</option>
+        <option value="uk">🇺🇦 Українська</option>
+        <option value="hi">🇮🇳 हिन्दी</option>
+        <option value="he">🇮🇱 עברית</option>
+        <option value="ja">🇯🇵 日本語</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="el">🇬🇷 Ελληνικά</option>
+        <option value="hy">🇦🇲 Հայերեն</option>
+        <option value="ko">🇰🇷 한국어</option>
+        <option value="th">🇹🇭 ไทย</option>
+        <option value="ar">🇸🇦 العربية</option>
+        <option value="fa">🇮🇷 فارسی</option>
+      </select>
+      <div class="balance-display" id="balanceDisplay" onclick="document.querySelector('.nav-item[data-page=profile]').click()">💰 <span id="balanceAmount">0.00</span>$</div>
+      <input type="text" class="nav-search" placeholder="🔍" id="searchInput" data-i18n-placeholder="searchPlaceholder">
+      <div class="user-avatar-small" id="userAvatarSmall" onclick="openProfileOrLogin()">🎮</div>
+      <button class="btn-admin" onclick="openAdmin()" data-i18n="adminBtn">🔐 ADMIN</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page active" id="page-store">
+      <div class="section-title" data-i18n="storeTitle">🌙 Mağaza</div>
+      <div class="section-subtitle" data-i18n="storeSubtitle">Admin tarafından eklenen oyunları keşfet</div>
+      <div class="games-grid" id="gamesGrid"></div>
+    </div>
+
+    <div class="page" id="page-library">
+      <div class="section-title" data-i18n="libraryTitle">📚 Kütüphanem</div>
+      <div class="section-subtitle" data-i18n="librarySubtitle">Sahip olduğun tüm oyunlar burada</div>
+      <div class="library-layout">
+        <div class="lib-sidebar">
+          <div class="lib-filter-title" data-i18n="filters">FİLTRELER</div>
+          <div class="lib-filter active" data-filter="all">🎮 <span data-i18n="allGames">Tüm Oyunlar</span> <span class="count" id="countAll">0</span></div>
+          <div class="lib-filter" data-filter="favorite">⭐ <span data-i18n="favorites">Favoriler</span> <span class="count" id="countFav">0</span></div>
+          <div class="lib-filter" data-filter="recent">🕐 <span data-i18n="recent">Son Oynanan</span> <span class="count" id="countRecent">0</span></div>
+          <div class="lib-filter" data-filter="free">🆓 <span data-i18n="free">Ücretsiz</span> <span class="count" id="countFree">0</span></div>
+          <div class="lib-filter" data-filter="purchased">💎 <span data-i18n="purchased">Satın Alınan</span> <span class="count" id="countPurchased">0</span></div>
+          <div class="lib-filter-title" style="margin-top:20px;" data-i18n="categories">KATEGORİLER</div>
+          <div id="categoryFilters"></div>
+          <select class="lib-sort" id="libSort">
+            <option value="name" data-i18n="sortName">İsme Göre (A-Z)</option>
+            <option value="recent" data-i18n="sortRecent">Son Oynanan</option>
+            <option value="price" data-i18n="sortPrice">Fiyata Göre</option>
+          </select>
+        </div>
+        <div>
+          <div class="games-grid" id="libraryGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-profile">
+      <div id="profileContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal-box admin">
+    <div class="modal-header">
+      <div class="modal-title-bar admin" data-i18n="adminPanel">🔐 ADMIN PANELİ</div>
+      <button class="modal-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="admin-panel active" id="adminLogin">
+        <div style="max-width:400px; margin:40px auto;">
+          <div style="text-align:center; font-size:20px; margin-bottom:20px; color:#ff00e6;" data-i18n="adminLogin">🔒 Admin Girişi</div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="password">ŞİFRE</label>
+            <input type="password" class="form-input" id="adminPassword" placeholder="••••••••" onkeypress="if(event.key==='Enter')adminLogin()">
+          </div>
+          <button class="btn-primary" style="width:100%;" onclick="adminLogin()" data-i18n="loginBtn">GİRİŞ YAP</button>
+          <div style="text-align:center; margin-top:15px; font-size:11px; color:#8a8ab0;" data-i18n="adminHint">5 farklı admin şifresi desteklenir</div>
+        </div>
+      </div>
+
+      <div class="admin-panel" id="adminDashboard">
+        <div class="admin-tabs">
+          <div class="admin-tab active" data-atab="add" data-i18n="addGame">➕ Oyun Ekle</div>
+          <div class="admin-tab" data-atab="manage" data-i18n="manageGames">📋 Yönet</div>
+          <div class="admin-tab" data-atab="io" data-i18n="importExport">💾 İçe/Dışa</div>
+        </div>
+
+        <div class="admin-panel active" id="atab-add">
+          <div style="max-width:700px;">
+            <div class="form-group">
+              <label class="form-label" data-i18n="gameCover">OYUN KAPAĞI</label>
+              <div class="image-upload" onclick="document.getElementById('coverInput').click()">
+                <div id="coverPlaceholder">
+                  <div style="font-size:40px; margin-bottom:10px;">🖼️</div>
+                  <div style="color:#8a8ab0;" data-i18n="clickUploadCover">Kapak resmi yüklemek için tıkla</div>
+                </div>
+                <img id="coverPreview" class="image-preview" style="display:none;">
+              </div>
+              <input type="file" id="coverInput" accept="image/*" style="display:none;" onchange="handleCoverUpload(event)">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="gameGallery">GALERİ (Birden fazla resim)</label>
+              <div class="image-upload" onclick="document.getElementById('galleryInput').click()" style="padding:15px;">
+                <div style="color:#8a8ab0;" data-i18n="clickUploadGallery">📷 Galeri resimleri eklemek için tıkla</div>
+              </div>
+              <input type="file" id="galleryInput" accept="image/*" multiple style="display:none;" onchange="handleGalleryUpload(event)">
+              <div class="gallery-upload-grid" id="galleryGrid"></div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" data-i18n="gameTitle">OYUN BAŞLIĞI *</label>
+                <input type="text" class="form-input" id="gameTitle" placeholder="Örn: Neon Snake">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="gameCategory">KATEGORİ *</label>
+                <select class="form-input" id="gameCategory">
+                  <option value="arcade">🕹️ Arcade</option>
+                  <option value="puzzle">🧩 Bulmaca</option>
+                  <option value="sport">🏓 Spor</option>
+                  <option value="action">⚔️ Aksiyon</option>
+                  <option value="strategy">🎯 Strateji</option>
+                  <option value="rpg">🗡️ RPG</option>
+                  <option value="racing">🏎️ Yarış</option>
+                  <option value="simulation">🎭 Simülasyon</option>
+                  <option value="horror">👻 Korku</option>
+                  <option value="adult">🔞 +18</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="gameSubtitle">ALT BAŞLIK</label>
+              <input type="text" class="form-input" id="gameSubtitle" placeholder="Kısa slogan...">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="gameDesc">AÇIKLAMA</label>
+              <textarea class="form-input form-textarea" id="gameDesc" placeholder="Oyun hakkında..."></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" data-i18n="gamePrice">FİYAT (USD)</label>
+                <input type="text" class="form-input" id="gamePrice" placeholder="ÜCRETSİZ veya 4.99" value="ÜCRETSİZ">
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-i18n="gamePlayable">OYNANABİLİR</label>
+                <select class="form-input" id="gamePlayable">
+                  <option value="true" data-i18n="yes">✅ Evet</option>
+                  <option value="false" data-i18n="no">❌ Hayır (Yakında)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="display:flex; align-items:center; gap:10px;">
+                <input type="checkbox" id="gameAge18" style="width:18px; height:18px; cursor:pointer;">
+                <span data-i18n="age18Label">🔞 +18 İçerik</span>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="gameHTML">OYUN HTML DOSYASI</label>
+              <div class="image-upload" onclick="document.getElementById('htmlInput').click()" style="padding:15px; margin-bottom:10px;">
+                <div style="color:#8a8ab0;" data-i18n="clickUploadHTML">📄 HTML dosyası yüklemek için tıkla</div>
+              </div>
+              <input type="file" id="htmlInput" accept=".html,.htm" style="display:none;" onchange="handleHTMLUpload(event)">
+              <div id="htmlStatus" style="font-size:12px; color:#8a8ab0; margin-bottom:10px;"></div>
+              <textarea class="form-input form-textarea" id="gameHTMLCode" placeholder="&lt;!DOCTYPE html&gt;..." style="min-height:150px; font-family:monospace; font-size:12px;"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="demoHTML">DEMO HTML</label>
+              <div class="image-upload" onclick="document.getElementById('demoInput').click()" style="padding:15px; margin-bottom:10px;">
+                <div style="color:#8a8ab0;" data-i18n="clickUploadDemo">📄 Demo HTML dosyası yükle</div>
+              </div>
+              <input type="file" id="demoInput" accept=".html,.htm" style="display:none;" onchange="handleDemoUpload(event)">
+              <div id="demoStatus" style="font-size:12px; color:#8a8ab0; margin-bottom:10px;"></div>
+              <textarea class="form-input form-textarea" id="gameDemoCode" placeholder="Demo HTML kodu..." style="min-height:100px; font-family:monospace; font-size:12px;"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="gameRules">OYUN KURALLARI</label>
+              <textarea class="form-input form-textarea" id="gameRules" placeholder="AMAÇ: ...&#10;KAYIP: ..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" data-i18n="gameManual">OYNAMA KİTAPÇIĞI (HTML)</label>
+              <textarea class="form-input form-textarea" id="gameManual" placeholder="<h3>Kontroller</h3>..."></textarea>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:20px;">
+              <button class="btn-primary" onclick="saveGame()" data-i18n="saveGame">💾 OYUNU KAYDET</button>
+              <button class="btn-secondary" onclick="cancelEdit()" data-i18n="cancel">❌ İPTAL</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-panel" id="atab-manage">
+          <div class="admin-game-list" id="adminGameList"></div>
+        </div>
+
+        <div class="admin-panel" id="atab-io">
+          <div class="io-section">
+            <div class="io-title" data-i18n="exportData">📤 Verileri Dışa Aktar</div>
+            <p style="color:#8a8ab0; font-size:13px; margin-bottom:15px;" data-i18n="exportDesc">Tüm verileri JSON olarak indir</p>
+            <button class="btn-io btn-export" onclick="exportData()" data-i18n="exportBtn">💾 JSON İNDİR</button>
+          </div>
+          <div class="io-section">
+            <div class="io-title" data-i18n="importData">📥 Verileri İçe Aktar</div>
+            <p style="color:#8a8ab0; font-size:13px; margin-bottom:15px;" data-i18n="importDesc">JSON dosyasından verileri yükle</p>
+            <button class="btn-io btn-import" onclick="document.getElementById('importInput').click()" data-i18n="importBtn">📂 DOSYA SEÇ</button>
+            <input type="file" id="importInput" accept=".json" style="display:none;" onchange="importData(event)">
+          </div>
+          <div class="io-section" style="border:1px solid rgba(255,95,87,0.3);">
+            <div class="io-title" style="color:#ff5f57;" data-i18n="dangerZone">⚠️ Tehlikeli Bölge</div>
+            <p style="color:#8a8ab0; font-size:13px; margin-bottom:15px;" data-i18n="dangerDesc">Tüm verileri sil ve sıfırla</p>
+            <button class="btn-io btn-delete" onclick="resetAllData()" data-i18n="resetBtn">🗑️ TÜM VERİLERİ SİL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME MODAL -->
+<div class="modal-overlay" id="gameModal">
+  <div class="modal-box">
+    <div class="game-modal-header" id="gameModalHeader">
+      <button class="modal-close" onclick="closeGameModal()">✕</button>
+    </div>
+    <div class="game-modal-body">
+      <div class="game-modal-title" id="gameModalTitle"></div>
+      <div class="game-modal-subtitle" id="gameModalSubtitle"></div>
+      <div class="game-modal-tabs">
+        <div class="game-modal-tab active" data-gtab="overview" data-i18n="tabOverview">📖 Genel Bakış</div>
+        <div class="game-modal-tab" data-gtab="gallery" data-i18n="tabGallery">🖼️ Galeri</div>
+        <div class="game-modal-tab" data-gtab="rules" data-i18n="tabRules">📜 Kurallar</div>
+        <div class="game-modal-tab" data-gtab="manual" data-i18n="tabManual">📘 Kitapçık</div>
+      </div>
+      <div class="tab-content active" id="gtab-overview"></div>
+      <div class="tab-content" id="gtab-gallery"></div>
+      <div class="tab-content" id="gtab-rules"></div>
+      <div class="tab-content" id="gtab-manual"></div>
+      <div class="game-modal-sidebar" id="gameModalSidebar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- AGE VERIFICATION -->
+<div class="modal-overlay" id="ageModal">
+  <div class="modal-box small">
+    <div class="age-modal">
+      <div class="age-icon">🔞</div>
+      <div class="age-title" data-i18n="ageTitle">Yaş Doğrulaması</div>
+      <div class="age-text" data-i18n="ageTextSimple">Bu içerik yalnızca 18 yaş ve üzeri içindir.<br>Devam etmek istiyor musunuz?</div>
+      <div class="age-buttons">
+        <button class="btn-age-yes" onclick="verifyAgeYes()" data-i18n="ageYes">✅ Evet, 18+ Yaşındayım</button>
+        <button class="btn-age-no" onclick="verifyAgeNo()" data-i18n="ageNo">❌ Hayır, Değilim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BUY MODAL -->
+<div class="modal-overlay" id="buyModal">
+  <div class="modal-box small">
+    <div class="modal-header">
+      <div class="modal-title-bar" data-i18n="buyTitle">💎 Satın Al</div>
+      <button class="modal-close" onclick="closeBuyModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center; margin-bottom:20px;">
+        <div style="font-size:18px; margin-bottom:10px;" id="buyGameName"></div>
+        <div class="price-big" id="buyGamePrice"></div>
+      </div>
+      <p style="color:#c0c0e0; text-align:center; margin-bottom:20px;" data-i18n="buyDesc">Satın almak için aşağıdaki yöntemlerden birini seçin:</p>
+      <div id="buyBalanceSection"></div>
+      <div class="buy-options">
+        <a class="buy-option" id="buyTelegram" href="#" target="_blank">
+          <div class="buy-option-icon">📱</div>
+          <div class="buy-option-name">Telegram</div>
+          <div class="buy-option-handle" id="buyTelegramHandle">@kmoon</div>
+        </a>
+        <a class="buy-option" id="buyWhatsApp" href="#" target="_blank">
+          <div class="buy-option-icon">💬</div>
+          <div class="buy-option-name">WhatsApp</div>
+          <div class="buy-option-handle" id="buyWhatsAppHandle">+90 555 000 00 00</div>
+        </a>
+        <a class="buy-option" id="buyInstagram" href="#" target="_blank">
+          <div class="buy-option-icon">📷</div>
+          <div class="buy-option-name">Instagram</div>
+          <div class="buy-option-handle" id="buyInstagramHandle">@kmoon</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN / REGISTER MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box small">
+    <div class="modal-header">
+      <div class="modal-title-bar" data-i18n="authTitle">👤 Hesap</div>
+      <button class="modal-close" onclick="closeAuthModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="login-screen">
+        <div class="login-screen-icon">🌙</div>
+        <div class="login-tabs">
+          <div class="login-tab active" data-auth="login" onclick="switchAuthTab('login')" data-i18n="loginTab">🔑 Giriş Yap</div>
+          <div class="login-tab" data-auth="register" onclick="switchAuthTab('register')" data-i18n="registerTab">✨ Kayıt Ol</div>
+          <div class="login-tab" data-auth="import" onclick="switchAuthTab('import')" data-i18n="importTab">📥 Veri Yükle</div>
+        </div>
+
+        <div class="login-panel active" id="panel-login">
+          <div class="form-group">
+            <label class="form-label" data-i18n="playerName">OYUNCU İSMİ</label>
+            <input type="text" class="form-input" id="loginName" placeholder="Kullanıcı adınız">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="password">ŞİFRE</label>
+            <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" onkeypress="if(event.key==='Enter')loginUser()">
+          </div>
+          <button class="btn-primary" style="width:100%;" onclick="loginUser()" data-i18n="loginBtn">🔑 GİRİŞ YAP</button>
+        </div>
+
+        <div class="login-panel" id="panel-register">
+          <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+            <span id="avatarPlaceholder">🎮</span>
+            <img id="avatarPreview" style="display:none;">
+            <div class="avatar-upload-hint" data-i18n="uploadAvatar">Avatar Yükle</div>
+          </div>
+          <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+          
+          <div class="form-group">
+            <label class="form-label" data-i18n="playerName">OYUNCU İSMİ *</label>
+            <input type="text" class="form-input" id="regName" placeholder="Örn: NeonGamer">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="birthdate">DOĞUM TARİHİ *</label>
+            <input type="date" class="form-input" id="regBirthdate">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="email">E-POSTA *</label>
+            <input type="email" class="form-input" id="regEmail" placeholder="ornek@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="password">ŞİFRE *</label>
+            <input type="password" class="form-input" id="regPassword" placeholder="••••••••">
+          </div>
+          <button class="btn-primary" style="width:100%;" onclick="registerUser()" data-i18n="registerBtn">✨ KAYIT OL</button>
+        </div>
+
+        <div class="login-panel" id="panel-import">
+          <div style="padding:30px 20px; text-align:center;">
+            <div style="font-size:60px; margin-bottom:20px;">📥</div>
+            <div style="color:#c0c0e0; margin-bottom:20px; line-height:1.6;" data-i18n="importDbDesc">Daha önce dışa aktardığınız JSON dosyasını yükleyerek hesabınıza ve tüm verilerinize ulaşın.</div>
+            <button class="btn-primary" onclick="document.getElementById('dbImportInput').click()" data-i18n="importDbBtn">📂 VERİ TABANI DOSYASI SEÇ</button>
+            <input type="file" id="dbImportInput" accept=".json" style="display:none;" onchange="importDatabase(event)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen">
+  <div class="game-topbar">
+    <div class="game-topbar-title" id="gameTitleBar">OYUN</div>
+    <button class="btn-fullscreen" onclick="toggleFullscreen()" data-i18n="fullscreen">⛶ TAM EKRAN</button>
+    <button class="btn-back" onclick="closeGame()" data-i18n="backToLauncher">← LAUNCHER'A DÖN</button>
+  </div>
+  <iframe class="game-frame" id="gameFrame"></iframe>
+</div>
+
+<script>
+// ===== ÇOKLU DİL (K-Moon teması) =====
+const translations = {
+  tr: { tagline:'GAME LAUNCHER', loading:'K-Moon başlatılıyor...', exitConfirm:'Çıkmak istediğinize emin misiniz?', navStore:'🏪 MAĞAZA', navLibrary:'📚 KÜTÜPHANE', navProfile:'👤 PROFİL', searchPlaceholder:'🔍 Oyun ara...', adminBtn:'🔐 ADMIN', storeTitle:'🌙 Mağaza', storeSubtitle:'Admin tarafından eklenen oyunları keşfet', libraryTitle:'📚 Kütüphanem', librarySubtitle:'Sahip olduğun tüm oyunlar burada', filters:'FİLTRELER', allGames:'Tüm Oyunlar', favorites:'Favoriler', recent:'Son Oynanan', free:'Ücretsiz', purchased:'Satın Alınan', categories:'KATEGORİLER', sortName:'İsme Göre (A-Z)', sortRecent:'Son Oynanan', sortPrice:'Fiyata Göre', adminPanel:'🔐 ADMIN PANELİ', adminLogin:'🔒 Admin Girişi', password:'ŞİFRE', loginBtn:'GİRİŞ YAP', adminHint:'5 farklı admin şifresi desteklenir', addGame:'➕ Oyun Ekle', manageGames:'📋 Yönet', importExport:'💾 İçe/Dışa', gameCover:'OYUN KAPAĞI', clickUploadCover:'Kapak resmi yüklemek için tıkla', gameGallery:'GALERİ', clickUploadGallery:'📷 Galeri resimleri ekle', gameTitle:'OYUN BAŞLIĞI *', gameCategory:'KATEGORİ *', gameSubtitle:'ALT BAŞLIK', gameDesc:'AÇIKLAMA', gamePrice:'FİYAT (USD)', gamePlayable:'OYNANABİLİR', yes:'✅ Evet', no:'❌ Hayır (Yakında)', age18Label:'🔞 +18 İçerik', gameHTML:'OYUN HTML DOSYASI', clickUploadHTML:'📄 HTML dosyası yükle', demoHTML:'DEMO HTML', clickUploadDemo:'📄 Demo HTML yükle', gameRules:'OYUN KURALLARI', gameManual:'OYNAMA KİTAPÇIĞI', saveGame:'💾 KAYDET', cancel:'❌ İPTAL', exportData:'📤 Dışa Aktar', exportDesc:'Tüm verileri JSON olarak indir', exportBtn:'💾 JSON İNDİR', importData:'📥 İçe Aktar', importDesc:'JSON dosyasından verileri yükle', importBtn:'📂 DOSYA SEÇ', dangerZone:'⚠️ Tehlikeli Bölge', dangerDesc:'Tüm verileri sil', resetBtn:'🗑️ SİL', tabOverview:'📖 Genel Bakış', tabGallery:'🖼️ Galeri', tabRules:'📜 Kurallar', tabManual:'📘 Kitapçık', playable:'OYNANABİLİR', comingSoon:'YAKINDA', category:'KATEGORİ', status:'DURUM', price:'FİYAT', play:'▶ OYNA', buy:'💎 SATIN AL', buyBalance:'💰 BALANS İLE AL', demo:'🎮 DEMO', ageTitle:'Yaş Doğrulaması', ageTextSimple:'Bu içerik yalnızca 18 yaş ve üzeri içindir.<br>Devam etmek istiyor musunuz?', ageYes:'✅ Evet, 18+ Yaşındayım', ageNo:'❌ Hayır, Değilim', ageDenied:'Bu içeriği görüntüleyemezsiniz!', buyTitle:'💎 Satın Al', buyDesc:'Satın almak için aşağıdaki yöntemlerden birini seçin:', authTitle:'👤 Hesap', loginTab:'🔑 Giriş Yap', registerTab:'✨ Kayıt Ol', importTab:'📥 Veri Yükle', playerName:'OYUNCU İSMİ', birthdate:'DOĞUM TARİHİ', email:'E-POSTA', registerBtn:'✨ KAYIT OL', uploadAvatar:'Avatar Yükle', importDbDesc:'Daha önce dışa aktardığınız JSON dosyasını yükleyerek hesabınıza ve tüm verilerinize ulaşın.', importDbBtn:'📂 VERİ TABANI DOSYASI SEÇ', fullscreen:'⛶ TAM EKRAN', backToLauncher:'← LAUNCHER\'A DÖN', profileWelcome:'K-Moon\'a Hoş Geldin', profileLogin:'🔑 Giriş Yap', profileRegister:'✨ Kayıt Ol', profileImport:'📥 Veri Tabanı Yükle', profileLogout:'🚪 Çıkış Yap', profileEdit:'✏️ Düzenle', profileExport:'📤 Dışa Aktar', loginRequired:'Profilinize erişmek için giriş yapın', loginRequiredDesc:'Kayıt olun veya mevcut hesabınızla giriş yapın', totalGames:'Toplam Oyun', playedGames:'Oynanan Oyun', totalPlays:'Toplam Oynama', achievements:'Başarım', totalXP:'Toplam XP', badgesTitle:'🏆 Başarımlar & Ödüller', badgesSubtitle:'Görevleri tamamla, dolar kazan! Zorluk arttıkça ödül de artar.', activitiesTitle:'Son Aktiviteler', activitiesSubtitle:'Son oyun aktivitelerin', noActivity:'Henüz aktivite yok. Bir oyun oynayarak başla!', loginSuccess:'Giriş başarılı! Hoş geldin', loginFailed:'Geçersiz kullanıcı adı veya şifre!', registerSuccess:'Kayıt başarılı! Hoş geldin', registerFailed:'Tüm alanları doldurun!', usernameExists:'Bu kullanıcı adı zaten kullanılıyor!', gameSaved:'Oyun kaydedildi!', gameUpdated:'Oyun güncellendi!', gameDeleted:'Oyun silindi!', fillRequired:'Gerekli alanları doldurun!', htmlLoaded:'HTML yüklendi!', deleteConfirm:'Bu oyunu silmek istediğinize emin misiniz?', resetConfirm:'TÜM VERİLER SİLİNECEK! Devam?', resetSuccess:'Tüm veriler sıfırlandı', exportSuccess:'Veriler dışa aktarıldı!', importSuccess:'Veriler içe aktarıldı!', importFailed:'Geçersiz dosya!', dbImportSuccess:'Veri tabanı yüklendi! Hoş geldin', noGames:'Henüz oyun eklenmemiş. Admin panelinden oyun ekleyin.', noFilterResult:'Bu kategoride oyun bulunamadı', favoriteAdded:'Favorilere eklendi!', favoriteRemoved:'Favorilerden çıkarıldı!', purchasedSuccess:'Satın alma kaydedildi!', htmlFileStatus:'✅ Yüklendi: ', demoFileStatus:'✅ Demo yüklendi: ', online:'Çevrimiçi', memberSince:'Üye:', welcomeBack:'Tekrar hoş geldin', balanceLabel:'💰 Bakiye', dailyReward:'🎁 Günlük Ödül', claimDaily:'🎁 GÜNLÜK 1$ AL', dailyAvailable:'Ödül hazır!', dailyWait:'Sonraki ödül:', dailyClaimed:'Bugünkü ödül alındı', streakLabel:'🔥 Seri', totalEarned:'Toplam Kazanç', buyWithBalance:'💰 Bakiye ile Satın Al', insufficientBalance:'Yetersiz bakiye!', purchaseSuccess:'Oyun başarıyla satın alındı!', claimReward:'🎁 ÖDÜLÜ AL', rewardClaimed:'✅ ALINDI', allCompleteBonus:'🎉 TÜM GÖREVLER TAMAMLANDI! +20$ BONUS!', difficulty_easy:'KOLAY', difficulty_medium:'ORTA', difficulty_hard:'ZOR', difficulty_epic:'DESTANSI', difficulty_legendary:'EFSANE' },
+  en: { tagline:'GAME LAUNCHER', loading:'Starting K-Moon...', exitConfirm:'Exit?', navStore:'🏪 STORE', navLibrary:'📚 LIBRARY', navProfile:'👤 PROFILE', searchPlaceholder:'🔍 Search...', adminBtn:'🔐 ADMIN', storeTitle:'🌙 Store', storeSubtitle:'Discover games added by admin', libraryTitle:'📚 My Library', librarySubtitle:'All your games here', filters:'FILTERS', allGames:'All Games', favorites:'Favorites', recent:'Recent', free:'Free', purchased:'Purchased', categories:'CATEGORIES', sortName:'By Name', sortRecent:'Recent', sortPrice:'By Price', adminPanel:'🔐 ADMIN', adminLogin:'🔒 Admin Login', password:'PASSWORD', loginBtn:'LOGIN', adminHint:'5 admin passwords', addGame:'➕ Add Game', manageGames:'📋 Manage', importExport:'💾 Import/Export', gameCover:'COVER', clickUploadCover:'Click to upload', gameGallery:'GALLERY', clickUploadGallery:'📷 Add images', gameTitle:'TITLE *', gameCategory:'CATEGORY *', gameSubtitle:'SUBTITLE', gameDesc:'DESCRIPTION', gamePrice:'PRICE (USD)', gamePlayable:'PLAYABLE', yes:'✅ Yes', no:'❌ Soon', age18Label:'🔞 +18', gameHTML:'HTML FILE', clickUploadHTML:'📄 Upload', demoHTML:'DEMO', clickUploadDemo:'📄 Demo', gameRules:'RULES', gameManual:'MANUAL', saveGame:'💾 SAVE', cancel:'❌ CANCEL', exportData:'📤 Export', exportDesc:'Download JSON', exportBtn:'💾 JSON', importData:'📥 Import', importDesc:'Load JSON', importBtn:'📂 FILE', dangerZone:'⚠️ Danger', dangerDesc:'Delete all', resetBtn:'🗑️ DELETE', tabOverview:'📖 Overview', tabGallery:'🖼️ Gallery', tabRules:'📜 Rules', tabManual:'📘 Manual', playable:'PLAYABLE', comingSoon:'SOON', category:'CATEGORY', status:'STATUS', price:'PRICE', play:'▶ PLAY', buy:'💎 BUY', buyBalance:'💰 BALANCE BUY', demo:'🎮 DEMO', ageTitle:'Age Check', ageTextSimple:'18+ only.<br>Continue?', ageYes:'✅ I am 18+', ageNo:'❌ No', ageDenied:'Cannot view!', buyTitle:'💎 Buy', buyDesc:'Choose a method:', authTitle:'👤 Account', loginTab:'🔑 Login', registerTab:'✨ Register', importTab:'📥 Import', playerName:'NAME', birthdate:'BIRTHDATE', email:'EMAIL', registerBtn:'✨ REGISTER', uploadAvatar:'Avatar', importDbDesc:'Load your JSON backup.', importDbBtn:'📂 SELECT FILE', fullscreen:'⛶ FULLSCREEN', backToLauncher:'← BACK', profileWelcome:'Welcome to K-Moon', profileLogin:'🔑 Login', profileRegister:'✨ Register', profileImport:'📥 Load DB', profileLogout:'🚪 Logout', profileEdit:'✏️ Edit', profileExport:'📤 Export', loginRequired:'Login required', loginRequiredDesc:'Register or login', totalGames:'Total', playedGames:'Played', totalPlays:'Plays', achievements:'Achievements', totalXP:'XP', badgesTitle:'🏆 Achievements & Rewards', badgesSubtitle:'Complete tasks, earn dollars! Higher difficulty = higher reward.', activitiesTitle:'Recent', activitiesSubtitle:'Your activities', noActivity:'No activities yet.', loginSuccess:'Welcome!', loginFailed:'Invalid credentials!', registerSuccess:'Welcome!', registerFailed:'Fill all fields!', usernameExists:'Username taken!', gameSaved:'Saved!', gameUpdated:'Updated!', gameDeleted:'Deleted!', fillRequired:'Fill required!', htmlLoaded:'Loaded!', deleteConfirm:'Delete?', resetConfirm:'DELETE ALL?', resetSuccess:'Reset', exportSuccess:'Exported!', importSuccess:'Imported!', importFailed:'Invalid!', dbImportSuccess:'Loaded!', noGames:'No games yet. Admin can add games.', noFilterResult:'No games', favoriteAdded:'Added!', favoriteRemoved:'Removed!', purchasedSuccess:'Purchased!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Demo: ', online:'Online', memberSince:'Member:', welcomeBack:'Welcome back', balanceLabel:'💰 Balance', dailyReward:'🎁 Daily', claimDaily:'🎁 CLAIM 1$', dailyAvailable:'Reward ready!', dailyWait:'Next reward:', dailyClaimed:'Claimed today', streakLabel:'🔥 Streak', totalEarned:'Total Earned', buyWithBalance:'💰 Buy with Balance', insufficientBalance:'Insufficient balance!', purchaseSuccess:'Purchased!', claimReward:'🎁 CLAIM', rewardClaimed:'✅ CLAIMED', allCompleteBonus:'🎉 ALL COMPLETE! +20$ BONUS!', difficulty_easy:'EASY', difficulty_medium:'MEDIUM', difficulty_hard:'HARD', difficulty_epic:'EPIC', difficulty_legendary:'LEGENDARY' },
+  ru: { tagline:'GAME LAUNCHER', loading:'Запуск K-Moon...', exitConfirm:'Выйти?', navStore:'🏪 МАГАЗИН', navLibrary:'📚 БИБЛИОТЕКА', navProfile:'👤 ПРОФИЛЬ', searchPlaceholder:'🔍 Поиск...', adminBtn:'🔐 АДМИН', storeTitle:'🌙 Магазин', storeSubtitle:'Игры от админа', libraryTitle:'📚 Библиотека', librarySubtitle:'Ваши игры', filters:'ФИЛЬТРЫ', allGames:'Все', favorites:'Избранное', recent:'Недавние', free:'Бесплатные', purchased:'Купленные', categories:'КАТЕГОРИИ', sortName:'По имени', sortRecent:'Недавние', sortPrice:'По цене', adminPanel:'🔐 АДМИН', adminLogin:'🔒 Вход', password:'ПАРОЛЬ', loginBtn:'ВОЙТИ', adminHint:'5 паролей', addGame:'➕ Добавить', manageGames:'📋 Управление', importExport:'💾 Импорт', gameCover:'ОБЛОЖКА', clickUploadCover:'Загрузить', gameGallery:'ГАЛЕРЕЯ', clickUploadGallery:'📷 Добавить', gameTitle:'НАЗВАНИЕ *', gameCategory:'КАТЕГОРИЯ *', gameSubtitle:'ПОДЗАГОЛОВОК', gameDesc:'ОПИСАНИЕ', gamePrice:'ЦЕНА (USD)', gamePlayable:'ИГРАБЕЛЬНАЯ', yes:'✅ Да', no:'❌ Скоро', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 Загрузить', demoHTML:'ДЕМО', clickUploadDemo:'📄 Демо', gameRules:'ПРАВИЛА', gameManual:'РУКОВОДСТВО', saveGame:'💾 СОХРАНИТЬ', cancel:'❌ ОТМЕНА', exportData:'📤 Экспорт', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 Импорт', importDesc:'Из JSON', importBtn:'📂 ФАЙЛ', dangerZone:'⚠️ Опасно', dangerDesc:'Удалить', resetBtn:'🗑️ УДАЛИТЬ', tabOverview:'📖 Обзор', tabGallery:'🖼️ Галерея', tabRules:'📜 Правила', tabManual:'📘 Руководство', playable:'ИГРАБЕЛЬНАЯ', comingSoon:'СКОРО', category:'КАТЕГОРИЯ', status:'СТАТУС', price:'ЦЕНА', play:'▶ ИГРАТЬ', buy:'💎 КУПИТЬ', buyBalance:'💰 БАЛАНС', demo:'🎮 ДЕМО', ageTitle:'Возраст', ageTextSimple:'Только 18+.<br>Продолжить?', ageYes:'✅ 18+', ageNo:'❌ Нет', ageDenied:'Нельзя!', buyTitle:'💎 Покупка', buyDesc:'Выберите способ:', authTitle:'👤 Аккаунт', loginTab:'🔑 Войти', registerTab:'✨ Регистрация', importTab:'📥 Импорт', playerName:'ИМЯ', birthdate:'ДАТА РОЖДЕНИЯ', email:'EMAIL', registerBtn:'✨ РЕГИСТРАЦИЯ', uploadAvatar:'Аватар', importDbDesc:'Загрузите JSON.', importDbBtn:'📂 ФАЙЛ', fullscreen:'⛶ ЭКРАН', backToLauncher:'← НАЗАД', profileWelcome:'Добро пожаловать в K-Moon', profileLogin:'🔑 Войти', profileRegister:'✨ Регистрация', profileImport:'📥 Загрузить', profileLogout:'🚪 Выйти', profileEdit:'✏️ Редактировать', profileExport:'📤 Экспорт', loginRequired:'Войдите', loginRequiredDesc:'Зарегистрируйтесь', totalGames:'Всего', playedGames:'Сыграно', totalPlays:'Запусков', achievements:'Достижения', totalXP:'XP', badgesTitle:'🏆 Достижения и награды', badgesSubtitle:'Выполняйте задания, зарабатывайте!', activitiesTitle:'Активность', activitiesSubtitle:'Последние', noActivity:'Нет активности.', loginSuccess:'Успешно!', loginFailed:'Ошибка!', registerSuccess:'Успешно!', registerFailed:'Заполните!', usernameExists:'Занято!', gameSaved:'Сохранено!', gameUpdated:'Обновлено!', gameDeleted:'Удалено!', fillRequired:'Заполните!', htmlLoaded:'Загружено!', deleteConfirm:'Удалить?', resetConfirm:'ВСЁ УДАЛИТЬ?', resetSuccess:'Сброшено', exportSuccess:'Экспортировано!', importSuccess:'Импортировано!', importFailed:'Ошибка!', dbImportSuccess:'Загружено!', noGames:'Нет игр. Админ может добавить.', noFilterResult:'Нет игр', favoriteAdded:'Добавлено!', favoriteRemoved:'Удалено!', purchasedSuccess:'Куплено!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Демо: ', online:'В сети', memberSince:'Участник:', welcomeBack:'С возвращением', balanceLabel:'💰 Баланс', dailyReward:'🎁 Ежедневно', claimDaily:'🎁 ПОЛУЧИТЬ 1$', dailyAvailable:'Готово!', dailyWait:'Следующее:', dailyClaimed:'Получено сегодня', streakLabel:'🔥 Серия', totalEarned:'Всего заработано', buyWithBalance:'💰 Купить с баланса', insufficientBalance:'Недостаточно!', purchaseSuccess:'Куплено!', claimReward:'🎁 ПОЛУЧИТЬ', rewardClaimed:'✅ ПОЛУЧЕНО', allCompleteBonus:'🎉 ВСЁ ВЫПОЛНЕНО! +20$ БОНУС!', difficulty_easy:'ЛЕГКО', difficulty_medium:'СРЕДНЕ', difficulty_hard:'СЛОЖНО', difficulty_epic:'ЭПИЧЕСКИ', difficulty_legendary:'ЛЕГЕНДА' },
+  ka: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'გასვლა?', navStore:'🏪 მაღაზია', navLibrary:'📚 ბიბლიოთეკა', navProfile:'👤 პროფილი', searchPlaceholder:'🔍 ძიება...', adminBtn:'🔐 ადმინი', storeTitle:'🌙 მაღაზია', storeSubtitle:'ადმინის თამაშები', libraryTitle:'📚 ბიბლიოთეკა', librarySubtitle:'თქვენი თამაშები', filters:'ფილტრები', allGames:'ყველა', favorites:'ფავორიტები', recent:'ბოლო', free:'უფასო', purchased:'ნაყიდი', categories:'კატეგორიები', sortName:'სახელით', sortRecent:'ბოლო', sortPrice:'ფასით', adminPanel:'🔐 ადმინი', adminLogin:'🔒 შესვლა', password:'პაროლი', loginBtn:'შესვლა', adminHint:'5 პაროლი', addGame:'➕ დამატება', manageGames:'📋 მართვა', importExport:'💾 იმპორტი', gameCover:'ყდა', clickUploadCover:'ატვირთვა', gameGallery:'გალერეა', clickUploadGallery:'📷 დამატება', gameTitle:'სათაური *', gameCategory:'კატეგორია *', gameSubtitle:'ქვესათაური', gameDesc:'აღწერა', gamePrice:'ფასი (USD)', gamePlayable:'ითამაშება', yes:'✅ კი', no:'❌ მალე', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 ატვირთვა', demoHTML:'დემო', clickUploadDemo:'📄 დემო', gameRules:'წესები', gameManual:'სახელმძღვანელო', saveGame:'💾 შენახვა', cancel:'❌ გაუქმება', exportData:'📤 ექსპორტი', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 იმპორტი', importDesc:'JSON-დან', importBtn:'📂 ფაილი', dangerZone:'⚠️ საშიში', dangerDesc:'წაშლა', resetBtn:'🗑️ წაშლა', tabOverview:'📖 მიმოხილვა', tabGallery:'🖼️ გალერეა', tabRules:'📜 წესები', tabManual:'📘 სახელმძღვანელო', playable:'ითამაშება', comingSoon:'მალე', category:'კატეგორია', status:'სტატუსი', price:'ფასი', play:'▶ თამაში', buy:'💎 ყიდვა', buyBalance:'💰 ბალანსით', demo:'🎮 დემო', ageTitle:'ასაკი', ageTextSimple:'მხოლოდ 18+.<br>გაგრძელება?', ageYes:'✅ 18+', ageNo:'❌ არა', ageDenied:'არა!', buyTitle:'💎 ყიდვა', buyDesc:'არჩიეთ:', authTitle:'👤 ანგარიში', loginTab:'🔑 შესვლა', registerTab:'✨ რეგისტრაცია', importTab:'📥 იმპორტი', playerName:'სახელი', birthdate:'დაბ. თარიღი', email:'EMAIL', registerBtn:'✨ რეგისტრაცია', uploadAvatar:'ავატარი', importDbDesc:'JSON ფაილი.', importDbBtn:'📂 ფაილი', fullscreen:'⛶ სრული', backToLauncher:'← უკან', profileWelcome:'K-Moon-ში კეთილი', profileLogin:'🔑 შესვლა', profileRegister:'✨ რეგისტრაცია', profileImport:'📥 ჩატვირთვა', profileLogout:'🚪 გასვლა', profileEdit:'✏️ რედაქტირება', profileExport:'📤 ექსპორტი', loginRequired:'შესვლა', loginRequiredDesc:'დარეგისტრირდით', totalGames:'სულ', playedGames:'ნათამაშები', totalPlays:'სულ', achievements:'მიღწევები', totalXP:'XP', badgesTitle:'🏆 მიღწევები', badgesSubtitle:'შეასრულეთ, მოიგეთ!', activitiesTitle:'აქტივობები', activitiesSubtitle:'ბოლო', noActivity:'არაფერი.', loginSuccess:'წარმატებული!', loginFailed:'შეცდომა!', registerSuccess:'წარმატებული!', registerFailed:'შეავსეთ!', usernameExists:'დაკავებული!', gameSaved:'შენახულია!', gameUpdated:'განახლებულია!', gameDeleted:'წაშლილია!', fillRequired:'შეავსეთ!', htmlLoaded:'ჩატვირთულია!', deleteConfirm:'წაშლა?', resetConfirm:'ყველაფერი წაიშლება!', resetSuccess:'განულებულია', exportSuccess:'ექსპორტი!', importSuccess:'იმპორტი!', importFailed:'შეცდომა!', dbImportSuccess:'ჩატვირთულია!', noGames:'არაფერი. ადმინმა დაამატოს.', noFilterResult:'არაფერი', favoriteAdded:'დამატებული!', favoriteRemoved:'წაშლილი!', purchasedSuccess:'ნაყიდი!', htmlFileStatus:'✅ ', demoFileStatus:'✅ დემო: ', online:'ონლაინ', memberSince:'წევრი:', welcomeBack:'კეთილი', balanceLabel:'💰 ბალანსი', dailyReward:'🎁 ყოველდღიური', claimDaily:'🎁 მიიღე 1$', dailyAvailable:'მზად!', dailyWait:'შემდეგი:', dailyClaimed:'მიღებულია', streakLabel:'🔥 სერია', totalEarned:'სულ მოგებული', buyWithBalance:'💰 ბალანსით ყიდვა', insufficientBalance:'არაა საკმარისი!', purchaseSuccess:'ნაყიდია!', claimReward:'🎁 მიღება', rewardClaimed:'✅ მიღებული', allCompleteBonus:'🎉 ყველა შესრულდა! +20$ ბონუსი!', difficulty_easy:'ადვილი', difficulty_medium:'საშუალო', difficulty_hard:'რთული', difficulty_epic:'ეპიკური', difficulty_legendary:'ლეგენდარული' },
+  az: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'Çıxış?', navStore:'🏪 MAĞAZA', navLibrary:'📚 KİTABXANA', navProfile:'👤 PROFİL', searchPlaceholder:'🔍 Axtar...', adminBtn:'🔐 ADMİN', storeTitle:'🌙 Mağaza', storeSubtitle:'Admin oyunları', libraryTitle:'📚 Kitabxana', librarySubtitle:'Oyunlarınız', filters:'FİLTRLƏR', allGames:'Hamısı', favorites:'Sevimlilər', recent:'Son', free:'Pulsuz', purchased:'Alınan', categories:'KATEQORİYALAR', sortName:'Ada görə', sortRecent:'Son', sortPrice:'Qiymətə', adminPanel:'🔐 ADMİN', adminLogin:'🔒 Giriş', password:'ŞİFRƏ', loginBtn:'GİRİŞ', adminHint:'5 şifrə', addGame:'➕ Əlavə', manageGames:'📋 İdarə', importExport:'💾 İdxal', gameCover:'QAPAQ', clickUploadCover:'Yüklə', gameGallery:'QALERİYA', clickUploadGallery:'📷 Əlavə', gameTitle:'BAŞLIK *', gameCategory:'KATEQORİYA *', gameSubtitle:'ALT', gameDesc:'AÇIQLAMA', gamePrice:'QİYMƏT (USD)', gamePlayable:'OYNANILAN', yes:'✅ Bəli', no:'❌ Tezliklə', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 Yüklə', demoHTML:'DEMO', clickUploadDemo:'📄 Demo', gameRules:'QAYDALAR', gameManual:'TƏLİMAT', saveGame:'💾 SAXLA', cancel:'❌ LƏĞV', exportData:'📤 İxrac', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 İdxal', importDesc:'JSON-dan', importBtn:'📂 FAYL', dangerZone:'⚠️ Təhlükəli', dangerDesc:'Sil', resetBtn:'🗑️ SİL', tabOverview:'📖 İcmal', tabGallery:'🖼️ Qaleriya', tabRules:'📜 Qaydalar', tabManual:'📘 Təlimat', playable:'OYNANILAN', comingSoon:'TEZLİKLƏ', category:'KATEQORİYA', status:'STATUS', price:'QİYMƏT', play:'▶ OYNA', buy:'💎 AL', buyBalance:'💰 BALANS', demo:'🎮 DEMO', ageTitle:'Yaş', ageTextSimple:'Yalnız 18+.<br>Davam?', ageYes:'✅ 18+', ageNo:'❌ Xeyr', ageDenied:'Baxa bilməzsiniz!', buyTitle:'💎 Al', buyDesc:'Seçin:', authTitle:'👤 Hesab', loginTab:'🔑 Giriş', registerTab:'✨ Qeydiyyat', importTab:'📥 İdxal', playerName:'AD', birthdate:'DOĞUM', email:'EMAIL', registerBtn:'✨ QEYDİYYAT', uploadAvatar:'Avatar', importDbDesc:'JSON faylı.', importDbBtn:'📂 FAYL', fullscreen:'⛶ TAM', backToLauncher:'← GERİ', profileWelcome:'K-Moon-a xoş', profileLogin:'🔑 Giriş', profileRegister:'✨ Qeydiyyat', profileImport:'📥 Yüklə', profileLogout:'🚪 Çıxış', profileEdit:'✏️ Redaktə', profileExport:'📤 İxrac', loginRequired:'Giriş', loginRequiredDesc:'Qeydiyyat', totalGames:'Ümumi', playedGames:'Oynanan', totalPlays:'Toplam', achievements:'Nailiyyətlər', totalXP:'XP', badgesTitle:'🏆 Nailiyyətlər', badgesSubtitle:'Qazan!', activitiesTitle:'Fəaliyyətlər', activitiesSubtitle:'Son', noActivity:'Yoxdur.', loginSuccess:'Uğurlu!', loginFailed:'Səhv!', registerSuccess:'Uğurlu!', registerFailed:'Doldurun!', usernameExists:'Götürülüb!', gameSaved:'Saxlanıldı!', gameUpdated:'Yeniləndi!', gameDeleted:'Silindi!', fillRequired:'Doldurun!', htmlLoaded:'Yükləndi!', deleteConfirm:'Sil?', resetConfirm:'HAMISI SİLİNƏCƏK!', resetSuccess:'Sıfırlandı', exportSuccess:'İxrac!', importSuccess:'İdxal!', importFailed:'Səhv!', dbImportSuccess:'Yükləndi!', noGames:'Yox. Admin əlavə etsin.', noFilterResult:'Yox', favoriteAdded:'Əlavə!', favoriteRemoved:'Silindi!', purchasedSuccess:'Alındı!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Demo: ', online:'Onlayn', memberSince:'Üzv:', welcomeBack:'Xoş', balanceLabel:'💰 Balans', dailyReward:'🎁 Gündəlik', claimDaily:'🎁 1$ AL', dailyAvailable:'Hazır!', dailyWait:'Sonraki:', dailyClaimed:'Alındı', streakLabel:'🔥 Seriya', totalEarned:'Toplam qazanc', buyWithBalance:'💰 Balansla al', insufficientBalance:'Kifayət deyil!', purchaseSuccess:'Alındı!', claimReward:'🎁 AL', rewardClaimed:'✅ ALINDI', allCompleteBonus:'🎉 HAMISI TAMAMLANDI! +20$ BONUS!', difficulty_easy:'ASAN', difficulty_medium:'ORTA', difficulty_hard:'ÇƏTİN', difficulty_epic:'EPOS', difficulty_legendary:'ƏFSANƏ' },
+  uk: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'Вийти?', navStore:'🏪 МАГАЗИН', navLibrary:'📚 БІБЛІОТЕКА', navProfile:'👤 ПРОФІЛЬ', searchPlaceholder:'🔍 Пошук...', adminBtn:'🔐 АДМІН', storeTitle:'🌙 Магазин', storeSubtitle:'Ігри адміна', libraryTitle:'📚 Бібліотека', librarySubtitle:'Ваші ігри', filters:'ФІЛЬТРИ', allGames:'Всі', favorites:'Обрані', recent:'Недавні', free:'Безкоштовні', purchased:'Куплені', categories:'КАТЕГОРІЇ', sortName:'За ім\'ям', sortRecent:'Недавні', sortPrice:'За ціною', adminPanel:'🔐 АДМІН', adminLogin:'🔒 Вхід', password:'ПАРОЛЬ', loginBtn:'УВІЙТИ', adminHint:'5 паролів', addGame:'➕ Додати', manageGames:'📋 Керувати', importExport:'💾 Імпорт', gameCover:'ОБКЛАДИНКА', clickUploadCover:'Завантажити', gameGallery:'ГАЛЕРЕЯ', clickUploadGallery:'📷 Додати', gameTitle:'НАЗВА *', gameCategory:'КАТЕГОРІЯ *', gameSubtitle:'ПІДЗАГОЛОВОК', gameDesc:'ОПИС', gamePrice:'ЦІНА (USD)', gamePlayable:'ГРАБЕЛЬНА', yes:'✅ Так', no:'❌ Скоро', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 Завантажити', demoHTML:'ДЕМО', clickUploadDemo:'📄 Демо', gameRules:'ПРАВИЛА', gameManual:'ПОСІБНИК', saveGame:'💾 ЗБЕРЕГТИ', cancel:'❌ СКАСУВАТИ', exportData:'📤 Експорт', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 Імпорт', importDesc:'З JSON', importBtn:'📂 ФАЙЛ', dangerZone:'⚠️ Небезпечно', dangerDesc:'Видалити', resetBtn:'🗑️ ВИДАЛИТИ', tabOverview:'📖 Огляд', tabGallery:'🖼️ Галерея', tabRules:'📜 Правила', tabManual:'📘 Посібник', playable:'ГРАБЕЛЬНА', comingSoon:'СКОРО', category:'КАТЕГОРІЯ', status:'СТАТУС', price:'ЦІНА', play:'▶ ГРАТИ', buy:'💎 КУПИТИ', buyBalance:'💰 БАЛАНС', demo:'🎮 ДЕМО', ageTitle:'Вік', ageTextSimple:'Тільки 18+.<br>Продовжити?', ageYes:'✅ 18+', ageNo:'❌ Ні', ageDenied:'Не можна!', buyTitle:'💎 Купівля', buyDesc:'Виберіть:', authTitle:'👤 Акаунт', loginTab:'🔑 Увійти', registerTab:'✨ Реєстрація', importTab:'📥 Імпорт', playerName:'ІМ\'Я', birthdate:'ДАТА НАРОДЖЕННЯ', email:'EMAIL', registerBtn:'✨ ЗАРЕЄСТРУВАТИСЬ', uploadAvatar:'Аватар', importDbDesc:'JSON файл.', importDbBtn:'📂 ФАЙЛ', fullscreen:'⛶ ПОВНИЙ', backToLauncher:'← НАЗАД', profileWelcome:'Ласкаво в K-Moon', profileLogin:'🔑 Увійти', profileRegister:'✨ Реєстрація', profileImport:'📥 Завантажити', profileLogout:'🚪 Вийти', profileEdit:'✏️ Редагувати', profileExport:'📤 Експорт', loginRequired:'Увійдіть', loginRequiredDesc:'Зареєструйтесь', totalGames:'Всього', playedGames:'Зіграно', totalPlays:'Запусків', achievements:'Досягнення', totalXP:'XP', badgesTitle:'🏆 Досягнення', badgesSubtitle:'Виконуйте, заробляйте!', activitiesTitle:'Активність', activitiesSubtitle:'Остання', noActivity:'Немає.', loginSuccess:'Успішно!', loginFailed:'Помилка!', registerSuccess:'Успішно!', registerFailed:'Заповніть!', usernameExists:'Зайнято!', gameSaved:'Збережено!', gameUpdated:'Оновлено!', gameDeleted:'Видалено!', fillRequired:'Заповніть!', htmlLoaded:'Завантажено!', deleteConfirm:'Видалити?', resetConfirm:'ВСЕ ВИДАЛИТИ!', resetSuccess:'Скинуто', exportSuccess:'Експортовано!', importSuccess:'Імпортовано!', importFailed:'Помилка!', dbImportSuccess:'Завантажено!', noGames:'Немає. Адмін додасть.', noFilterResult:'Немає', favoriteAdded:'Додано!', favoriteRemoved:'Видалено!', purchasedSuccess:'Куплено!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Демо: ', online:'Онлайн', memberSince:'Учасник:', welcomeBack:'З поверненням', balanceLabel:'💰 Баланс', dailyReward:'🎁 Щоденно', claimDaily:'🎁 ОТРИМАТИ 1$', dailyAvailable:'Готово!', dailyWait:'Наступне:', dailyClaimed:'Отримано', streakLabel:'🔥 Серія', totalEarned:'Всього зароблено', buyWithBalance:'💰 Купити з балансу', insufficientBalance:'Недостатньо!', purchaseSuccess:'Куплено!', claimReward:'🎁 ОТРИМАТИ', rewardClaimed:'✅ ОТРИМАНО', allCompleteBonus:'🎉 ВСЕ ВИКОНАНО! +20$ БОНУС!', difficulty_easy:'ЛЕГКО', difficulty_medium:'СЕРЕДНЬО', difficulty_hard:'СКЛАДНО', difficulty_epic:'ЕПІЧНО', difficulty_legendary:'ЛЕГЕНДА' },
+  hi: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'बाहर?', navStore:'🏪 स्टोर', navLibrary:'📚 पुस्तकालय', navProfile:'👤 प्रोफ़ाइल', searchPlaceholder:'🔍 खोज...', adminBtn:'🔐 एडमिन', storeTitle:'🌙 स्टोर', storeSubtitle:'एडमिन के खेल', libraryTitle:'📚 पुस्तकालय', librarySubtitle:'आपके खेल', filters:'फ़िल्टर', allGames:'सभी', favorites:'पसंदीदा', recent:'हालिया', free:'मुफ्त', purchased:'खरीदे', categories:'श्रेणियाँ', sortName:'नाम', sortRecent:'हालिया', sortPrice:'मूल्य', adminPanel:'🔐 एडमिन', adminLogin:'🔒 लॉगिन', password:'पासवर्ड', loginBtn:'लॉगिन', adminHint:'5 पासवर्ड', addGame:'➕ जोड़ें', manageGames:'📋 प्रबंधन', importExport:'💾 आयात', gameCover:'कवर', clickUploadCover:'अपलोड', gameGallery:'गैलरी', clickUploadGallery:'📷 जोड़ें', gameTitle:'शीर्षक *', gameCategory:'श्रेणी *', gameSubtitle:'उपशीर्षक', gameDesc:'विवरण', gamePrice:'मूल्य (USD)', gamePlayable:'खेलने योग्य', yes:'✅ हाँ', no:'❌ जल्द', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 अपलोड', demoHTML:'डेमो', clickUploadDemo:'📄 डेमो', gameRules:'नियम', gameManual:'मैनुअल', saveGame:'💾 सहेजें', cancel:'❌ रद्द', exportData:'📤 निर्यात', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 आयात', importDesc:'JSON से', importBtn:'📂 फ़ाइल', dangerZone:'⚠️ खतरनाक', dangerDesc:'हटाएं', resetBtn:'🗑️ हटाएं', tabOverview:'📖 अवलोकन', tabGallery:'🖼️ गैलरी', tabRules:'📜 नियम', tabManual:'📘 मैनुअल', playable:'खेलने योग्य', comingSoon:'जल्द', category:'श्रेणी', status:'स्थिति', price:'मूल्य', play:'▶ खेलें', buy:'💎 खरीदें', buyBalance:'💰 बैलेंस', demo:'🎮 डेमो', ageTitle:'आयु', ageTextSimple:'केवल 18+.<br>जारी?', ageYes:'✅ 18+', ageNo:'❌ नहीं', ageDenied:'नहीं!', buyTitle:'💎 खरीदें', buyDesc:'चुनें:', authTitle:'👤 खाता', loginTab:'🔑 लॉगिन', registerTab:'✨ पंजीकरण', importTab:'📥 आयात', playerName:'नाम', birthdate:'जन्म तिथि', email:'ईमेल', registerBtn:'✨ पंजीकरण', uploadAvatar:'अवतार', importDbDesc:'JSON फ़ाइल.', importDbBtn:'📂 फ़ाइल', fullscreen:'⛶ पूर्ण', backToLauncher:'← वापस', profileWelcome:'K-Moon में स्वागत', profileLogin:'🔑 लॉगिन', profileRegister:'✨ पंजीकरण', profileImport:'📥 लोड', profileLogout:'🚪 लॉगआउट', profileEdit:'✏️ संपादित', profileExport:'📤 निर्यात', loginRequired:'लॉगिन', loginRequiredDesc:'पंजीकरण', totalGames:'कुल', playedGames:'खेले', totalPlays:'कुल', achievements:'उपलब्धियाँ', totalXP:'XP', badgesTitle:'🏆 उपलब्धियाँ', badgesSubtitle:'कमाओ!', activitiesTitle:'गतिविधियाँ', activitiesSubtitle:'हालिया', noActivity:'कोई नहीं.', loginSuccess:'सफल!', loginFailed:'गलत!', registerSuccess:'सफल!', registerFailed:'भरें!', usernameExists:'लिया!', gameSaved:'सहेजा!', gameUpdated:'अपडेट!', gameDeleted:'हटाया!', fillRequired:'भरें!', htmlLoaded:'लोड!', deleteConfirm:'हटाएं?', resetConfirm:'सब हटेगा!', resetSuccess:'रीसेट', exportSuccess:'निर्यात!', importSuccess:'आयात!', importFailed:'गलत!', dbImportSuccess:'लोड!', noGames:'कोई नहीं. एडमिन जोड़े.', noFilterResult:'कोई नहीं', favoriteAdded:'जोड़ा!', favoriteRemoved:'हटाया!', purchasedSuccess:'खरीदा!', htmlFileStatus:'✅ ', demoFileStatus:'✅ डेमो: ', online:'ऑनलाइन', memberSince:'सदस्य:', welcomeBack:'वापसी', balanceLabel:'💰 बैलेंस', dailyReward:'🎁 दैनिक', claimDaily:'🎁 1$ लें', dailyAvailable:'तैयार!', dailyWait:'अगला:', dailyClaimed:'ले लिया', streakLabel:'🔥 स्ट्रीक', totalEarned:'कुल कमाई', buyWithBalance:'💰 बैलेंस से', insufficientBalance:'अपर्याप्त!', purchaseSuccess:'खरीदा!', claimReward:'🎁 लें', rewardClaimed:'✅ लिया', allCompleteBonus:'🎉 सब पूरा! +20$ बोनस!', difficulty_easy:'आसान', difficulty_medium:'मध्यम', difficulty_hard:'कठिन', difficulty_epic:'महाकाव्य', difficulty_legendary:'दंतकथा' },
+  he: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'לצאת?', navStore:'🏪 חנות', navLibrary:'📚 ספרייה', navProfile:'👤 פרופיל', searchPlaceholder:'🔍 חיפוש...', adminBtn:'🔐 מנהל', storeTitle:'🌙 חנות', storeSubtitle:'משחקי מנהל', libraryTitle:'📚 ספרייה', librarySubtitle:'המשחקים שלך', filters:'מסננים', allGames:'הכל', favorites:'מועדפים', recent:'אחרונים', free:'חינם', purchased:'נקנו', categories:'קטגוריות', sortName:'שם', sortRecent:'אחרונים', sortPrice:'מחיר', adminPanel:'🔐 מנהל', adminLogin:'🔒 כניסה', password:'סיסמה', loginBtn:'כניסה', adminHint:'5 סיסמאות', addGame:'➕ הוסף', manageGames:'📋 ניהול', importExport:'💾 ייבוא', gameCover:'כריכה', clickUploadCover:'העלה', gameGallery:'גלריה', clickUploadGallery:'📷 הוסף', gameTitle:'שם *', gameCategory:'קטגוריה *', gameSubtitle:'כותרת', gameDesc:'תיאור', gamePrice:'מחיר (USD)', gamePlayable:'שחקן', yes:'✅ כן', no:'❌ בקרוב', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 העלה', demoHTML:'דמו', clickUploadDemo:'📄 דמו', gameRules:'כללים', gameManual:'מדריך', saveGame:'💾 שמור', cancel:'❌ ביטול', exportData:'📤 ייצוא', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 ייבוא', importDesc:'מ-JSON', importBtn:'📂 קובץ', dangerZone:'⚠️ מסוכן', dangerDesc:'מחק', resetBtn:'🗑️ מחק', tabOverview:'📖 סקירה', tabGallery:'🖼️ גלריה', tabRules:'📜 כללים', tabManual:'📘 מדריך', playable:'שחקן', comingSoon:'בקרוב', category:'קטגוריה', status:'סטטוס', price:'מחיר', play:'▶ שחק', buy:'💎 קנה', buyBalance:'💰 יתרה', demo:'🎮 דמו', ageTitle:'גיל', ageTextSimple:'רק 18+.<br>להמשיך?', ageYes:'✅ 18+', ageNo:'❌ לא', ageDenied:'אי אפשר!', buyTitle:'💎 קנייה', buyDesc:'בחר:', authTitle:'👤 חשבון', loginTab:'🔑 כניסה', registerTab:'✨ הרשמה', importTab:'📥 ייבוא', playerName:'שם', birthdate:'לידה', email:'אימייל', registerBtn:'✨ הרשם', uploadAvatar:'אווטר', importDbDesc:'קובץ JSON.', importDbBtn:'📂 קובץ', fullscreen:'⛶ מלא', backToLauncher:'← חזרה', profileWelcome:'ברוך ל-K-Moon', profileLogin:'🔑 כניסה', profileRegister:'✨ הרשמה', profileImport:'📥 טען', profileLogout:'🚪 יציאה', profileEdit:'✏️ ערוך', profileExport:'📤 ייצוא', loginRequired:'התחבר', loginRequiredDesc:'הירשם', totalGames:'סה"כ', playedGames:'שוחקו', totalPlays:'סה"כ', achievements:'הישגים', totalXP:'XP', badgesTitle:'🏆 הישגים', badgesSubtitle:'הרווח!', activitiesTitle:'פעילויות', activitiesSubtitle:'אחרונות', noActivity:'אין.', loginSuccess:'הצלחה!', loginFailed:'שגיאה!', registerSuccess:'הצלחה!', registerFailed:'מלא!', usernameExists:'תפוס!', gameSaved:'נשמר!', gameUpdated:'עודכן!', gameDeleted:'נמחק!', fillRequired:'מלא!', htmlLoaded:'נטען!', deleteConfirm:'למחוק?', resetConfirm:'הכל יימחק!', resetSuccess:'אופס', exportSuccess:'יוצא!', importSuccess:'יובא!', importFailed:'שגיאה!', dbImportSuccess:'נטען!', noGames:'אין. מנהל יוסיף.', noFilterResult:'אין', favoriteAdded:'נוסף!', favoriteRemoved:'הוסר!', purchasedSuccess:'נקנה!', htmlFileStatus:'✅ ', demoFileStatus:'✅ דמו: ', online:'מחובר', memberSince:'חבר:', welcomeBack:'ברוך', balanceLabel:'💰 יתרה', dailyReward:'🎁 יומי', claimDaily:'🎁 קבל 1$', dailyAvailable:'מוכן!', dailyWait:'הבא:', dailyClaimed:'נלקח', streakLabel:'🔥 רצף', totalEarned:'סה"כ הרווח', buyWithBalance:'💰 קנה מיתרה', insufficientBalance:'לא מספיק!', purchaseSuccess:'נקנה!', claimReward:'🎁 קבל', rewardClaimed:'✅ נלקח', allCompleteBonus:'🎉 הכל הושלם! +20$ בונוס!', difficulty_easy:'קל', difficulty_medium:'בינוני', difficulty_hard:'קשה', difficulty_epic:'אפי', difficulty_legendary:'אגדי' },
+  ja: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'終了?', navStore:'🏪 ストア', navLibrary:'📚 ライブラリ', navProfile:'👤 プロフィール', searchPlaceholder:'🔍 検索...', adminBtn:'🔐 管理者', storeTitle:'🌙 ストア', storeSubtitle:'管理者のゲーム', libraryTitle:'📚 ライブラリ', librarySubtitle:'あなたのゲーム', filters:'フィルター', allGames:'全て', favorites:'お気に入り', recent:'最近', free:'無料', purchased:'購入済', categories:'カテゴリ', sortName:'名前順', sortRecent:'最近', sortPrice:'価格順', adminPanel:'🔐 管理者', adminLogin:'🔒 ログイン', password:'パスワード', loginBtn:'ログイン', adminHint:'5パスワード', addGame:'➕ 追加', manageGames:'📋 管理', importExport:'💾 インポート', gameCover:'カバー', clickUploadCover:'アップロード', gameGallery:'ギャラリー', clickUploadGallery:'📷 追加', gameTitle:'タイトル *', gameCategory:'カテゴリ *', gameSubtitle:'サブタイトル', gameDesc:'説明', gamePrice:'価格 (USD)', gamePlayable:'プレイ可能', yes:'✅ はい', no:'❌ 近日', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 アップロード', demoHTML:'デモ', clickUploadDemo:'📄 デモ', gameRules:'ルール', gameManual:'マニュアル', saveGame:'💾 保存', cancel:'❌ キャンセル', exportData:'📤 エクスポート', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 インポート', importDesc:'JSONから', importBtn:'📂 ファイル', dangerZone:'⚠️ 危険', dangerDesc:'削除', resetBtn:'🗑️ 削除', tabOverview:'📖 概要', tabGallery:'🖼️ ギャラリー', tabRules:'📜 ルール', tabManual:'📘 マニュアル', playable:'プレイ可能', comingSoon:'近日', category:'カテゴリ', status:'ステータス', price:'価格', play:'▶ プレイ', buy:'💎 購入', buyBalance:'💰 残高', demo:'🎮 デモ', ageTitle:'年齢', ageTextSimple:'18+のみ。<br>続行?', ageYes:'✅ 18+', ageNo:'❌ いいえ', ageDenied:'見れません!', buyTitle:'💎 購入', buyDesc:'選択:', authTitle:'👤 アカウント', loginTab:'🔑 ログイン', registerTab:'✨ 登録', importTab:'📥 インポート', playerName:'名前', birthdate:'生年月日', email:'メール', registerBtn:'✨ 登録', uploadAvatar:'アバター', importDbDesc:'JSONファイル.', importDbBtn:'📂 ファイル', fullscreen:'⛶ 全画面', backToLauncher:'← 戻る', profileWelcome:'K-Moonへようこそ', profileLogin:'🔑 ログイン', profileRegister:'✨ 登録', profileImport:'📥 ロード', profileLogout:'🚪 ログアウト', profileEdit:'✏️ 編集', profileExport:'📤 エクスポート', loginRequired:'ログイン', loginRequiredDesc:'登録', totalGames:'合計', playedGames:'プレイ', totalPlays:'合計', achievements:'実績', totalXP:'XP', badgesTitle:'🏆 実績', badgesSubtitle:'稼ごう!', activitiesTitle:'アクティビティ', activitiesSubtitle:'最近', noActivity:'なし。', loginSuccess:'成功!', loginFailed:'エラー!', registerSuccess:'成功!', registerFailed:'入力!', usernameExists:'使用中!', gameSaved:'保存!', gameUpdated:'更新!', gameDeleted:'削除!', fillRequired:'入力!', htmlLoaded:'ロード!', deleteConfirm:'削除?', resetConfirm:'全削除!', resetSuccess:'リセット', exportSuccess:'エクスポート!', importSuccess:'インポート!', importFailed:'エラー!', dbImportSuccess:'ロード!', noGames:'なし。管理者が追加。', noFilterResult:'なし', favoriteAdded:'追加!', favoriteRemoved:'削除!', purchasedSuccess:'購入!', htmlFileStatus:'✅ ', demoFileStatus:'✅ デモ: ', online:'オンライン', memberSince:'メンバー:', welcomeBack:'おかえり', balanceLabel:'💰 残高', dailyReward:'🎁 毎日', claimDaily:'🎁 1$獲得', dailyAvailable:'準備完了!', dailyWait:'次:', dailyClaimed:'獲得済み', streakLabel:'🔥 ストリーク', totalEarned:'総獲得', buyWithBalance:'💰 残高で購入', insufficientBalance:'不足!', purchaseSuccess:'購入!', claimReward:'🎁 獲得', rewardClaimed:'✅ 獲得済', allCompleteBonus:'🎉 全て完了! +20$ ボーナス!', difficulty_easy:'簡単', difficulty_medium:'普通', difficulty_hard:'難しい', difficulty_epic:'エピック', difficulty_legendary:'伝説' },
+  zh: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'退出?', navStore:'🏪 商店', navLibrary:'📚 库', navProfile:'👤 资料', searchPlaceholder:'🔍 搜索...', adminBtn:'🔐 管理员', storeTitle:'🌙 商店', storeSubtitle:'管理员游戏', libraryTitle:'📚 库', librarySubtitle:'你的游戏', filters:'过滤器', allGames:'全部', favorites:'收藏', recent:'最近', free:'免费', purchased:'已购', categories:'分类', sortName:'名称', sortRecent:'最近', sortPrice:'价格', adminPanel:'🔐 管理员', adminLogin:'🔒 登录', password:'密码', loginBtn:'登录', adminHint:'5密码', addGame:'➕ 添加', manageGames:'📋 管理', importExport:'💾 导入', gameCover:'封面', clickUploadCover:'上传', gameGallery:'图库', clickUploadGallery:'📷 添加', gameTitle:'标题 *', gameCategory:'分类 *', gameSubtitle:'副标题', gameDesc:'描述', gamePrice:'价格 (USD)', gamePlayable:'可玩', yes:'✅ 是', no:'❌ 即将', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 上传', demoHTML:'演示', clickUploadDemo:'📄 演示', gameRules:'规则', gameManual:'手册', saveGame:'💾 保存', cancel:'❌ 取消', exportData:'📤 导出', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 导入', importDesc:'从JSON', importBtn:'📂 文件', dangerZone:'⚠️ 危险', dangerDesc:'删除', resetBtn:'🗑️ 删除', tabOverview:'📖 概览', tabGallery:'🖼️ 图库', tabRules:'📜 规则', tabManual:'📘 手册', playable:'可玩', comingSoon:'即将', category:'分类', status:'状态', price:'价格', play:'▶ 玩', buy:'💎 购买', buyBalance:'💰 余额', demo:'🎮 演示', ageTitle:'年龄', ageTextSimple:'仅18+。<br>继续?', ageYes:'✅ 18+', ageNo:'❌ 不', ageDenied:'不能看!', buyTitle:'💎 购买', buyDesc:'选择:', authTitle:'👤 账户', loginTab:'🔑 登录', registerTab:'✨ 注册', importTab:'📥 导入', playerName:'名称', birthdate:'生日', email:'邮箱', registerBtn:'✨ 注册', uploadAvatar:'头像', importDbDesc:'JSON文件.', importDbBtn:'📂 文件', fullscreen:'⛶ 全屏', backToLauncher:'← 返回', profileWelcome:'欢迎来到K-Moon', profileLogin:'🔑 登录', profileRegister:'✨ 注册', profileImport:'📥 加载', profileLogout:'🚪 登出', profileEdit:'✏️ 编辑', profileExport:'📤 导出', loginRequired:'登录', loginRequiredDesc:'注册', totalGames:'总', playedGames:'已玩', totalPlays:'总玩', achievements:'成就', totalXP:'XP', badgesTitle:'🏆 成就', badgesSubtitle:'赚钱!', activitiesTitle:'活动', activitiesSubtitle:'最近', noActivity:'无。', loginSuccess:'成功!', loginFailed:'错误!', registerSuccess:'成功!', registerFailed:'填写!', usernameExists:'已用!', gameSaved:'保存!', gameUpdated:'更新!', gameDeleted:'删除!', fillRequired:'填写!', htmlLoaded:'加载!', deleteConfirm:'删除?', resetConfirm:'全删!', resetSuccess:'重置', exportSuccess:'导出!', importSuccess:'导入!', importFailed:'错误!', dbImportSuccess:'加载!', noGames:'无。管理员添加。', noFilterResult:'无', favoriteAdded:'添加!', favoriteRemoved:'移除!', purchasedSuccess:'购买!', htmlFileStatus:'✅ ', demoFileStatus:'✅ 演示: ', online:'在线', memberSince:'成员:', welcomeBack:'欢迎回来', balanceLabel:'💰 余额', dailyReward:'🎁 每日', claimDaily:'🎁 领1$', dailyAvailable:'就绪!', dailyWait:'下次:', dailyClaimed:'已领', streakLabel:'🔥 连续', totalEarned:'总收入', buyWithBalance:'💰 余额购买', insufficientBalance:'不足!', purchaseSuccess:'购买!', claimReward:'🎁 领取', rewardClaimed:'✅ 已领', allCompleteBonus:'🎉 全部完成! +20$ 奖励!', difficulty_easy:'简单', difficulty_medium:'中等', difficulty_hard:'困难', difficulty_epic:'史诗', difficulty_legendary:'传奇' },
+  el: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'Έξοδος;', navStore:'🏪 ΚΑΤΑΣΤΗΜΑ', navLibrary:'📚 ΒΙΒΛΙΟΘΗΚΗ', navProfile:'👤 ΠΡΟΦΙΛ', searchPlaceholder:'🔍 Αναζήτηση...', adminBtn:'🔐 ΔΙΑΧ', storeTitle:'🌙 Κατάστημα', storeSubtitle:'Παιχνίδια διαχειριστή', libraryTitle:'📚 Βιβλιοθήκη', librarySubtitle:'Τα παιχνίδια σας', filters:'ΦΙΛΤΡΑ', allGames:'Όλα', favorites:'Αγαπημένα', recent:'Πρόσφατα', free:'Δωρεάν', purchased:'Αγορασμένα', categories:'ΚΑΤΗΓΟΡΙΕΣ', sortName:'Όνομα', sortRecent:'Πρόσφατα', sortPrice:'Τιμή', adminPanel:'🔐 ΔΙΑΧ', adminLogin:'🔒 Σύνδεση', password:'ΚΩΔΙΚΟΣ', loginBtn:'ΣΥΝΔΕΣΗ', adminHint:'5 κωδικοί', addGame:'➕ Προσθήκη', manageGames:'📋 Διαχείριση', importExport:'💾 Εισαγωγή', gameCover:'ΕΞΩΦΥΛΛΟ', clickUploadCover:'Ανέβασμα', gameGallery:'ΓΚΑΛΕΡΙ', clickUploadGallery:'📷 Προσθήκη', gameTitle:'ΤΙΤΛΟΣ *', gameCategory:'ΚΑΤΗΓΟΡΙΑ *', gameSubtitle:'ΥΠΟΤΙΤΛΟΣ', gameDesc:'ΠΕΡΙΓΡΑΦΗ', gamePrice:'ΤΙΜΗ (USD)', gamePlayable:'ΠΑΙΖΕΤΑΙ', yes:'✅ Ναι', no:'❌ Σύντομα', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 Ανέβασμα', demoHTML:'DEMO', clickUploadDemo:'📄 Demo', gameRules:'ΚΑΝΟΝΕΣ', gameManual:'ΕΓΧΕΙΡΙΔΙΟ', saveGame:'💾 ΑΠΟΘΗΚΕΥΣΗ', cancel:'❌ ΑΚΥΡΟ', exportData:'📤 Εξαγωγή', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 Εισαγωγή', importDesc:'Από JSON', importBtn:'📂 ΑΡΧΕΙΟ', dangerZone:'⚠️ Επικίνδυνο', dangerDesc:'Διαγραφή', resetBtn:'🗑️ ΔΙΑΓΡΑΦΗ', tabOverview:'📖 Επισκόπηση', tabGallery:'🖼️ Γκαλερί', tabRules:'📜 Κανόνες', tabManual:'📘 Εγχειρίδιο', playable:'ΠΑΙΖΕΤΑΙ', comingSoon:'ΣΥΝΤΟΜΑ', category:'ΚΑΤΗΓΟΡΙΑ', status:'ΚΑΤΑΣΤΑΣΗ', price:'ΤΙΜΗ', play:'▶ ΠΑΙΞΕ', buy:'💎 ΑΓΟΡΑ', buyBalance:'💰 ΥΠΟΛΟΙΠΟ', demo:'🎮 DEMO', ageTitle:'Ηλικία', ageTextSimple:'Μόνο 18+.<br>Συνέχεια;', ageYes:'✅ 18+', ageNo:'❌ Όχι', ageDenied:'Αδύνατο!', buyTitle:'💎 Αγορά', buyDesc:'Επιλογή:', authTitle:'👤 Λογαριασμός', loginTab:'🔑 Σύνδεση', registerTab:'✨ Εγγραφή', importTab:'📥 Εισαγωγή', playerName:'ΟΝΟΜΑ', birthdate:'ΓΕΝΝΗΣΗ', email:'EMAIL', registerBtn:'✨ ΕΓΓΡΑΦΗ', uploadAvatar:'Άβαταρ', importDbDesc:'JSON αρχείο.', importDbBtn:'📂 ΑΡΧΕΙΟ', fullscreen:'⛶ ΠΛΗΡΗΣ', backToLauncher:'← ΠΙΣΩ', profileWelcome:'Καλώς στο K-Moon', profileLogin:'🔑 Σύνδεση', profileRegister:'✨ Εγγραφή', profileImport:'📥 Φόρτωση', profileLogout:'🚪 Έξοδος', profileEdit:'✏️ Επεξεργασία', profileExport:'📤 Εξαγωγή', loginRequired:'Σύνδεση', loginRequiredDesc:'Εγγραφή', totalGames:'Σύνολο', playedGames:'Παιγμένα', totalPlays:'Σύνολο', achievements:'Επιτεύγματα', totalXP:'XP', badgesTitle:'🏆 Επιτεύγματα', badgesSubtitle:'Κέρδισε!', activitiesTitle:'Δραστηριότητες', activitiesSubtitle:'Πρόσφατες', noActivity:'Καμία.', loginSuccess:'Επιτυχής!', loginFailed:'Σφάλμα!', registerSuccess:'Επιτυχής!', registerFailed:'Συμπληρώστε!', usernameExists:'Κατειλημμένο!', gameSaved:'Αποθηκεύτηκε!', gameUpdated:'Ενημερώθηκε!', gameDeleted:'Διαγράφηκε!', fillRequired:'Συμπληρώστε!', htmlLoaded:'Φορτώθηκε!', deleteConfirm:'Διαγραφή;', resetConfirm:'Όλα θα διαγραφούν!', resetSuccess:'Επαναφορά', exportSuccess:'Εξήχθη!', importSuccess:'Εισήχθη!', importFailed:'Σφάλμα!', dbImportSuccess:'Φορτώθηκε!', noGames:'Κανένα. Διαχειριστής.', noFilterResult:'Κανένα', favoriteAdded:'Προστέθηκε!', favoriteRemoved:'Αφαιρέθηκε!', purchasedSuccess:'Καταγράφηκε!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Demo: ', online:'Συνδεδεμένος', memberSince:'Μέλος:', welcomeBack:'Καλώς ήρθες', balanceLabel:'💰 Υπόλοιπο', dailyReward:'🎁 Ημερήσιο', claimDaily:'🎁 Πάρε 1$', dailyAvailable:'Έτοιμο!', dailyWait:'Επόμενο:', dailyClaimed:'Ελήφθη', streakLabel:' Σερί', totalEarned:'Σύνολο κερδών', buyWithBalance:'💰 Αγορά με υπόλοιπο', insufficientBalance:'Ανεπαρκές!', purchaseSuccess:'Αγορά!', claimReward:'🎁 Πάρε', rewardClaimed:'✅ Ελήφθη', allCompleteBonus:'🎉 Όλα ολοκληρώθηκαν! +20$ ΜΠΟΝΟΥΣ!', difficulty_easy:'Εύκολο', difficulty_medium:'Μέτριο', difficulty_hard:'Δύσκολο', difficulty_epic:'Επικό', difficulty_legendary:'Θρυλικό' },
+  hy: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'Ելք;', navStore:'🏪 Խdelays', navLibrary:'📚 Գdelays', navProfile:'👤 DELAYS', searchPlaceholder:'🔍 Որdelays...', adminBtn:'🔐 DELAYS', storeTitle:'🌙 Խdelays', storeSubtitle:'Delays', libraryTitle:'📚 Գdelays', librarySubtitle:'Dzer', filters:'ZTICHNER', allGames:'Bolor', favorites:'Siréli', recent:'Verjin', free:'Anvchar', purchased:'Gnsvats', categories:'KATEGORIANER', sortName:'Anunov', sortRecent:'Verjin', sortPrice:'Gnov', adminPanel:'🔐 PANEL', adminLogin:'🔒 Mutq', password:'GAGTNA BAR', loginBtn:'MUTQ', adminHint:'5', addGame:'➕ Avelacnel', manageGames:'📋 Karavar', importExport:'💾 Nerkrel', gameCover:'KDELAYS', clickUploadCover:'Seqmel', gameGallery:'PATEKERAN', clickUploadGallery:'📷 Avelacnel', gameTitle:'ANUN *', gameCategory:'KATEGORIA *', gameSubtitle:'ENTsAGR', gameDesc:'Nkaragr', gamePrice:'GIN (USD)', gamePlayable:'KHAGHALI', yes:'✅ Ayo', no:'❌ Shud', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 Bernal', demoHTML:'DEMO', clickUploadDemo:'📄 Demo', gameRules:'KANONNER', gameManual:'DASAGIRK', saveGame:'💾 Pahpanel', cancel:'❌ Chexarkel', exportData:'📤 Arel', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 Nerkrel', importDesc:'JSON-its', importBtn:'📂 PHEKQ', dangerZone:'⚠️ Vtangs', dangerDesc:'Jnjl', resetBtn:'🗑️ JNJEL', tabOverview:'📖 Znnosum', tabGallery:'🖼️ Patekeran', tabRules:'📜 Kanonner', tabManual:'📘 Dasagirk', playable:'Khaghali', comingSoon:'Shud', category:'Kategoria', status:'Kartsavijak', price:'Gin', play:'▶ KHAGHAL', buy:'💎 GNEL', buyBalance:'💰 HASHIV', demo:'🎮 DEMO', ageTitle:'Tariq', ageTextSimple:'18+.<br>Sharnudelays?', ageYes:'✅ 18+', ageNo:'❌ Che', ageDenied:'Ches karogh!', buyTitle:'💖 Gnel', buyDesc:'Entreq:', authTitle:'👤 Hashiv', loginTab:'🔑 Mutq', registerTab:'✨ Grancvel', importTab:'📥 Nerkrel', playerName:'ANUN', birthdate:'CINNDEVOR', email:'EMAIL', registerBtn:'✨ GRANCVEL', uploadAvatar:'Avatar', importDbDesc:'JSON.', importDbBtn:'📂 PHEKQ', fullscreen:'⛶ Amboxj', backToLauncher:'← Het', profileWelcome:'Bari galust K-Moon', profileLogin:'🔑 Mutq', profileRegister:'✨ Grancvel', profileImport:'📥 Bernal', profileLogout:'🚪 Elk', profileEdit:'✏️ Khmbagr', profileExport:'📤 Arel', loginRequired:'Mutq', loginRequiredDesc:'Grancveq', totalGames:'Yndh', playedGames:'Khaghats', totalPlays:'Khagher', achievements:'Nvachumner', totalXP:'XP', badgesTitle:'🏆 Nvachumner', badgesSubtitle:'Ashxatel!', activitiesTitle:'Aktiv', activitiesSubtitle:'Verjin', noActivity:'Chka.', loginSuccess:'Hajogh!', loginFailed:'Sphel!', registerSuccess:'Hajogh!', registerFailed:'Lreq!', usernameExists:'Zbaxvats!', gameSaved:'Pahpanvats!', gameUpdated:'Tarratsvats!', gameDeleted:'Jnjvats!', fillRequired:'Lreq!', htmlLoaded:'Bernal!', deleteConfirm:'Jnjel?', resetConfirm:'Bolor jnjvel!', resetSuccess:'Zroyc', exportSuccess:'Arel!', importSuccess:'Nerkrel!', importFailed:'Spel!', dbImportSuccess:'Bernal!', noGames:'Chka. Admin.', noFilterResult:'Chka', favoriteAdded:'Avelac!', favoriteRemoved:'Jnj!', purchasedSuccess:'Granc!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Demo: ', online:'Arts', memberSince:'Anham:', welcomeBack:'Bari galust', balanceLabel:'💰 Hashiv', dailyReward:'🎁 Amenor', claimDaily:'🎁 STANEL 1$', dailyAvailable:'Patrasts!', dailyWait:'Hajord:', dailyClaimed:'Stacvel', streakLabel:' Serial', totalEarned:'Yndh shahuyt', buyWithBalance:'💰 Hashivov gnel', insufficientBalance:'Chka!', purchaseSuccess:'Gnvel!', claimReward:'🎁 STANEL', rewardClaimed:'✅ STACVEL', allCompleteBonus:'🎉 BOLORY! +20$ BONUS!', difficulty_easy:'Hetso', difficulty_medium:'Mijins', difficulty_hard:'Dzvar', difficulty_epic:'Epikos', difficulty_legendary:'Aveli' },
+  ko: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'종료?', navStore:'🏪 상점', navLibrary:'📚 라이브러리', navProfile:'👤 프로필', searchPlaceholder:'🔍 검색...', adminBtn:'🔐 관리자', storeTitle:'🌙 상점', storeSubtitle:'관리자 게임', libraryTitle:'📚 라이브러리', librarySubtitle:'당신의 게임', filters:'필터', allGames:'전체', favorites:'즐겨찾기', recent:'최근', free:'무료', purchased:'구매', categories:'카테고리', sortName:'이름', sortRecent:'최근', sortPrice:'가격', adminPanel:'🔐 관리자', adminLogin:'🔒 로그인', password:'비밀번호', loginBtn:'로그인', adminHint:'5 비밀번호', addGame:'➕ 추가', manageGames:'📋 관리', importExport:'💾 가져오기', gameCover:'커버', clickUploadCover:'업로드', gameGallery:'갤러리', clickUploadGallery:'📷 추가', gameTitle:'제목 *', gameCategory:'카테고리 *', gameSubtitle:'부제목', gameDesc:'설명', gamePrice:'가격 (USD)', gamePlayable:'플레이', yes:'✅ 예', no:'❌ 곧', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 업로드', demoHTML:'데모', clickUploadDemo:'📄 데모', gameRules:'규칙', gameManual:'매뉴얼', saveGame:'💾 저장', cancel:'❌ 취소', exportData:'📤 내보내기', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 가져오기', importDesc:'JSON에서', importBtn:'📂 파일', dangerZone:'⚠️ 위험', dangerDesc:'삭제', resetBtn:'🗑️ 삭제', tabOverview:'📖 개요', tabGallery:'🖼️ 갤러리', tabRules:'📜 규칙', tabManual:'📘 매뉴얼', playable:'플레이', comingSoon:'곧', category:'카테고리', status:'상태', price:'가격', play:'▶ 플레이', buy:'💎 구매', buyBalance:'💰 잔액', demo:'🎮 데모', ageTitle:'연령', ageTextSimple:'18+만.<br>계속?', ageYes:'✅ 18+', ageNo:'❌ 아니오', ageDenied:'볼 수 없습니다!', buyTitle:'💎 구매', buyDesc:'선택:', authTitle:'👤 계정', loginTab:'🔑 로그인', registerTab:'✨ 등록', importTab:'📥 가져오기', playerName:'이름', birthdate:'생년월일', email:'이메일', registerBtn:'✨ 등록', uploadAvatar:'아바타', importDbDesc:'JSON 파일.', importDbBtn:'📂 파일', fullscreen:'⛶ 전체화면', backToLauncher:'← 뒤로', profileWelcome:'K-Moon에 오신 것을', profileLogin:'🔑 로그인', profileRegister:'✨ 등록', profileImport:'📥 로드', profileLogout:'🚪 로그아웃', profileEdit:'✏️ 편집', profileExport:'📤 내보내기', loginRequired:'로그인', loginRequiredDesc:'등록', totalGames:'총', playedGames:'플레이', totalPlays:'총 플레이', achievements:'업적', totalXP:'XP', badgesTitle:'🏆 업적', badgesSubtitle:'벌어라!', activitiesTitle:'활동', activitiesSubtitle:'최근', noActivity:'없음.', loginSuccess:'성공!', loginFailed:'오류!', registerSuccess:'성공!', registerFailed:'입력!', usernameExists:'사용중!', gameSaved:'저장!', gameUpdated:'업데이트!', gameDeleted:'삭제!', fillRequired:'입력!', htmlLoaded:'로드!', deleteConfirm:'삭제?', resetConfirm:'전체 삭제!', resetSuccess:'초기화', exportSuccess:'내보내기!', importSuccess:'가져오기!', importFailed:'오류!', dbImportSuccess:'로드!', noGames:'없음. 관리자 추가.', noFilterResult:'없음', favoriteAdded:'추가!', favoriteRemoved:'제거!', purchasedSuccess:'구매!', htmlFileStatus:'✅ ', demoFileStatus:'✅ 데모: ', online:'온라인', memberSince:'멤버:', welcomeBack:'다시 환영', balanceLabel:'💰 잔액', dailyReward:'🎁 매일', claimDaily:'🎁 1$ 받기', dailyAvailable:'준비!', dailyWait:'다음:', dailyClaimed:'받음', streakLabel:' 연속', totalEarned:'총 수입', buyWithBalance:'💰 잔액으로 구매', insufficientBalance:'부족!', purchaseSuccess:'구매!', claimReward:'🎁 받기', rewardClaimed:'✅ 받음', allCompleteBonus:'🎉 모두 완료! +20$ 보너스!', difficulty_easy:'쉬움', difficulty_medium:'보통', difficulty_hard:'어려움', difficulty_epic:'에픽', difficulty_legendary:'전설' },
+  th: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'ออก?', navStore:'🏪 ร้าน', navLibrary:'📚 คลัง', navProfile:'👤 โปรไฟล์', searchPlaceholder:'🔍 ค้นหา...', adminBtn:'🔐 แอดมิน', storeTitle:'🌙 ร้าน', storeSubtitle:'เกมแอดมิน', libraryTitle:'📚 คลัง', librarySubtitle:'เกมของคุณ', filters:'ตัวกรอง', allGames:'ทั้งหมด', favorites:'โปรด', recent:'ล่าสุด', free:'ฟรี', purchased:'ซื้อแล้ว', categories:'หมวดหมู่', sortName:'ชื่อ', sortRecent:'ล่าสุด', sortPrice:'ราคา', adminPanel:'🔐 แผง', adminLogin:'🔒 เข้าสู่ระบบ', password:'รหัส', loginBtn:'เข้า', adminHint:'5 รหัส', addGame:'➕ เพิ่ม', manageGames:'📋 จัดการ', importExport:'💾 นำเข้า', gameCover:'ปก', clickUploadCover:'อัปโหลด', gameGallery:'แกลเลอรี', clickUploadGallery:'📷 เพิ่ม', gameTitle:'ชื่อ *', gameCategory:'หมวด *', gameSubtitle:'หัวข้อย่อย', gameDesc:'คำอธิบาย', gamePrice:'ราคา (USD)', gamePlayable:'เล่นได้', yes:'✅ ใช่', no:'❌ เร็วๆ', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 อัปโหลด', demoHTML:'เดโม', clickUploadDemo:'📄 เดโม', gameRules:'กฎ', gameManual:'คู่มือ', saveGame:'💾 บันทึก', cancel:'❌ ยกเลิก', exportData:'📤 ส่งออก', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 นำเข้า', importDesc:'จาก JSON', importBtn:'📂 ไฟล์', dangerZone:'⚠️ อันตราย', dangerDesc:'ลบ', resetBtn:'🗑️ ลบ', tabOverview:'📖 ภาพรวม', tabGallery:'🖼️ แกลเลอรี', tabRules:'📜 กฎ', tabManual:'📘 คู่มือ', playable:'เล่นได้', comingSoon:'เร็วๆ', category:'หมวด', status:'สถานะ', price:'ราคา', play:'▶ เล่น', buy:'💎 ซื้อ', buyBalance:'💰 ยอด', demo:'🎮 เดโม', ageTitle:'อายุ', ageTextSimple:'18+ เท่านั้น<br>ต่อ?', ageYes:'✅ 18+', ageNo:'❌ ไม่', ageDenied:'ดูไม่ได้!', buyTitle:'💎 ซื้อ', buyDesc:'เลือก:', authTitle:'👤 บัญชี', loginTab:'🔑 เข้าสู่ระบบ', registerTab:'✨ สมัครสมาชิก', importTab:'📥 นำเข้า', playerName:'ชื่อ', birthdate:'วันเกิด', email:'อีเมล', registerBtn:'✨ สมัครสมาชิก', uploadAvatar:'อวาตาร์', importDbDesc:'ไฟล์ JSON.', importDbBtn:'📂 ไฟล์', fullscreen:'⛶ เต็มจอ', backToLauncher:'← กลับ', profileWelcome:'ยินดีต้อนรับสู่ K-Moon', profileLogin:'🔑 เข้าสู่ระบบ', profileRegister:'✨ สมัครสมาชิก', profileImport:'📥 โหลด', profileLogout:'🚪 ออก', profileEdit:'✏️ แก้ไข', profileExport:'📤 ส่งออก', loginRequired:'เข้าสู่ระบบ', loginRequiredDesc:'ลงทะเบียน', totalGames:'ทั้งหมด', playedGames:'เล่นแล้ว', totalPlays:'เล่นทั้งหมด', achievements:'ความสำเร็จ', totalXP:'XP', badgesTitle:'🏆 ความสำเร็จ', badgesSubtitle:'หาเงิน!', activitiesTitle:'กิจกรรม', activitiesSubtitle:'ล่าสุด', noActivity:'ไม่มี', loginSuccess:'สำเร็จ!', loginFailed:'ผิดพลาด!', registerSuccess:'สำเร็จ!', registerFailed:'กรอก!', usernameExists:'ใช้แล้ว!', gameSaved:'บันทึก!', gameUpdated:'อัปเดต!', gameDeleted:'ลบ!', fillRequired:'กรอก!', htmlLoaded:'โหลด!', deleteConfirm:'ลบ?', resetConfirm:'ลบทั้งหมด!', resetSuccess:'รีเซ็ต', exportSuccess:'ส่งออก!', importSuccess:'นำเข้า!', importFailed:'ผิดพลาด!', dbImportSuccess:'โหลด!', noGames:'ไม่มี. แอดมินเพิ่ม.', noFilterResult:'ไม่มี', favoriteAdded:'เพิ่ม!', favoriteRemoved:'ลบ!', purchasedSuccess:'บันทึก!', htmlFileStatus:'✅ ', demoFileStatus:'✅ เดโม: ', online:'ออนไลน์', memberSince:'สมาชิก:', welcomeBack:'ยินดีต้อนรับกลับ', balanceLabel:'💰 ยอด', dailyReward:'🎁 รายวัน', claimDaily:'🎁 รับ 1$', dailyAvailable:'พร้อม!', dailyWait:'ถัดไป:', dailyClaimed:'รับแล้ว', streakLabel:' ต่อเนื่อง', totalEarned:'รายได้รวม', buyWithBalance:'💰 ซื้อด้วยยอด', insufficientBalance:'ไม่พอ!', purchaseSuccess:'ซื้อแล้ว!', claimReward:'🎁 รับ', rewardClaimed:'✅ รับแล้ว', allCompleteBonus:'🎉 ทั้งหมดเสร็จ! +20$ โบนัส!', difficulty_easy:'ง่าย', difficulty_medium:'ปานกลาง', difficulty_hard:'ยาก', difficulty_epic:'มหากาพย์', difficulty_legendary:'ตำนาน' },
+  ar: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'خروج؟', navStore:'🏪 المتجر', navLibrary:'📚 المكتبة', navProfile:'👤 الملف', searchPlaceholder:'🔍 بحث...', adminBtn:'🔐 مسؤول', storeTitle:'🌙 المتجر', storeSubtitle:'ألعاب المسؤول', libraryTitle:'📚 المكتبة', librarySubtitle:'ألعابك', filters:'مرشحات', allGames:'الكل', favorites:'المفضلة', recent:'الأخيرة', free:'مجاني', purchased:'مشترى', categories:'الفئات', sortName:'الاسم', sortRecent:'الأخيرة', sortPrice:'السعر', adminPanel:'🔐 لوحة', adminLogin:'🔒 دخول', password:'كلمة المرور', loginBtn:'دخول', adminHint:'5 كلمات', addGame:'➕ إضافة', manageGames:'📋 إدارة', importExport:'💾 استيراد', gameCover:'غلاف', clickUploadCover:'تحميل', gameGallery:'المعرض', clickUploadGallery:'📷 إضافة', gameTitle:'عنوان *', gameCategory:'فئة *', gameSubtitle:'فرعي', gameDesc:'وصف', gamePrice:'سعر (USD)', gamePlayable:'قابل للعب', yes:'✅ نعم', no:'❌ قريباً', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 تحميل', demoHTML:'عرض', clickUploadDemo:'📄 عرض', gameRules:'قواعد', gameManual:'دليل', saveGame:'💾 حفظ', cancel:'❌ إلغاء', exportData:'📤 تصدير', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 استيراد', importDesc:'من JSON', importBtn:'📂 ملف', dangerZone:'⚠️ خطر', dangerDesc:'حذف', resetBtn:'🗑️ حذف', tabOverview:'📖 نظرة', tabGallery:'🖼️ معرض', tabRules:'📜 قواعد', tabManual:'📘 دليل', playable:'قابل للعب', comingSoon:'قريباً', category:'فئة', status:'حالة', price:'سعر', play:'▶ العب', buy:'💎 اشتر', buyBalance:'💰 رصيد', demo:'🎮 عرض', ageTitle:'عمر', ageTextSimple:'18+ فقط<br>متابعة؟', ageYes:'✅ 18+', ageNo:'❌ لا', ageDenied:'لا يمكن!', buyTitle:'💎 شراء', buyDesc:'اختر:', authTitle:'👤 حساب', loginTab:'🔑 دخول', registerTab:'✨ تسجيل', importTab:'📥 استيراد', playerName:'اسم', birthdate:'ميلاد', email:'بريد', registerBtn:'✨ تسجيل', uploadAvatar:'صورة', importDbDesc:'ملف JSON.', importDbBtn:'📂 ملف', fullscreen:'⛶ ملء', backToLauncher:'← رجوع', profileWelcome:'مرحبا في K-Moon', profileLogin:'🔑 دخول', profileRegister:'✨ تسجيل', profileImport:'📥 تحميل', profileLogout:'🚪 خروج', profileEdit:'✏️ تحرير', profileExport:'📤 تصدير', loginRequired:'دخول', loginRequiredDesc:'تسجيل', totalGames:'الكل', playedGames:'لعبت', totalPlays:'الكل', achievements:'إنجازات', totalXP:'XP', badgesTitle:'🏆 إنجازات', badgesSubtitle:'اربح!', activitiesTitle:'نشاطات', activitiesSubtitle:'الأخيرة', noActivity:'لا يوجد.', loginSuccess:'نجح!', loginFailed:'خطأ!', registerSuccess:'نجح!', registerFailed:'املأ!', usernameExists:'مأخوذ!', gameSaved:'حفظ!', gameUpdated:'تحديث!', gameDeleted:'حذف!', fillRequired:'املأ!', htmlLoaded:'حمل!', deleteConfirm:'حذف؟', resetConfirm:'حذف الكل!', resetSuccess:'إعادة', exportSuccess:'صدر!', importSuccess:'استورد!', importFailed:'خطأ!', dbImportSuccess:'حمل!', noGames:'لا. مسؤول.', noFilterResult:'لا', favoriteAdded:'أضيف!', favoriteRemoved:'حذف!', purchasedSuccess:'سجل!', htmlFileStatus:'✅ ', demoFileStatus:'✅ عرض: ', online:'متصل', memberSince:'عضو:', welcomeBack:'مرحبا', balanceLabel:'💰 رصيد', dailyReward:'🎁 يومي', claimDaily:'🎁 احصل على 1$', dailyAvailable:'جاهز!', dailyWait:'التالي:', dailyClaimed:'تم', streakLabel:' متتابع', totalEarned:'إجمالي الأرباح', buyWithBalance:'💰 شراء بالرصيد', insufficientBalance:'غير كاف!', purchaseSuccess:'شراء!', claimReward:'🎁 احصل', rewardClaimed:'✅ تم', allCompleteBonus:'🎉 الكل مكتمل! +20$ مكافأة!', difficulty_easy:'سهل', difficulty_medium:'متوسط', difficulty_hard:'صعب', difficulty_epic:'ملحمي', difficulty_legendary:'أسطوري' },
+  fa: { tagline:'GAME LAUNCHER', loading:'K-Moon...', exitConfirm:'خروج؟', navStore:'🏪 فروشگاه', navLibrary:'📚 کتابخانه', navProfile:'👤 پروفایل', searchPlaceholder:'🔍 جستجو...', adminBtn:'🔐 مدیر', storeTitle:'🌙 فروشگاه', storeSubtitle:'بازی‌های مدیر', libraryTitle:'📚 کتابخانه', librarySubtitle:'بازی‌های شما', filters:'فیلترها', allGames:'همه', favorites:'مورد علاقه', recent:'اخیر', free:'رایگان', purchased:'خریداری', categories:'دسته‌ها', sortName:'نام', sortRecent:'اخیر', sortPrice:'قیمت', adminPanel:'🔐 پنل', adminLogin:'🔒 ورود', password:'رمز', loginBtn:'ورود', adminHint:'5 رمز', addGame:'➕ افزودن', manageGames:'📋 مدیریت', importExport:'💾 واردات', gameCover:'جلد', clickUploadCover:'بارگذاری', gameGallery:'گالری', clickUploadGallery:'📷 افزودن', gameTitle:'عنوان *', gameCategory:'دسته *', gameSubtitle:'زیرعنوان', gameDesc:'توضیحات', gamePrice:'قیمت (USD)', gamePlayable:'قابل بازی', yes:'✅ بله', no:'❌ به زودی', age18Label:'🔞 +18', gameHTML:'HTML', clickUploadHTML:'📄 بارگذاری', demoHTML:'نمونه', clickUploadDemo:'📄 نمونه', gameRules:'قوانین', gameManual:'راهنما', saveGame:'💾 ذخیره', cancel:'❌ لغو', exportData:'📤 صادرات', exportDesc:'JSON', exportBtn:'💾 JSON', importData:'📥 واردات', importDesc:'از JSON', importBtn:'📂 فایل', dangerZone:'⚠️ خطر', dangerDesc:'حذف', resetBtn:'🗑️ حذف', tabOverview:'📖 مرور', tabGallery:'🖼️ گالری', tabRules:'📜 قوانین', tabManual:'📘 راهنما', playable:'قابل بازی', comingSoon:'به زودی', category:'دسته', status:'وضعیت', price:'قیمت', play:'▶ بازی', buy:'💎 خرید', buyBalance:'💰 موجودی', demo:'🎮 نمونه', ageTitle:'سن', ageTextSimple:'فقط 18+<br>ادامه؟', ageYes:'✅ 18+', ageNo:'❌ خیر', ageDenied:'نمی‌توانید!', buyTitle:'💎 خرید', buyDesc:'انتخاب:', authTitle:'👤 حساب', loginTab:'🔑 ورود', registerTab:'✨ ثبت نام', importTab:'📥 واردات', playerName:'نام', birthdate:'تولد', email:'ایمیل', registerBtn:'✨ ثبت نام', uploadAvatar:'آواتار', importDbDesc:'فایل JSON.', importDbBtn:'📂 فایل', fullscreen:'⛶ تمام', backToLauncher:'← بازگشت', profileWelcome:'خوش آمدید به K-Moon', profileLogin:'🔑 ورود', profileRegister:'✨ ثبت نام', profileImport:'📥 بارگذاری', profileLogout:'🚪 خروج', profileEdit:'✏️ ویرایش', profileExport:'📤 صادرات', loginRequired:'ورود', loginRequiredDesc:'ثبت نام', totalGames:'کل', playedGames:'بازی شده', totalPlays:'کل', achievements:'دستاوردها', totalXP:'XP', badgesTitle:'🏆 دستاوردها', badgesSubtitle:'کسب کنید!', activitiesTitle:'فعالیت‌ها', activitiesSubtitle:'اخیر', noActivity:'ندارد.', loginSuccess:'موفق!', loginFailed:'خطا!', registerSuccess:'موفق!', registerFailed:'پر کنید!', usernameExists:'گرفته!', gameSaved:'ذخیره!', gameUpdated:'بروزرسانی!', gameDeleted:'حذف!', fillRequired:'پر کنید!', htmlLoaded:'بارگذاری!', deleteConfirm:'حذف؟', resetConfirm:'حذف همه!', resetSuccess:'بازنشانی', exportSuccess:'صادر!', importSuccess:'وارد!', importFailed:'خطا!', dbImportSuccess:'بارگذاری!', noGames:'ندارد. مدیر.', noFilterResult:'ندارد', favoriteAdded:'اضافه!', favoriteRemoved:'حذف!', purchasedSuccess:'ثبت!', htmlFileStatus:'✅ ', demoFileStatus:'✅ نمونه: ', online:'آنلاین', memberSince:'عضو:', welcomeBack:'خوش آمدید', balanceLabel:'💰 موجودی', dailyReward:'🎁 روزانه', claimDaily:'🎁 دریافت 1$', dailyAvailable:'آماده!', dailyWait:'بعدی:', dailyClaimed:'دریافت شد', streakLabel:' متوالی', totalEarned:'کل درآمد', buyWithBalance:'💰 خرید با موجودی', insufficientBalance:'کافی نیست!', purchaseSuccess:'خرید!', claimReward:'🎁 دریافت', rewardClaimed:'✅ دریافت شد', allCompleteBonus:'🎉 همه کامل! +20$ پاداش!', difficulty_easy:'آسان', difficulty_medium:'متوسط', difficulty_hard:'سخت', difficulty_epic:'حماسی', difficulty_legendary:'افسانه‌ای' }
+};
+
+let currentLang = localStorage.getItem('kmoonLang') || 'tr';
+function t(key) { return translations[currentLang]?.[key] || translations.en[key] || key; }
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[currentLang]?.[key]) el.textContent = translations[currentLang][key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (translations[currentLang]?.[key]) el.placeholder = translations[currentLang][key];
+  });
+  const rtlLangs = ['ar', 'he', 'fa'];
+  document.body.style.direction = rtlLangs.includes(currentLang) ? 'rtl' : 'ltr';
+}
+
+function changeLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('kmoonLang', lang);
+  document.getElementById('langSelect').value = lang;
+  applyTranslations();
+  renderStore(); renderLibrary(); renderProfile();
+}
+
+// ===== ŞİFRELENMİŞ ADMİN ŞİFRELERİ =====
+const ENCODED_ADMIN_PASSWORDS = [
+  [152,143,162,159,157,92,90,92,98],      // nexus2026
+  [139,142,151,147,152,91,92,93],          // admin123
+  [145,139,150,143,156,94,92],             // gamer42
+  [151,139,157,158,143,156,149,143,163],   // masterkey
+  [154,139,157,157,161,153,156,142]        // password
+];
+
+function checkAdminPassword(input) {
+  const codes = Array.from(input).map(c => c.charCodeAt(0) + 42);
+  return ENCODED_ADMIN_PASSWORDS.some(ep => 
+    ep.length === codes.length && ep.every((v, i) => v === codes[i])
+  );
+}
+
+function simpleHash(str) {
+  let hash = 5381;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) + hash) + str.charCodeAt(i);
+    hash = hash & 0x7FFFFFFF;
+  }
+  let hash2 = 0;
+  const hashStr = hash.toString();
+  for (let i = 0; i < hashStr.length; i++) {
+    hash2 = ((hash2 << 3) - hash2) + hashStr.charCodeAt(i);
+    hash2 = hash2 & 0x7FFFFFFF;
+  }
+  let hash3 = str.length * 7919;
+  for (let i = 0; i < str.length; i += 2) {
+    hash3 = ((hash3 << 4) + hash3) + str.charCodeAt(i);
+    hash3 = hash3 & 0x7FFFFFFF;
+  }
+  return 'h_' + hash.toString(36) + '_' + hash2.toString(36) + '_' + hash3.toString(36);
+}
+
+// ===== BAŞARIMLAR (ZORLUK SIRALI, ARTAN ÖDÜLLERLE) =====
+const ACHIEVEMENTS = [
+  // KOLAY - 0.10$
+  { id:'a1', icon:'🎮', name:'İlk Adım', desc:'İlk oyunu oyna', reward:0.10, difficulty:'easy', check: s => s.playedGames >= 1 },
+  { id:'a2', icon:'🔍', name:'Keşif', desc:'3 farklı oyun oyna', reward:0.10, difficulty:'easy', check: s => s.playedGames >= 3 },
+  { id:'a3', icon:'❤️', name:'Favori', desc:'3 oyunu favorilere ekle', reward:0.10, difficulty:'easy', check: s => s.favoriteCount >= 3 },
+  { id:'a4', icon:'📅', name:'Günlük', desc:'İlk günlük ödülünü al', reward:0.10, difficulty:'easy', check: s => (s.totalDailyClaims||0) >= 1 },
+  
+  // ORTA - 0.20$
+  { id:'a5', icon:'🔥', name:'Isınma', desc:'5 farklı oyun oyna', reward:0.20, difficulty:'medium', check: s => s.playedGames >= 5 },
+  { id:'a6', icon:'🏆', name:'Uzman', desc:'Bir oyunu 10 kez oyna', reward:0.20, difficulty:'medium', check: s => s.maxPlayCount >= 10 },
+  { id:'a7', icon:'🎯', name:'Çeşitlilik', desc:'3 farklı kategoride oyna', reward:0.20, difficulty:'medium', check: s => s.uniqueCategories >= 3 },
+  { id:'a8', icon:'⭐', name:'Koleksiyoncu', desc:'10 farklı oyun oyna', reward:0.20, difficulty:'medium', check: s => s.playedGames >= 10 },
+  
+  // ZOR - 0.30$
+  { id:'a9', icon:'🔥', name:'Sadakat', desc:'7 gün üst üste giriş', reward:0.30, difficulty:'hard', check: s => (s.streak||0) >= 7 },
+  { id:'a10', icon:'💎', name:'Tam Koleksiyon', desc:'5 farklı kategoride oyna', reward:0.30, difficulty:'hard', check: s => s.uniqueCategories >= 5 },
+  { id:'a11', icon:'💖', name:'Tutkulu', desc:'7 oyunu favorilere ekle', reward:0.30, difficulty:'hard', check: s => s.favoriteCount >= 7 },
+  { id:'a12', icon:'🚀', name:'Seviye 5', desc:'Seviye 5\'e ulaş', reward:0.30, difficulty:'hard', check: s => s.level >= 5 },
+  
+  // DESTANSI - 0.50$
+  { id:'a13', icon:'👑', name:'Master', desc:'Bir oyunu 50 kez oyna', reward:0.50, difficulty:'epic', check: s => s.maxPlayCount >= 50 },
+  { id:'a14', icon:'🎪', name:'Seviye 10', desc:'Seviye 10\'a ulaş', reward:0.50, difficulty:'epic', check: s => s.level >= 10 },
+  { id:'a15', icon:'🌈', name:'Rengarenk', desc:'8 farklı kategoride oyna', reward:0.50, difficulty:'epic', check: s => s.uniqueCategories >= 8 },
+  { id:'a16', icon:'💰', name:'Zengin', desc:'Toplam 50$ kazan', reward:0.50, difficulty:'epic', check: s => (s.totalEarned||0) >= 50 },
+  
+  // EFSANE - 1.00$
+  { id:'a17', icon:'🌟', name:'Efsane', desc:'Bir oyunu 100 kez oyna', reward:1.00, difficulty:'legendary', check: s => s.maxPlayCount >= 100 },
+  { id:'a18', icon:'🛒', name:'Alışverişçi', desc:'İlk ücretli oyunu satın al', reward:1.00, difficulty:'legendary', check: s => (s.purchasedCount||0) >= 1 },
+  { id:'a19', icon:'📚', name:'Süper Fan', desc:'20 farklı oyun oyna', reward:1.00, difficulty:'legendary', check: s => s.playedGames >= 20 },
+  { id:'a20', icon:'💎', name:'Koleksiyon Kralı', desc:'15 oyunu favorilere ekle', reward:1.00, difficulty:'legendary', check: s => s.favoriteCount >= 15 },
+  
+  // MÜKEMMELİYETÇİ - 20.00$ (TÜMÜ)
+  { id:'a21', icon:'🏅', name:'Mükemmeliyetçi', desc:'Tüm başarımları tamamla', reward:20.00, difficulty:'legendary', check: (s, allClaimed) => allClaimed >= 20 }
+];
+
+// ===== VERİ YÖNETİMİ =====
+let games = []; // Varsayılan oyun YOK - sadece admin ekler
+let userProfile = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0 };
+let users = [];
+let currentUser = null;
+let currentEditId = null;
+let currentCoverImage = null;
+let currentGalleryImages = [];
+let currentHTML = null;
+let currentDemoHTML = null;
+let currentAvatar = null;
+let isAdminLoggedIn = false;
+let pendingAgeGameId = null;
+let currentModalGame = null;
+
+function createSVGCover(title, c1, c2, emoji) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${c1}"/><stop offset="100%" style="stop-color:${c2}"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><circle cx="80" cy="60" r="40" fill="rgba(255,255,255,0.1)"/><circle cx="320" cy="240" r="60" fill="rgba(255,255,255,0.08)"/><text x="200" y="160" font-size="100" text-anchor="middle">${emoji}</text><text x="200" y="250" font-size="24" font-weight="900" text-anchor="middle" fill="white" font-family="Arial">${title}</text></svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+}
+
+function loadUsers() {
+  try {
+    const u = localStorage.getItem('kmoonUsers');
+    users = u ? JSON.parse(u) : [];
+  } catch(e) { users = []; }
+}
+
+function saveUsers() {
+  try { localStorage.setItem('kmoonUsers', JSON.stringify(users)); } catch(e) {}
+}
+
+function loadCurrentUser() {
+  try {
+    const name = localStorage.getItem('kmoonCurrentUser');
+    if (name) {
+      currentUser = users.find(u => u.name === name) || null;
+      if (currentUser) loadUserData();
+    }
+  } catch(e) {}
+}
+
+function saveCurrentUser() {
+  try {
+    if (currentUser) localStorage.setItem('kmoonCurrentUser', currentUser.name);
+    else localStorage.removeItem('kmoonCurrentUser');
+  } catch(e) {}
+}
+
+function loadUserData() {
+  if (!currentUser) {
+    games = [];
+    userProfile = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0 };
+    return;
+  }
+  try {
+    const g = localStorage.getItem('kmoonGames_' + currentUser.name);
+    const p = localStorage.getItem('kmoonProfile_' + currentUser.name);
+    games = g ? JSON.parse(g) : [];
+    if (!g) saveGameData();
+    const defaults = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0 };
+    userProfile = p ? {...defaults, ...JSON.parse(p)} : defaults;
+  } catch(e) {
+    games = [];
+    userProfile = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0 };
+  }
+}
+
+function saveGameData() {
+  if (!currentUser) return;
+  try { localStorage.setItem('kmoonGames_' + currentUser.name, JSON.stringify(games)); }
+  catch(e) { showToast('⚠️ Depolama dolu!', 'error'); }
+}
+
+function saveProfileData() {
+  if (!currentUser) return;
+  try { localStorage.setItem('kmoonProfile_' + currentUser.name, JSON.stringify(userProfile)); } catch(e) {}
+}
+
+function showToast(msg, type='success') {
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(20px)'; setTimeout(()=>t.remove(),300); }, 3500);
+}
+
+function createParticles() {
+  const c = document.getElementById('particles');
+  for (let i=0; i<30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100+'%';
+    p.style.animationDelay = Math.random()*15+'s';
+    p.style.animationDuration = (10+Math.random()*10)+'s';
+    p.style.background = Math.random()>0.5?'#ffd700':'#ff6b00';
+    c.appendChild(p);
+  }
+}
+createParticles();
+
+setTimeout(() => {
+  document.getElementById('splash').classList.add('hide');
+  document.getElementById('launcher').classList.add('show');
+  loadUsers();
+  loadCurrentUser();
+  document.getElementById('langSelect').value = currentLang;
+  applyTranslations();
+  renderStore();
+  renderLibrary();
+  renderProfile();
+  updateUserAvatar();
+  updateBalanceDisplay();
+}, 3000);
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    item.classList.add('active');
+    document.getElementById('page-'+item.dataset.page).classList.add('active');
+    document.getElementById('searchInput').value = '';
+    if (item.dataset.page==='profile') renderProfile();
+    if (item.dataset.page==='library') renderLibrary();
+  });
+});
+
+function updateBalanceDisplay() {
+  document.getElementById('balanceAmount').textContent = (userProfile.balance || 0).toFixed(2);
+}
+
+function renderStore(filter='') {
+  const grid = document.getElementById('gamesGrid');
+  grid.innerHTML = '';
+  const filtered = filter ? games.filter(g => g.title.toLowerCase().includes(filter) || g.category.toLowerCase().includes(filter)) : games;
+  
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#8a8ab0;"><div style="font-size:80px;margin-bottom:15px;">🌙</div><div style="font-size:18px;margin-bottom:10px;">${t('noGames')}</div></div>`;
+    return;
+  }
+  
+  filtered.forEach((g, idx) => {
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    card.style.animationDelay = (idx*0.05)+'s';
+    card.onclick = () => openGameModal(g.id);
+    card.innerHTML = `
+      ${g.playable?'<div class="play-badge">'+t('playable')+'</div>':''}
+      ${g.age18?'<div class="age-badge">🔞 18+</div>':''}
+      <div class="game-cover ${g.age18?'blur-18':''}" style="background-image:url('${g.cover}')"></div>
+      <div class="game-info">
+        <div class="game-title">${g.title}</div>
+        <div class="game-genre">${getCategoryName(g.category)}</div>
+        <div class="game-price ${g.free?'free':''}">${g.price}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function getCategoryName(cat) {
+  const n = { arcade:'🕹️ Arcade', puzzle:'🧩 Puzzle', sport:'🏓 Sport', action:'⚔️ Action', strategy:'🎯 Strategy', rpg:'🗡️ RPG', racing:'🏎️ Racing', simulation:'🎭 Simulation', horror:'👻 Horror', adult:'🔞 +18' };
+  return n[cat] || cat;
+}
+
+let currentFilter = 'all';
+let currentCategory = null;
+
+function renderLibrary() {
+  document.getElementById('countAll').textContent = games.length;
+  document.getElementById('countFav').textContent = userProfile.favorites.length;
+  document.getElementById('countRecent').textContent = Object.keys(userProfile.gamesPlayed).length;
+  document.getElementById('countFree').textContent = games.filter(g=>g.free).length;
+  document.getElementById('countPurchased').textContent = (userProfile.purchased||[]).length;
+  
+  const cats = [...new Set(games.map(g=>g.category))];
+  document.getElementById('categoryFilters').innerHTML = cats.map(c => 
+    `<div class="lib-filter ${currentCategory===c?'active':''}" data-cat="${c}">${getCategoryName(c)} <span class="count">${games.filter(g=>g.category===c).length}</span></div>`
+  ).join('');
+  
+  document.querySelectorAll('#categoryFilters .lib-filter').forEach(f => {
+    f.addEventListener('click', () => {
+      currentCategory = currentCategory===f.dataset.cat?null:f.dataset.cat;
+      renderLibrary();
+    });
+  });
+  
+  applyFilter();
+}
+
+function applyFilter() {
+  let filtered = [...games];
+  const sort = document.getElementById('libSort').value;
+  
+  if (currentFilter==='favorite') filtered = filtered.filter(g=>userProfile.favorites.includes(g.id));
+  else if (currentFilter==='recent') filtered = filtered.filter(g=>userProfile.gamesPlayed[g.id]);
+  else if (currentFilter==='free') filtered = filtered.filter(g=>g.free);
+  else if (currentFilter==='purchased') filtered = filtered.filter(g=>(userProfile.purchased||[]).includes(g.id));
+  
+  if (currentCategory) filtered = filtered.filter(g=>g.category===currentCategory);
+  
+  if (sort==='name') filtered.sort((a,b)=>a.title.localeCompare(b.title));
+  else if (sort==='price') filtered.sort((a,b)=>(a.free?0:1)-(b.free?0:1));
+  
+  const grid = document.getElementById('libraryGrid');
+  grid.innerHTML = '';
+  
+  if (filtered.length===0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:#8a8ab0;"><div style="font-size:60px;margin-bottom:15px;">📭</div><div>${t('noFilterResult')}</div></div>`;
+    return;
+  }
+  
+  filtered.forEach(g => {
+    const isFav = userProfile.favorites.includes(g.id);
+    const played = userProfile.gamesPlayed[g.id];
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    card.onclick = () => openGameModal(g.id);
+    card.innerHTML = `
+      ${isFav?'<div class="play-badge" style="background:rgba(255,204,0,0.2);border-color:#ffcc00;color:#ffcc00;">⭐</div>':''}
+      ${g.age18?'<div class="age-badge">🔞 18+</div>':''}
+      <div class="game-cover ${g.age18?'blur-18':''}" style="background-image:url('${g.cover}')"></div>
+      <div class="game-info">
+        <div class="game-title">${g.title}</div>
+        <div class="game-genre">${getCategoryName(g.category)}</div>
+        <div class="lib-meta">
+          ${played?`<span>🕐 ${played.count}x</span>`:''}
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+document.querySelectorAll('#page-library .lib-filter[data-filter]').forEach(f => {
+  f.addEventListener('click', () => {
+    document.querySelectorAll('#page-library .lib-filter[data-filter]').forEach(x=>x.classList.remove('active'));
+    f.classList.add('active');
+    currentFilter = f.dataset.filter;
+    applyFilter();
+  });
+});
+document.getElementById('libSort').addEventListener('change', applyFilter);
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  const p = document.querySelector('.nav-item.active').dataset.page;
+  if (p==='store') renderStore(q);
+});
+
+// ===== GÜNLÜK ÖDÜL =====
+function canClaimDaily() {
+  if (!userProfile.lastDailyReward) return true;
+  const last = new Date(userProfile.lastDailyReward).getTime();
+  const now = Date.now();
+  return (now - last) >= 24 * 60 * 60 * 1000; // 24 saat
+}
+
+function getTimeUntilNextDaily() {
+  if (!userProfile.lastDailyReward) return null;
+  const last = new Date(userProfile.lastDailyReward).getTime();
+  const next = last + 24 * 60 * 60 * 1000;
+  const diff = next - Date.now();
+  if (diff <= 0) return null;
+  const h = Math.floor(diff / (1000*60*60));
+  const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const s = Math.floor((diff % (1000*60)) / 1000);
+  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+
+function claimDailyReward() {
+  if (!currentUser) return;
+  if (!canClaimDaily()) {
+    showToast(t('dailyClaimed'), 'warning');
+    return;
+  }
+  
+  // Seri kontrolü
+  const now = new Date();
+  if (userProfile.lastLogin) {
+    const last = new Date(userProfile.lastLogin);
+    const dayDiff = Math.floor((now - last) / (1000*60*60*24));
+    if (dayDiff === 1) {
+      userProfile.streak = (userProfile.streak || 0) + 1;
+    } else if (dayDiff > 1) {
+      userProfile.streak = 1;
+    }
+  } else {
+    userProfile.streak = 1;
+  }
+  
+  userProfile.lastLogin = now.toISOString();
+  userProfile.lastDailyReward = now.toISOString();
+  userProfile.balance = (userProfile.balance || 0) + 1.00;
+  userProfile.totalEarned = (userProfile.totalEarned || 0) + 1.00;
+  userProfile.totalDailyClaims = (userProfile.totalDailyClaims || 0) + 1;
+  
+  saveProfileData();
+  updateBalanceDisplay();
+  renderProfile();
+  showToast('🎁 +1.00$ ' + t('dailyReward') + '!', 'reward');
+}
+
+// ===== BAŞARIM ÖDÜLÜ =====
+function claimAchievementReward(achId) {
+  if (!currentUser) return;
+  const ach = ACHIEVEMENTS.find(a => a.id === achId);
+  if (!ach) return;
+  
+  if (userProfile.claimedAchievements.includes(achId)) {
+    return;
+  }
+  
+  const stats = calculateProfile();
+  const allClaimedCount = userProfile.claimedAchievements.length;
+  if (!ach.check(stats, allClaimedCount)) {
+    showToast('Görev tamamlanmamış!', 'warning');
+    return;
+  }
+  
+  userProfile.claimedAchievements.push(achId);
+  userProfile.balance = (userProfile.balance || 0) + ach.reward;
+  userProfile.totalEarned = (userProfile.totalEarned || 0) + ach.reward;
+  
+  saveProfileData();
+  updateBalanceDisplay();
+  renderProfile();
+  showToast(`🎁 +${ach.reward.toFixed(2)}$ - ${ach.name}!`, 'reward');
+  
+  // Tüm görevler tamamlandı mı?
+  checkAllCompleteBonus();
+}
+
+function checkAllCompleteBonus() {
+  const nonFinal = ACHIEVEMENTS.filter(a => a.id !== 'a21');
+  const allClaimed = nonFinal.every(a => userProfile.claimedAchievements.includes(a.id));
+  
+  if (allClaimed && !userProfile.claimedAchievements.includes('a21')) {
+    setTimeout(() => {
+      userProfile.claimedAchievements.push('a21');
+      userProfile.balance = (userProfile.balance || 0) + 20.00;
+      userProfile.totalEarned = (userProfile.totalEarned || 0) + 20.00;
+      saveProfileData();
+      updateBalanceDisplay();
+      renderProfile();
+      showToast(t('allCompleteBonus'), 'reward');
+    }, 1000);
+  }
+}
+
+function calculateProfile() {
+  const played = Object.keys(userProfile.gamesPlayed);
+  const totalPlays = played.reduce((s,id)=>s+(userProfile.gamesPlayed[id]?.count||0),0);
+  const uniqueCats = new Set(played.map(id=>games.find(g=>g.id===id)?.category)).size;
+  const favCount = userProfile.favorites.length;
+  const maxPlayCount = Math.max(0, ...played.map(id => userProfile.gamesPlayed[id]?.count || 0));
+  
+  let xp = totalPlays*50 + played.length*100 + uniqueCats*200 + favCount*30 + (userProfile.activities?.length||0)*10;
+  const level = Math.floor(Math.sqrt(xp/100))+1;
+  const xpNext = Math.pow(level,2)*100;
+  const xpCurr = Math.pow(level-1,2)*100;
+  const curXP = xp-xpCurr;
+  const needXP = xpNext-xpCurr;
+  
+  return { 
+    totalGames:games.length, 
+    playedGames:played.length, 
+    totalPlays, 
+    uniqueCategories:uniqueCats, 
+    favoriteCount:favCount, 
+    xp, level, currentXP:curXP, neededXP:needXP, 
+    xpPercent:(curXP/needXP)*100,
+    maxPlayCount,
+    streak: userProfile.streak || 0,
+    totalEarned: userProfile.totalEarned || 0,
+    totalDailyClaims: userProfile.totalDailyClaims || 0,
+    purchasedCount: (userProfile.purchased || []).length
+  };
+}
+
+function renderProfile() {
+  const c = document.getElementById('profileContent');
+  
+  if (!currentUser) {
+    c.innerHTML = `
+      <div style="text-align:center; padding:60px 20px;">
+        <div style="font-size:100px; margin-bottom:20px;">🌙</div>
+        <div style="font-size:28px; font-weight:900; margin-bottom:10px;">${t('profileWelcome')}</div>
+        <div style="color:#8a8ab0; margin-bottom:40px; line-height:1.6;">${t('loginRequired')}<br>${t('loginRequiredDesc')}</div>
+        <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+          <button class="btn-primary" onclick="openAuthModal('login')">🔑 ${t('profileLogin')}</button>
+          <button class="btn-primary" style="background:linear-gradient(90deg, #ff00e6, #9900ff);" onclick="openAuthModal('register')">✨ ${t('profileRegister')}</button>
+          <button class="btn-secondary" onclick="openAuthModal('import')">📥 ${t('profileImport')}</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  const s = calculateProfile();
+  const avatarHTML = currentUser.avatar ? `<img src="${currentUser.avatar}">` : '🎮';
+  const canClaim = canClaimDaily();
+  const timeUntil = getTimeUntilNextDaily();
+  
+  c.innerHTML = `
+    <div class="profile-header">
+      <div class="avatar-big">${avatarHTML}<div class="avatar-level">LV ${s.level}</div></div>
+      <div class="profile-info">
+        <div class="profile-name">${currentUser.name}</div>
+        <div class="profile-tag">@${currentUser.name.toLowerCase().replace(/\s+/g,'')} • 🟢 ${t('online')} • ${t('memberSince')} ${new Date(currentUser.joined).toLocaleDateString()}</div>
+        <div class="profile-bio">${currentUser.email}</div>
+        <div class="xp-bar-container">
+          <div class="xp-label">
+            <span>SEVİYE ${s.level}</span>
+            <span>${s.currentXP} / ${s.neededXP} XP</span>
+          </div>
+          <div class="xp-bar"><div class="xp-fill" style="width:${s.xpPercent}%"></div></div>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button class="btn-profile primary" onclick="editAccount()">✏️ ${t('profileEdit')}</button>
+        <button class="btn-profile" onclick="exportData()">📤 ${t('profileExport')}</button>
+        <button class="btn-profile" style="border-color:#ff5f57; color:#ff5f57;" onclick="logoutUser()">🚪 ${t('profileLogout')}</button>
+      </div>
+    </div>
+    
+    <div class="balance-card">
+      <div class="balance-item">
+        <div class="balance-item-icon">💰</div>
+        <div class="balance-item-value">${(userProfile.balance||0).toFixed(2)}$</div>
+        <div class="balance-item-label">${t('balanceLabel')}</div>
+      </div>
+      <div class="balance-item">
+        <div class="balance-item-icon">🎁</div>
+        <div class="balance-item-value">${(userProfile.totalEarned||0).toFixed(2)}$</div>
+        <div class="balance-item-label">${t('totalEarned')}</div>
+      </div>
+      <div class="balance-item">
+        <div class="balance-item-icon">🔥</div>
+        <div class="balance-item-value">${userProfile.streak||0}</div>
+        <div class="balance-item-label">${t('streakLabel')}</div>
+        <button class="btn-daily" onclick="claimDailyReward()" ${!canClaim?'disabled':''}>
+          ${canClaim ? t('claimDaily') : t('dailyClaimed')}
+        </button>
+        ${!canClaim && timeUntil ? `<div class="daily-timer">${t('dailyWait')} ${timeUntil}</div>` : ''}
+      </div>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="stat-card" style="--c1:#ffd700; --c2:#ff6b00;"><div class="stat-icon">🎮</div><div class="stat-value">${s.playedGames}</div><div class="stat-label">${t('playedGames')}</div><div class="stat-change">${s.totalGames} ${t('totalGames')}</div></div>
+      <div class="stat-card" style="--c1:#ff00e6; --c2:#9900ff;"><div class="stat-icon">🎯</div><div class="stat-value">${s.totalPlays}</div><div class="stat-label">${t('totalPlays')}</div></div>
+      <div class="stat-card" style="--c1:#27c93f; --c2:#00f0ff;"><div class="stat-icon">🏆</div><div class="stat-value">${userProfile.claimedAchievements.length}/${ACHIEVEMENTS.length}</div><div class="stat-label">${t('achievements')}</div></div>
+      <div class="stat-card" style="--c1:#ffcc00; --c2:#ff6600;"><div class="stat-icon">⭐</div><div class="stat-value">${s.xp.toLocaleString()}</div><div class="stat-label">${t('totalXP')}</div><div class="stat-change">Lv ${s.level}</div></div>
+    </div>
+    
+    <div class="section-title">${t('badgesTitle')}</div>
+    <div class="section-subtitle">${t('badgesSubtitle')}</div>
+    <div class="badges-grid" id="badgesGrid"></div>
+    
+    <div style="margin-top:30px;">
+      <div class="section-title">${t('activitiesTitle')}</div>
+      <div class="section-subtitle">${t('activitiesSubtitle')}</div>
+      <div class="activity-list">${(userProfile.activities||[]).length===0?`<div style="padding:30px;text-align:center;color:#8a8ab0;">${t('noActivity')}</div>`:(userProfile.activities||[]).slice(-10).reverse().map(a=>`<div class="activity-item"><div class="activity-icon" style="background:${a.bg||'linear-gradient(135deg,#ffd700,#ff6b00)'}">${a.icon}</div><div class="activity-info"><div class="activity-title">${a.title}</div><div style="font-size:12px;color:#c0c0e0;">${a.detail}</div></div><div class="activity-time">${a.time}</div></div>`).join('')}</div>
+    </div>
+  `;
+  
+  renderAchievements();
+  
+  // Timer güncelleme
+  if (!canClaim && timeUntil) {
+    startDailyTimer();
+  }
+}
+
+let dailyTimerInterval = null;
+function startDailyTimer() {
+  if (dailyTimerInterval) clearInterval(dailyTimerInterval);
+  dailyTimerInterval = setInterval(() => {
+    const timeUntil = getTimeUntilNextDaily();
+    const timerEl = document.querySelector('.daily-timer');
+    if (timerEl && timeUntil) {
+      timerEl.textContent = t('dailyWait') + ' ' + timeUntil;
+    } else if (timerEl && !timeUntil) {
+      clearInterval(dailyTimerInterval);
+      renderProfile();
+    }
+  }, 1000);
+}
+
+function renderAchievements() {
+  const grid = document.getElementById('badgesGrid');
+  if (!grid) return;
+  const stats = calculateProfile();
+  const allClaimedCount = userProfile.claimedAchievements.length;
+  
+  grid.innerHTML = ACHIEVEMENTS.map(a => {
+    const unlocked = a.check(stats, allClaimedCount);
+    const claimed = userProfile.claimedAchievements.includes(a.id);
+    const diffClass = {easy:'diff-easy', medium:'diff-medium', hard:'diff-hard', epic:'diff-epic', legendary:'diff-legendary'}[a.difficulty];
+    const diffLabel = t('difficulty_' + a.difficulty);
+    
+    return `
+      <div class="badge-card ${unlocked?'':'locked'}">
+        <div class="badge-difficulty ${diffClass}">${diffLabel}</div>
+        <div class="badge-icon" style="color:${unlocked?'#ffd700':'#8a8ab0'}">${a.icon}</div>
+        <div class="badge-name">${a.name}</div>
+        <div class="badge-desc">${a.desc}</div>
+        <div class="badge-reward">💰 +${a.reward.toFixed(2)}$</div>
+        ${unlocked && !claimed ? `<button class="badge-claim" onclick="claimAchievementReward('${a.id}')">${t('claimReward')}</button>` : ''}
+        ${claimed ? `<button class="badge-claim claimed">${t('rewardClaimed')}</button>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function openProfileOrLogin() {
+  if (currentUser) {
+    document.querySelector('.nav-item[data-page="profile"]').click();
+  } else {
+    openAuthModal('login');
+  }
+}
+
+function openAuthModal(tab='login') {
+  document.getElementById('authModal').classList.add('show');
+  switchAuthTab(tab);
+}
+
+function closeAuthModal() {
+  document.getElementById('authModal').classList.remove('show');
+}
+
+function switchAuthTab(tab) {
+  document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.login-tab[data-auth="${tab}"]`).classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+function registerUser() {
+  const name = document.getElementById('regName').value.trim();
+  const birthdate = document.getElementById('regBirthdate').value;
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  
+  if (!name || !birthdate || !email || !password) {
+    showToast(t('registerFailed'), 'error');
+    return;
+  }
+  
+  if (users.find(u => u.name.toLowerCase() === name.toLowerCase())) {
+    showToast(t('usernameExists'), 'error');
+    return;
+  }
+  
+  const passwordHash = simpleHash(password);
+  
+  const newUser = {
+    name, birthdate, email, passwordHash,
+    avatar: currentAvatar,
+    joined: new Date().toISOString()
+  };
+  
+  users.push(newUser);
+  saveUsers();
+  
+  currentUser = newUser;
+  saveCurrentUser();
+  
+  games = [];
+  userProfile = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0 };
+  saveGameData();
+  saveProfileData();
+  
+  closeAuthModal();
+  updateUserAvatar();
+  renderProfile();
+  renderStore();
+  renderLibrary();
+  updateBalanceDisplay();
+  showToast(t('registerSuccess') + ', ' + name + '!', 'success');
+  
+  document.getElementById('regName').value = '';
+  document.getElementById('regBirthdate').value = '';
+  document.getElementById('regEmail').value = '';
+  document.getElementById('regPassword').value = '';
+  document.getElementById('avatarPreview').style.display = 'none';
+  document.getElementById('avatarPlaceholder').style.display = 'block';
+  currentAvatar = null;
+}
+
+function loginUser() {
+  const name = document.getElementById('loginName').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  
+  if (!name || !password) {
+    showToast(t('loginFailed'), 'error');
+    return;
+  }
+  
+  const user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+  if (!user) {
+    showToast(t('loginFailed'), 'error');
+    return;
+  }
+  
+  const passwordHash = simpleHash(password);
+  if (user.passwordHash !== passwordHash) {
+    showToast(t('loginFailed'), 'error');
+    return;
+  }
+  
+  currentUser = user;
+  saveCurrentUser();
+  loadUserData();
+  
+  closeAuthModal();
+  updateUserAvatar();
+  renderProfile();
+  renderStore();
+  renderLibrary();
+  updateBalanceDisplay();
+  showToast(t('welcomeBack') + ', ' + user.name + '!', 'success');
+  
+  document.getElementById('loginName').value = '';
+  document.getElementById('loginPassword').value = '';
+}
+
+function logoutUser() {
+  if (!confirm(t('exitConfirm'))) return;
+  currentUser = null;
+  localStorage.removeItem('kmoonCurrentUser');
+  games = [];
+  userProfile = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0 };
+  updateUserAvatar();
+  renderProfile();
+  renderStore();
+  renderLibrary();
+  updateBalanceDisplay();
+}
+
+function editAccount() {
+  if (!currentUser) return;
+  const newName = prompt(t('playerName'), currentUser.name);
+  if (newName && newName.trim()) {
+    const oldName = currentUser.name;
+    currentUser.name = newName.trim();
+    const oldGames = localStorage.getItem('kmoonGames_' + oldName);
+    const oldProfile = localStorage.getItem('kmoonProfile_' + oldName);
+    if (oldGames) {
+      localStorage.setItem('kmoonGames_' + currentUser.name, oldGames);
+      localStorage.removeItem('kmoonGames_' + oldName);
+    }
+    if (oldProfile) {
+      localStorage.setItem('kmoonProfile_' + currentUser.name, oldProfile);
+      localStorage.removeItem('kmoonProfile_' + oldName);
+    }
+    saveUsers();
+    saveCurrentUser();
+    renderProfile();
+    updateUserAvatar();
+    showToast('✓', 'success');
+  }
+}
+
+function handleAvatarUpload(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    currentAvatar = ev.target.result;
+    document.getElementById('avatarPreview').src = currentAvatar;
+    document.getElementById('avatarPreview').style.display = 'block';
+    document.getElementById('avatarPlaceholder').style.display = 'none';
+  };
+  r.readAsDataURL(f);
+}
+
+function updateUserAvatar() {
+  const el = document.getElementById('userAvatarSmall');
+  if (currentUser?.avatar) {
+    el.innerHTML = `<img src="${currentUser.avatar}">`;
+  } else {
+    el.innerHTML = '🎮';
+  }
+}
+
+function importDatabase(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      
+      if (data.account) {
+        const acc = data.account;
+        let existingUser = users.find(u => u.name.toLowerCase() === acc.name.toLowerCase());
+        
+        if (existingUser) {
+          if (acc.passwordHash && existingUser.passwordHash !== acc.passwordHash) {
+            showToast(t('loginFailed'), 'error');
+            return;
+          }
+          currentUser = existingUser;
+        } else {
+          users.push(acc);
+          saveUsers();
+          currentUser = acc;
+        }
+        
+        saveCurrentUser();
+        
+        if (data.games) { games = data.games; saveGameData(); }
+        if (data.profile) {
+          const defaults = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0 };
+          userProfile = {...defaults, ...data.profile};
+          saveProfileData();
+        }
+        
+        closeAuthModal();
+        updateUserAvatar();
+        renderProfile();
+        renderStore();
+        renderLibrary();
+        updateBalanceDisplay();
+        showToast(t('dbImportSuccess') + ', ' + currentUser.name + '!', 'success');
+      } else {
+        showToast(t('importFailed'), 'error');
+      }
+    } catch(err) {
+      showToast(t('importFailed'), 'error');
+    }
+  };
+  r.readAsText(f);
+  e.target.value = '';
+}
+
+function recordGamePlay(id) {
+  if (!currentUser) return;
+  if (!userProfile.gamesPlayed[id]) userProfile.gamesPlayed[id] = {count:0, firstPlayed:new Date().toISOString(), lastPlayed:null};
+  userProfile.gamesPlayed[id].count++;
+  userProfile.gamesPlayed[id].lastPlayed = new Date().toISOString();
+  
+  const g = games.find(x=>x.id===id);
+  if (!userProfile.activities) userProfile.activities = [];
+  userProfile.activities.push({
+    icon: g?.title.charAt(0) || '🎮',
+    bg: 'linear-gradient(135deg, #ffd700, #ff6b00)',
+    title: (g?.title || 'Oyun') + ' ' + (currentLang==='tr'?'oynandı':'played'),
+    detail: userProfile.gamesPlayed[id].count + '. ' + (currentLang==='tr'?'kez':'time'),
+    time: currentLang==='tr'?'Şimdi':'Now'
+  });
+  if (userProfile.activities.length>50) userProfile.activities = userProfile.activities.slice(-50);
+  saveProfileData();
+}
+
+function openGameModal(id) {
+  const g = games.find(x=>x.id===id);
+  if (!g) return;
+  
+  if (g.age18) {
+    pendingAgeGameId = id;
+    document.getElementById('ageModal').classList.add('show');
+    return;
+  }
+  
+  showGameModalContent(g);
+}
+
+function showGameModalContent(g) {
+  currentModalGame = g;
+  document.getElementById('gameModalHeader').style.backgroundImage = `url('${g.cover}')`;
+  document.getElementById('gameModalHeader').className = 'game-modal-header' + (g.age18?' blur-18':'');
+  document.getElementById('gameModalTitle').textContent = g.title;
+  document.getElementById('gameModalSubtitle').textContent = g.subtitle || '';
+  
+  document.getElementById('gtab-overview').innerHTML = `
+    <p style="color:#c0c0e0;line-height:1.8;font-size:15px;">${g.description||''}</p>
+    <div style="display:flex;gap:15px;margin-top:20px;flex-wrap:wrap;">
+      <div style="padding:12px 20px;background:rgba(255,215,0,0.1);border-radius:8px;border:1px solid rgba(255,215,0,0.3);">
+        <div style="color:#8a8ab0;font-size:11px;">${t('category')}</div>
+        <div style="color:#ffd700;font-weight:700;">${getCategoryName(g.category)}</div>
+      </div>
+      <div style="padding:12px 20px;background:rgba(255,107,0,0.1);border-radius:8px;border:1px solid rgba(255,107,0,0.3);">
+        <div style="color:#8a8ab0;font-size:11px;">${t('status')}</div>
+        <div style="color:#ff6b00;font-weight:700;">${g.playable?t('playable'):t('comingSoon')}</div>
+      </div>
+      ${g.age18?`<div style="padding:12px 20px;background:rgba(255,0,0,0.1);border-radius:8px;border:1px solid rgba(255,0,0,0.3);"><div style="color:#8a8ab0;font-size:11px;">YAŞ</div><div style="color:#ff0066;font-weight:700;">🔞 18+</div></div>`:''}
+    </div>
+  `;
+  
+  const gallery = g.gallery || [];
+  document.getElementById('gtab-gallery').innerHTML = gallery.length>0
+    ? `<div class="gallery">${gallery.map(img=>`<div class="gallery-img" style="background-image:url('${img}')"></div>`).join('')}</div>`
+    : `<div style="color:#8a8ab0;padding:20px;">-</div>`;
+  
+  const rules = g.rules || [];
+  document.getElementById('gtab-rules').innerHTML = rules.length>0
+    ? `<ul class="rules-list">${rules.map(r=>`<li>${r.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</li>`).join('')}</ul>`
+    : `<div style="color:#8a8ab0;padding:20px;">-</div>`;
+  
+  document.getElementById('gtab-manual').innerHTML = g.manual ? `<div class="manual">${g.manual}</div>` : `<div style="color:#8a8ab0;padding:20px;">-</div>`;
+  
+  const isFav = userProfile.favorites.includes(g.id);
+  const isPurchased = (userProfile.purchased||[]).includes(g.id);
+  
+  let sidebarHTML = `
+    <div>
+      <div style="color:#8a8ab0;font-size:12px;">${t('price')}</div>
+      <div class="price-big">${g.price}</div>
+    </div>
+    <div class="game-actions">
+      <button class="btn-profile" style="padding:14px 20px;" onclick="toggleFavorite('${g.id}')">${isFav?'⭐':'☆'}</button>
+  `;
+  
+  if (g.free) {
+    if (g.playable) sidebarHTML += `<button class="btn-play" onclick="startGame('${g.id}')">${t('play')}</button>`;
+  } else {
+    if (isPurchased) {
+      if (g.playable) sidebarHTML += `<button class="btn-play" onclick="startGame('${g.id}')">${t('play')}</button>`;
+    } else {
+      if (g.demo) sidebarHTML += `<button class="btn-demo" onclick="playDemo('${g.id}')">${t('demo')}</button>`;
+      sidebarHTML += `<button class="btn-buy" onclick="openBuyModal('${g.id}')">${t('buy')}</button>`;
+    }
+  }
+  
+  sidebarHTML += `</div>`;
+  document.getElementById('gameModalSidebar').innerHTML = sidebarHTML;
+  
+  document.querySelectorAll('.game-modal-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#gameModal .tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelector('.game-modal-tab[data-gtab="overview"]').classList.add('active');
+  document.getElementById('gtab-overview').classList.add('active');
+  
+  document.getElementById('gameModal').classList.add('show');
+}
+
+function closeGameModal() { document.getElementById('gameModal').classList.remove('show'); }
+
+document.querySelectorAll('.game-modal-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.game-modal-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('#gameModal .tab-content').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('gtab-'+tab.dataset.gtab).classList.add('active');
+  });
+});
+
+document.getElementById('gameModal').addEventListener('click', e => { if (e.target.id==='gameModal') closeGameModal(); });
+
+function toggleFavorite(id) {
+  if (!currentUser) { showToast(t('loginRequired'), 'warning'); return; }
+  if (userProfile.favorites.includes(id)) {
+    userProfile.favorites = userProfile.favorites.filter(x=>x!==id);
+    showToast(t('favoriteRemoved'), 'success');
+  } else {
+    userProfile.favorites.push(id);
+    showToast(t('favoriteAdded'), 'success');
+  }
+  saveProfileData();
+  if (currentModalGame) showGameModalContent(currentModalGame);
+  renderLibrary();
+  renderProfile();
+}
+
+function verifyAgeYes() {
+  document.getElementById('ageModal').classList.remove('show');
+  const g = games.find(x=>x.id===pendingAgeGameId);
+  if (g) showGameModalContent(g);
+  pendingAgeGameId = null;
+}
+
+function verifyAgeNo() {
+  document.getElementById('ageModal').classList.remove('show');
+  pendingAgeGameId = null;
+  showToast(t('ageDenied'), 'warning');
+}
+
+function parsePrice(price) {
+  if (!price || price === 'ÜCRETSİZ' || price.toLowerCase() === 'free') return 0;
+  const num = parseFloat(String(price).replace(/[^0-9.]/g, ''));
+  return isNaN(num) ? 0 : num;
+}
+
+function openBuyModal(id) {
+  const g = games.find(x=>x.id===id);
+  if (!g) return;
+  currentModalGame = g;
+  document.getElementById('buyGameName').textContent = g.title;
+  document.getElementById('buyGamePrice').textContent = g.price;
+  
+  const price = parsePrice(g.price);
+  const balance = userProfile.balance || 0;
+  const canAfford = balance >= price;
+  
+  document.getElementById('buyBalanceSection').innerHTML = `
+    <div style="padding:15px; background:rgba(255,255,255,0.03); border-radius:10px; margin-bottom:20px; border:1px solid rgba(255,215,0,0.2);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div>
+          <div style="font-size:12px; color:#8a8ab0;">${t('balanceLabel')}</div>
+          <div style="font-size:20px; font-weight:700; color:#ffd700;">💰 ${balance.toFixed(2)}$</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:12px; color:#8a8ab0;">${t('price')}</div>
+          <div style="font-size:20px; font-weight:700; color:#ff6b00;">${price.toFixed(2)}$</div>
+        </div>
+      </div>
+      <button class="btn-buy-balance" style="width:100%;" onclick="buyWithBalance('${g.id}')" ${!canAfford?'disabled':''}>
+        ${canAfford ? t('buyWithBalance') : t('insufficientBalance')}
+      </button>
+    </div>
+    <div style="text-align:center; color:#8a8ab0; font-size:12px; margin-bottom:15px;">— veya —</div>
+  `;
+  
+  const msg = encodeURIComponent(`Merhaba! "${g.title}" oyununu satın almak istiyorum.`);
+  document.getElementById('buyTelegram').href = `https://t.me/kmoon?text=${msg}`;
+  document.getElementById('buyWhatsApp').href = `https://wa.me/905550000000?text=${msg}`;
+  document.getElementById('buyInstagram').href = `https://instagram.com/kmoon`;
+  
+  document.getElementById('buyModal').classList.add('show');
+}
+
+function closeBuyModal() { document.getElementById('buyModal').classList.remove('show'); }
+
+function buyWithBalance(id) {
+  const g = games.find(x=>x.id===id);
+  if (!g) return;
+  
+  const price = parsePrice(g.price);
+  if ((userProfile.balance || 0) < price) {
+    showToast(t('insufficientBalance'), 'error');
+    return;
+  }
+  
+  userProfile.balance -= price;
+  if (!userProfile.purchased) userProfile.purchased = [];
+  if (!userProfile.purchased.includes(id)) {
+    userProfile.purchased.push(id);
+  }
+  
+  saveProfileData();
+  updateBalanceDisplay();
+  closeBuyModal();
+  closeGameModal();
+  renderProfile();
+  renderLibrary();
+  showToast(t('purchaseSuccess') + ' - ' + g.title, 'success');
+}
+
+function playDemo(id) {
+  const g = games.find(x=>x.id===id);
+  if (!g || !g.demo) { showToast('Demo yok', 'error'); return; }
+  closeGameModal();
+  launchGame(g, g.demo, true);
+}
+
+function startGame(id) {
+  const g = games.find(x=>x.id===id);
+  if (!g) return;
+  
+  if (!g.free && !(userProfile.purchased||[]).includes(g.id)) {
+    showToast('Önce satın alın!', 'warning');
+    openBuyModal(g.id);
+    return;
+  }
+  
+  closeGameModal();
+  recordGamePlay(g.id);
+  
+  let html = g.html || `<html><body style="margin:0;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;flex-direction:column;"><div style="font-size:60px;margin-bottom:20px;">🌙</div><div style="font-size:24px;">${g.title}</div><div style="color:#8a8ab0;margin-top:10px;">HTML yok</div></body></html>`;
+  
+  launchGame(g, html, false);
+}
+
+function launchGame(g, html, isDemo) {
+  document.getElementById('gameTitleBar').textContent = g.title.toUpperCase() + (isDemo?' (DEMO)':'');
+  const frame = document.getElementById('gameFrame');
+  frame.src = 'about:blank';
+  document.getElementById('gameScreen').classList.add('show');
+  setTimeout(() => {
+    const doc = frame.contentDocument;
+    doc.open();
+    doc.write(html);
+    doc.close();
+  }, 100);
+}
+
+function closeGame() {
+  document.getElementById('gameScreen').classList.remove('show');
+  document.getElementById('gameFrame').src = 'about:blank';
+  if (document.fullscreenElement) document.exitFullscreen();
+  renderProfile();
+  renderLibrary();
+}
+
+function toggleFullscreen() {
+  const el = document.getElementById('gameScreen');
+  if (!document.fullscreenElement) {
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+  }
+}
+
+// ===== ADMIN =====
+function openAdmin() {
+  document.getElementById('adminModal').classList.add('show');
+  if (!isAdminLoggedIn) {
+    document.getElementById('adminLogin').classList.add('active');
+    document.getElementById('adminDashboard').classList.remove('active');
+  }
+}
+function closeAdmin() { document.getElementById('adminModal').classList.remove('show'); }
+
+function adminLogin() {
+  const p = document.getElementById('adminPassword').value;
+  if (checkAdminPassword(p)) {
+    isAdminLoggedIn = true;
+    document.getElementById('adminLogin').classList.remove('active');
+    document.getElementById('adminDashboard').classList.add('active');
+    document.getElementById('adminPassword').value = '';
+    renderAdminGameList();
+    showToast(t('loginSuccess'), 'success');
+  } else {
+    showToast(t('loginFailed'), 'error');
+  }
+}
+
+document.querySelectorAll('.admin-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('#adminDashboard > .admin-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('atab-'+tab.dataset.atab).classList.add('active');
+    if (tab.dataset.atab==='manage') renderAdminGameList();
+  });
+});
+
+function handleCoverUpload(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    currentCoverImage = ev.target.result;
+    document.getElementById('coverPreview').src = currentCoverImage;
+    document.getElementById('coverPreview').style.display = 'block';
+    document.getElementById('coverPlaceholder').style.display = 'none';
+  };
+  r.readAsDataURL(f);
+}
+
+function handleGalleryUpload(e) {
+  const files = Array.from(e.target.files);
+  files.forEach(f => {
+    const r = new FileReader();
+    r.onload = ev => {
+      currentGalleryImages.push(ev.target.result);
+      renderGalleryGrid();
+    };
+    r.readAsDataURL(f);
+  });
+}
+
+function renderGalleryGrid() {
+  const g = document.getElementById('galleryGrid');
+  g.innerHTML = currentGalleryImages.map((img, i) => 
+    `<div class="gallery-thumb" style="background-image:url('${img}')"><button class="gallery-thumb-remove" onclick="removeGalleryImage(${i})">×</button></div>`
+  ).join('');
+}
+
+function removeGalleryImage(i) {
+  currentGalleryImages.splice(i, 1);
+  renderGalleryGrid();
+}
+
+function handleHTMLUpload(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    currentHTML = ev.target.result;
+    document.getElementById('gameHTMLCode').value = currentHTML;
+    document.getElementById('htmlStatus').innerHTML = `<span style="color:#27c93f;">${t('htmlFileStatus')}${f.name}</span>`;
+  };
+  r.readAsText(f);
+}
+
+function handleDemoUpload(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    currentDemoHTML = ev.target.result;
+    document.getElementById('gameDemoCode').value = currentDemoHTML;
+    document.getElementById('demoStatus').innerHTML = `<span style="color:#27c93f;">${t('demoFileStatus')}${f.name}</span>`;
+  };
+  r.readAsText(f);
+}
+
+function saveGame() {
+  if (!isAdminLoggedIn) { showToast(t('loginRequired'), 'error'); return; }
+  
+  const title = document.getElementById('gameTitle').value.trim();
+  const category = document.getElementById('gameCategory').value;
+  const subtitle = document.getElementById('gameSubtitle').value.trim();
+  const description = document.getElementById('gameDesc').value.trim();
+  const price = document.getElementById('gamePrice').value.trim() || 'ÜCRETSİZ';
+  const playable = document.getElementById('gamePlayable').value === 'true';
+  const age18 = document.getElementById('gameAge18').checked;
+  const rulesText = document.getElementById('gameRules').value.trim();
+  const manual = document.getElementById('gameManual').value.trim();
+  const htmlCode = document.getElementById('gameHTMLCode').value.trim();
+  const demoCode = document.getElementById('gameDemoCode').value.trim();
+  
+  if (!title) { showToast(t('fillRequired'), 'error'); return; }
+  
+  const rules = rulesText ? rulesText.split('\n').filter(r=>r.trim()) : [];
+  const finalHTML = htmlCode || currentHTML;
+  const finalDemo = demoCode || currentDemoHTML;
+  
+  if (currentEditId) {
+    const g = games.find(x=>x.id===currentEditId);
+    if (g) {
+      g.title = title; g.category = category; g.subtitle = subtitle; g.description = description;
+      g.price = price; g.free = price==='ÜCRETSİZ' || parsePrice(price)===0; g.playable = playable; g.age18 = age18;
+      g.rules = rules; g.manual = manual;
+      if (currentCoverImage) g.cover = currentCoverImage;
+      if (currentGalleryImages.length>0) g.gallery = currentGalleryImages;
+      if (finalHTML) g.html = finalHTML;
+      if (finalDemo) g.demo = finalDemo;
+      showToast(t('gameUpdated'), 'success');
+    }
+  } else {
+    const newGame = {
+      id: 'game_' + Date.now(),
+      title, category, subtitle, description, price,
+      free: price==='ÜCRETSİZ' || parsePrice(price)===0,
+      playable, age18,
+      cover: currentCoverImage || createSVGCover(title.toUpperCase(), '#ffd700', '#ff6b00', '🌙'),
+      gallery: currentGalleryImages.length>0 ? currentGalleryImages : [],
+      rules, manual,
+      html: finalHTML,
+      demo: finalDemo
+    };
+    games.push(newGame);
+    showToast(t('gameSaved'), 'success');
+  }
+  
+  saveGameData();
+  resetForm();
+  renderStore();
+  renderLibrary();
+  renderAdminGameList();
+}
+
+function resetForm() {
+  currentEditId = null;
+  currentCoverImage = null;
+  currentGalleryImages = [];
+  currentHTML = null;
+  currentDemoHTML = null;
+  document.getElementById('gameTitle').value = '';
+  document.getElementById('gameCategory').value = 'arcade';
+  document.getElementById('gameSubtitle').value = '';
+  document.getElementById('gameDesc').value = '';
+  document.getElementById('gamePrice').value = 'ÜCRETSİZ';
+  document.getElementById('gamePlayable').value = 'true';
+  document.getElementById('gameAge18').checked = false;
+  document.getElementById('gameRules').value = '';
+  document.getElementById('gameManual').value = '';
+  document.getElementById('gameHTMLCode').value = '';
+  document.getElementById('gameDemoCode').value = '';
+  document.getElementById('coverPreview').style.display = 'none';
+  document.getElementById('coverPlaceholder').style.display = 'block';
+  document.getElementById('galleryGrid').innerHTML = '';
+  document.getElementById('htmlStatus').innerHTML = '';
+  document.getElementById('demoStatus').innerHTML = '';
+  document.getElementById('coverInput').value = '';
+  document.getElementById('galleryInput').value = '';
+  document.getElementById('htmlInput').value = '';
+  document.getElementById('demoInput').value = '';
+}
+
+function cancelEdit() { resetForm(); }
+
+function renderAdminGameList() {
+  const list = document.getElementById('adminGameList');
+  if (games.length===0) {
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:#8a8ab0;">${t('noGames')}</div>`;
+    return;
+  }
+  list.innerHTML = games.map(g => `
+    <div class="admin-game-item">
+      <div class="admin-game-cover" style="background-image:url('${g.cover}')"></div>
+      <div class="admin-game-info">
+        <h3>${g.title} ${g.age18?'🔞':''}</h3>
+        <p>${getCategoryName(g.category)} • ${g.price} • ${g.playable?'✅':'⏳'}</p>
+      </div>
+      <div class="admin-game-actions">
+        <button class="btn-edit" onclick="editGame('${g.id}')">✏️</button>
+        <button class="btn-delete" onclick="deleteGame('${g.id}')">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editGame(id) {
+  const g = games.find(x=>x.id===id);
+  if (!g) return;
+  currentEditId = id;
+  document.getElementById('gameTitle').value = g.title;
+  document.getElementById('gameCategory').value = g.category;
+  document.getElementById('gameSubtitle').value = g.subtitle || '';
+  document.getElementById('gameDesc').value = g.description || '';
+  document.getElementById('gamePrice').value = g.price;
+  document.getElementById('gamePlayable').value = g.playable?'true':'false';
+  document.getElementById('gameAge18').checked = g.age18 || false;
+  document.getElementById('gameRules').value = (g.rules||[]).join('\n');
+  document.getElementById('gameManual').value = g.manual || '';
+  
+  if (g.cover && g.cover.startsWith('data:')) {
+    currentCoverImage = g.cover;
+    document.getElementById('coverPreview').src = g.cover;
+    document.getElementById('coverPreview').style.display = 'block';
+    document.getElementById('coverPlaceholder').style.display = 'none';
+  }
+  
+  currentGalleryImages = [...(g.gallery||[])];
+  renderGalleryGrid();
+  
+  if (g.html) {
+    currentHTML = g.html;
+    document.getElementById('gameHTMLCode').value = g.html;
+  }
+  if (g.demo) {
+    currentDemoHTML = g.demo;
+    document.getElementById('gameDemoCode').value = g.demo;
+  }
+  
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#adminDashboard > .admin-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.admin-tab[data-atab="add"]').classList.add('active');
+  document.getElementById('atab-add').classList.add('active');
+}
+
+function deleteGame(id) {
+  const g = games.find(x=>x.id===id);
+  if (!g) return;
+  if (!confirm(t('deleteConfirm'))) return;
+  games = games.filter(x=>x.id!==id);
+  saveGameData();
+  renderStore();
+  renderLibrary();
+  renderAdminGameList();
+  showToast(t('gameDeleted'), 'success');
+}
+
+function exportData() {
+  if (!currentUser) { showToast(t('loginRequired'), 'error'); return; }
+  const data = { 
+    version:'7.0.0', 
+    exportDate:new Date().toISOString(), 
+    account: currentUser,
+    games, 
+    profile:userProfile
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `kmoon-${currentUser.name}-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(t('exportSuccess'), 'success');
+}
+
+function importData(e) {
+  if (!currentUser) { showToast(t('loginRequired'), 'error'); return; }
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.games) { games = data.games; saveGameData(); }
+      if (data.profile) { 
+        const defaults = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0 };
+        userProfile = {...defaults, ...data.profile}; 
+        saveProfileData(); 
+      }
+      renderStore(); renderLibrary(); renderProfile(); renderAdminGameList();
+      updateBalanceDisplay();
+      showToast(t('importSuccess'), 'success');
+    } catch(err) {
+      showToast(t('importFailed'), 'error');
+    }
+  };
+  r.readAsText(f);
+  e.target.value = '';
+}
+
+function resetAllData() {
+  if (!confirm(t('resetConfirm'))) return;
+  if (currentUser) {
+    localStorage.removeItem('kmoonGames_' + currentUser.name);
+    localStorage.removeItem('kmoonProfile_' + currentUser.name);
+  }
+  games = [];
+  userProfile = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0 };
+  saveGameData();
+  saveProfileData();
+  renderStore(); renderLibrary(); renderProfile(); renderAdminGameList();
+  updateBalanceDisplay();
+  showToast(t('resetSuccess'), 'success');
+}
+
+document.getElementById('langSelect').value = currentLang;
+applyTranslations();
+</script>
+</body>
+</html>
