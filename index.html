@@ -2,7 +2,8 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>K-Moon Launcher v8.0.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-Moon Launcher v9.0.0</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; user-select:none; }
 body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
@@ -19,6 +20,10 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
 .loader-bar { height:100%; width:0%; background: linear-gradient(90deg, #ffd700, #ff6b00); box-shadow: 0 0 10px #ffd700; animation: load 3s ease forwards; }
 @keyframes load { to { width:100%; } }
 .loader-text { margin-top:15px; color:#6a6a8a; font-size:12px; letter-spacing:2px; }
+.firebase-status { margin-top:15px; font-size:11px; padding:6px 14px; border-radius:20px; display:inline-block; }
+.firebase-status.connecting { background:rgba(255,215,0,0.2); color:#ffd700; border:1px solid #ffd700; }
+.firebase-status.connected { background:rgba(39,201,63,0.2); color:#27c93f; border:1px solid #27c93f; }
+.firebase-status.error { background:rgba(255,95,87,0.2); color:#ff5f57; border:1px solid #ff5f57; }
 
 #launcher { display:none; height:100vh; flex-direction:column; background: radial-gradient(circle at 20% 20%, rgba(255,215,0,0.08), transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,107,0,0.08), transparent 40%), #0a0a15; }
 #launcher.show { display:flex; }
@@ -40,6 +45,9 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
 .nav-item.active { color:#ffd700; background:rgba(255,215,0,0.1); }
 .nav-item.active::after { content:''; position:absolute; bottom:-21px; left:50%; transform:translateX(-50%); width:30px; height:2px; background: linear-gradient(90deg, #ffd700, #ff6b00); border-radius:2px; box-shadow: 0 0 8px #ffd700; }
 .nav-right { margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.online-indicator { padding:6px 12px; border-radius:20px; background:rgba(39,201,63,0.2); border:1px solid #27c93f; color:#27c93f; font-size:11px; font-weight:700; display:flex; align-items:center; gap:6px; }
+.online-dot { width:8px; height:8px; border-radius:50%; background:#27c93f; box-shadow:0 0 8px #27c93f; animation: pulseDot 2s infinite; }
+@keyframes pulseDot { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
 .balance-display { padding:6px 14px; border-radius:20px; background: linear-gradient(90deg, rgba(255,215,0,0.2), rgba(255,107,0,0.2)); border:1px solid #ffd700; color:#ffd700; font-weight:700; font-size:13px; display:flex; align-items:center; gap:6px; cursor:pointer; transition: all 0.3s; }
 .balance-display:hover { transform:translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.3); }
 .nav-search { padding:8px 16px; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; width:200px; outline:none; }
@@ -117,18 +125,7 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
 .btn-daily { padding:12px 24px; border:none; border-radius:8px; background: linear-gradient(90deg, #ffd700, #ff6b00); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition: all 0.3s; margin-top:10px; width:100%; box-shadow: 0 5px 20px rgba(255,215,0,0.3); }
 .btn-daily:hover:not(:disabled) { transform:translateY(-2px); box-shadow: 0 10px 30px rgba(255,215,0,0.5); }
 .btn-daily:disabled { opacity:0.5; cursor:not-allowed; }
-.daily-timer { font-size:11px; color:#8a8ab0; margin-top:6px; text-align:center; }
 
-.stats-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:15px; margin-bottom:25px; }
-.stat-card { background:rgba(0,0,0,0.3); border-radius:12px; padding:20px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s; position:relative; overflow:hidden; }
-.stat-card:hover { transform:translateY(-4px); border-color:rgba(255,215,0,0.3); }
-.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, var(--c1, #ffd700), var(--c2, #ff6b00)); }
-.stat-icon { font-size:28px; margin-bottom:8px; }
-.stat-value { font-size:28px; font-weight:900; margin-bottom:4px; background: linear-gradient(90deg, var(--c1, #ffd700), var(--c2, #ff6b00)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.stat-label { font-size:12px; color:#8a8ab0; }
-.stat-change { font-size:11px; color:#27c93f; margin-top:4px; }
-
-/* GÜNLÜK GİRİŞ TAKVİMİ */
 .daily-calendar { background:rgba(0,0,0,0.3); border-radius:12px; padding:20px; border:1px solid rgba(255,215,0,0.2); margin-bottom:25px; }
 .daily-calendar-title { font-size:16px; font-weight:700; margin-bottom:15px; color:#ffd700; display:flex; align-items:center; gap:8px; }
 .daily-calendar-grid { display:grid; grid-template-columns:repeat(10, 1fr); gap:6px; }
@@ -140,6 +137,14 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
 .daily-day.locked { opacity:0.5; }
 .daily-day-num { font-weight:700; font-size:12px; }
 .daily-day-reward { font-size:9px; color:#ffd700; font-weight:700; }
+
+.stats-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:15px; margin-bottom:25px; }
+.stat-card { background:rgba(0,0,0,0.3); border-radius:12px; padding:20px; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s; position:relative; overflow:hidden; }
+.stat-card:hover { transform:translateY(-4px); border-color:rgba(255,215,0,0.3); }
+.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: linear-gradient(90deg, var(--c1, #ffd700), var(--c2, #ff6b00)); }
+.stat-icon { font-size:28px; margin-bottom:8px; }
+.stat-value { font-size:28px; font-weight:900; margin-bottom:4px; background: linear-gradient(90deg, var(--c1, #ffd700), var(--c2, #ff6b00)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.stat-label { font-size:12px; color:#8a8ab0; }
 
 .badges-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:15px; }
 .badge-card { background:rgba(0,0,0,0.3); border-radius:12px; padding:20px 15px; text-align:center; border:1px solid rgba(255,255,255,0.05); transition: all 0.3s; cursor:pointer; position:relative; }
@@ -168,7 +173,6 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
 .activity-title { font-size:14px; font-weight:600; margin-bottom:2px; }
 .activity-time { font-size:11px; color:#8a8ab0; }
 
-/* DUYURULAR */
 .announcements-list { display:flex; flex-direction:column; gap:15px; }
 .announcement-card { background:rgba(0,0,0,0.3); border-radius:12px; padding:20px; border:1px solid rgba(255,215,0,0.2); transition: all 0.3s; }
 .announcement-card:hover { border-color:rgba(255,215,0,0.5); transform:translateY(-2px); }
@@ -322,7 +326,6 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
 .login-panel { display:none; }
 .login-panel.active { display:block; animation: fadeIn 0.4s; }
 
-/* INFO BUTTON */
 .info-button { position:fixed; bottom:20px; left:20px; width:50px; height:50px; border-radius:50%; background: linear-gradient(135deg, #ffd700, #ff6b00); border:none; cursor:pointer; font-size:24px; font-weight:900; color:#000; box-shadow: 0 5px 20px rgba(255,215,0,0.4); transition: all 0.3s; z-index:100; display:flex; align-items:center; justify-content:center; }
 .info-button:hover { transform:scale(1.1) rotate(10deg); box-shadow: 0 10px 30px rgba(255,215,0,0.6); }
 
@@ -340,7 +343,7 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
 .info-contributor-avatar { width:28px; height:28px; border-radius:50%; background: linear-gradient(135deg, #ffd700, #ff6b00); display:flex; align-items:center; justify-content:center; font-size:12px; }
 .info-contributor-name { font-size:13px; }
 .info-contributor-role { font-size:10px; color:#8a8ab0; }
-.info-social { display:flex; gap:10px; justify-content:center; margin-top:20px; }
+.info-social { display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
 .info-social-btn { padding:10px 20px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,215,0,0.3); color:#ffd700; text-decoration:none; font-size:13px; font-weight:600; transition: all 0.3s; display:flex; align-items:center; gap:8px; }
 .info-social-btn:hover { background:#ffd700; color:#000; transform:translateY(-2px); }
 
@@ -375,9 +378,10 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
   <div class="logo-moon">🌙</div>
   <div class="logo">K-MOON</div>
   <div class="tagline">GAME LAUNCHER</div>
-  <div class="version-tag">VERSION 8.0.0</div>
+  <div class="version-tag">VERSION 9.0.0 • ONLINE</div>
   <div class="loader"><div class="loader-bar"></div></div>
   <div class="loader-text" id="loadText">K-Moon başlatılıyor...</div>
+  <div class="firebase-status connecting" id="firebaseStatus">🔄 Veritabanına bağlanılıyor...</div>
 </div>
 
 <div class="particles" id="particles"></div>
@@ -386,7 +390,7 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
   <div class="titlebar">
     <div class="titlebar-left">
       <div class="app-icon">🌙</div>
-      <div class="app-title">K-Moon Launcher v8.0.0</div>
+      <div class="app-title">K-Moon Launcher v9.0.0</div>
     </div>
     <div class="window-controls">
       <button class="win-btn win-min" onclick="exportUserData()" title="Verileri İndir"></button>
@@ -402,6 +406,10 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
     <div class="nav-item" data-page="announcements">📢 <span data-i18n="navAnnouncements">DUYURU</span></div>
     <div class="nav-item" data-page="profile">👤 <span data-i18n="navProfile">PROFİL</span></div>
     <div class="nav-right">
+      <div class="online-indicator" id="onlineIndicator">
+        <div class="online-dot"></div>
+        <span>ONLINE</span>
+      </div>
       <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
         <option value="tr">🇹🇷 Türkçe</option>
         <option value="en">🇬🇧 English</option>
@@ -469,10 +477,8 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
   </div>
 </div>
 
-<!-- INFO BUTTON -->
 <button class="info-button" onclick="openInfoModal()" title="Hakkında">ℹ</button>
 
-<!-- INFO MODAL -->
 <div class="modal-overlay" id="infoModal">
   <div class="modal-box small">
     <div class="modal-header">
@@ -483,52 +489,19 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
       <div class="info-modal-content">
         <div class="info-logo">🌙</div>
         <div class="info-title">K-Moon Launcher</div>
-        <div class="info-version">Version 8.0.0 • 2026</div>
-        
+        <div class="info-version">Version 9.0.0 • 2026 • Online</div>
         <div class="info-details">
-          <div class="info-detail">
-            <div class="info-detail-label" data-i18n="infoDeveloper">YAPIMCI</div>
-            <div class="info-detail-value">K-Moon Studio</div>
-          </div>
-          <div class="info-detail">
-            <div class="info-detail-label" data-i18n="infoYear">YAPIM YILI</div>
-            <div class="info-detail-value">2026</div>
-          </div>
-          <div class="info-detail">
-            <div class="info-detail-label" data-i18n="infoVersion">VERSİYON</div>
-            <div class="info-detail-value">8.0.0</div>
-          </div>
-          <div class="info-detail">
-            <div class="info-detail-label" data-i18n="infoLicense">LİSANS</div>
-            <div class="info-detail-value">MIT</div>
-          </div>
+          <div class="info-detail"><div class="info-detail-label" data-i18n="infoDeveloper">YAPIMCI</div><div class="info-detail-value">K-Moon Studio</div></div>
+          <div class="info-detail"><div class="info-detail-label" data-i18n="infoYear">YAPIM YILI</div><div class="info-detail-value">2026</div></div>
+          <div class="info-detail"><div class="info-detail-label" data-i18n="infoVersion">VERSİYON</div><div class="info-detail-value">9.0.0</div></div>
+          <div class="info-detail"><div class="info-detail-label" data-i18n="infoLicense">LİSANS</div><div class="info-detail-value">MIT</div></div>
         </div>
-
         <div class="info-contributors">
           <div class="info-contributors-title" data-i18n="infoContributors">KATKIDA BULUNANLAR</div>
-          <div class="info-contributor">
-            <div class="info-contributor-avatar">👨‍💻</div>
-            <div>
-              <div class="info-contributor-name">K-Moon Dev</div>
-              <div class="info-contributor-role">Lead Developer</div>
-            </div>
-          </div>
-          <div class="info-contributor">
-            <div class="info-contributor-avatar">🎨</div>
-            <div>
-              <div class="info-contributor-name">Moon Designer</div>
-              <div class="info-contributor-role">UI/UX Designer</div>
-            </div>
-          </div>
-          <div class="info-contributor">
-            <div class="info-contributor-avatar">🎮</div>
-            <div>
-              <div class="info-contributor-name">Game Team</div>
-              <div class="info-contributor-role">Game Curators</div>
-            </div>
-          </div>
+          <div class="info-contributor"><div class="info-contributor-avatar">👨‍💻</div><div><div class="info-contributor-name">K-Moon Dev</div><div class="info-contributor-role">Lead Developer</div></div></div>
+          <div class="info-contributor"><div class="info-contributor-avatar">🎨</div><div><div class="info-contributor-name">Moon Designer</div><div class="info-contributor-role">UI/UX Designer</div></div></div>
+          <div class="info-contributor"><div class="info-contributor-avatar">🎮</div><div><div class="info-contributor-name">Game Team</div><div class="info-contributor-role">Game Curators</div></div></div>
         </div>
-
         <div class="info-social">
           <a href="https://instagram.com/kmoon" target="_blank" class="info-social-btn">📷 Instagram</a>
           <a href="https://paypal.me/kmoon" target="_blank" class="info-social-btn">💝 <span data-i18n="infoDonate">Destek Ol</span></a>
@@ -538,7 +511,6 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
   </div>
 </div>
 
-<!-- ADMIN MODAL -->
 <div class="modal-overlay" id="adminModal">
   <div class="modal-box admin">
     <div class="modal-header">
@@ -641,7 +613,6 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
               </label>
             </div>
 
-            <!-- YENİ: Link ve YouTube -->
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">🔗 <span data-i18n="gameLink">OYUN LİNKİ (İsteğe bağlı)</span></label>
@@ -694,7 +665,6 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
           <div class="admin-game-list" id="adminGameList"></div>
         </div>
 
-        <!-- YENİ: DUYURU YÖNETİMİ -->
         <div class="admin-panel" id="atab-announcements">
           <div style="max-width:700px; margin-bottom:30px;">
             <div style="font-size:18px; font-weight:700; color:#ffd700; margin-bottom:15px;">➕ <span data-i18n="addAnnouncement">Yeni Duyuru Ekle</span></div>
@@ -753,7 +723,6 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
   </div>
 </div>
 
-<!-- GAME MODAL -->
 <div class="modal-overlay" id="gameModal">
   <div class="modal-box">
     <div class="game-modal-header" id="gameModalHeader">
@@ -779,7 +748,6 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
   </div>
 </div>
 
-<!-- AGE VERIFICATION -->
 <div class="modal-overlay" id="ageModal">
   <div class="modal-box small">
     <div class="age-modal">
@@ -794,7 +762,6 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
   </div>
 </div>
 
-<!-- BUY MODAL -->
 <div class="modal-overlay" id="buyModal">
   <div class="modal-box small">
     <div class="modal-header">
@@ -809,27 +776,14 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
       <p style="color:#c0c0e0; text-align:center; margin-bottom:20px;" data-i18n="buyDesc">Satın almak için bir yöntem seçin:</p>
       <div id="buyBalanceSection"></div>
       <div class="buy-options">
-        <a class="buy-option" id="buyTelegram" href="#" target="_blank">
-          <div class="buy-option-icon">📱</div>
-          <div class="buy-option-name">Telegram</div>
-          <div class="buy-option-handle">@kmoon</div>
-        </a>
-        <a class="buy-option" id="buyWhatsApp" href="#" target="_blank">
-          <div class="buy-option-icon">💬</div>
-          <div class="buy-option-name">WhatsApp</div>
-          <div class="buy-option-handle">+90 555 000 00 00</div>
-        </a>
-        <a class="buy-option" id="buyInstagram" href="#" target="_blank">
-          <div class="buy-option-icon">📷</div>
-          <div class="buy-option-name">Instagram</div>
-          <div class="buy-option-handle">@kmoon</div>
-        </a>
+        <a class="buy-option" id="buyTelegram" href="#" target="_blank"><div class="buy-option-icon">📱</div><div class="buy-option-name">Telegram</div><div class="buy-option-handle">@kmoon</div></a>
+        <a class="buy-option" id="buyWhatsApp" href="#" target="_blank"><div class="buy-option-icon">💬</div><div class="buy-option-name">WhatsApp</div><div class="buy-option-handle">+90 555 000 00 00</div></a>
+        <a class="buy-option" id="buyInstagram" href="#" target="_blank"><div class="buy-option-icon">📷</div><div class="buy-option-name">Instagram</div><div class="buy-option-handle">@kmoon</div></a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- LOGIN / REGISTER MODAL -->
 <div class="modal-overlay" id="authModal">
   <div class="modal-box small">
     <div class="modal-header">
@@ -864,22 +818,10 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
             <div class="avatar-upload-hint" data-i18n="uploadAvatar">Avatar Yükle</div>
           </div>
           <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
-          <div class="form-group">
-            <label class="form-label" data-i18n="playerName">OYUNCU İSMİ *</label>
-            <input type="text" class="form-input" id="regName">
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="birthdate">DOĞUM TARİHİ *</label>
-            <input type="date" class="form-input" id="regBirthdate">
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="email">E-POSTA *</label>
-            <input type="email" class="form-input" id="regEmail">
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="password">ŞİFRE *</label>
-            <input type="password" class="form-input" id="regPassword">
-          </div>
+          <div class="form-group"><label class="form-label" data-i18n="playerName">OYUNCU İSMİ *</label><input type="text" class="form-input" id="regName"></div>
+          <div class="form-group"><label class="form-label" data-i18n="birthdate">DOĞUM TARİHİ *</label><input type="date" class="form-input" id="regBirthdate"></div>
+          <div class="form-group"><label class="form-label" data-i18n="email">E-POSTA *</label><input type="email" class="form-input" id="regEmail"></div>
+          <div class="form-group"><label class="form-label" data-i18n="password">ŞİFRE *</label><input type="password" class="form-input" id="regPassword"></div>
           <button class="btn-primary" style="width:100%;" onclick="registerUser()" data-i18n="registerBtn">✨ KAYIT OL</button>
         </div>
 
@@ -896,7 +838,6 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
   </div>
 </div>
 
-<!-- GAME SCREEN -->
 <div id="gameScreen">
   <div class="game-topbar">
     <div class="game-topbar-title" id="gameTitleBar">OYUN</div>
@@ -906,18 +847,45 @@ body { background:#0a0a15; color:#fff; overflow:hidden; height:100vh; }
   <iframe class="game-frame" id="gameFrame"></iframe>
 </div>
 
+<!-- ===== FIREBASE SDK ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
 <script>
-// ===== ÇOKLU DİL =====
-const translations = {
-  tr: { navStore:'MAĞAZA', navLibrary:'KÜTÜPHANE', navAnnouncements:'DUYURU', navProfile:'PROFİL', storeTitle:'Mağaza', storeSubtitle:'Admin tarafından eklenen oyunları keşfet', libraryTitle:'Kütüphanem', librarySubtitle:'Sahip olduğun tüm oyunlar', filters:'FİLTRELER', allGames:'Tüm Oyunlar', favorites:'Favoriler', recent:'Son Oynanan', free:'Ücretsiz', purchased:'Satın Alınan', categories:'KATEGORİLER', sortName:'İsme Göre', sortRecent:'Son Oynanan', sortPrice:'Fiyata Göre', announcementsTitle:'Duyurular', announcementsSubtitle:'Yeni oyunlar, güncellemeler ve haberler', adminPanel:'ADMIN PANELİ', adminLogin:'Admin Girişi', password:'ŞİFRE', loginBtn:'GİRİŞ YAP', addGame:'Oyun Ekle', manageGames:'Yönet', manageAnnouncements:'Duyurular', importExport:'İçe/Dışa', gameCover:'OYUN KAPAĞI', clickUploadCover:'Kapak resmi yükle', gameGallery:'GALERİ', clickUploadGallery:'Galeri resimleri ekle', gameTitle:'OYUN BAŞLIĞI *', gameCategory:'KATEGORİ *', gameSubtitle:'ALT BAŞLIK', gameDesc:'AÇIKLAMA', gamePrice:'FİYAT (USD)', gamePlayable:'OYNANABİLİR', age18Label:'🔞 +18 İçerik', gameLink:'OYUN LİNKİ (İsteğe bağlı)', gameYoutube:'YOUTUBE VİDEO (İsteğe bağlı)', gameHTML:'OYUN HTML DOSYASI', clickUploadHTML:'HTML dosyası yükle', demoHTML:'DEMO HTML', clickUploadDemo:'Demo HTML yükle', gameRules:'OYUN KURALLARI', gameManual:'OYNAMA KİTAPÇIĞI', saveGame:'KAYDET', cancel:'İPTAL', addAnnouncement:'Yeni Duyuru Ekle', annTitle:'BAŞLIK *', annCategory:'KATEGORİ', annPriority:'ÖNCELİK', annContent:'İÇERİK *', saveAnnouncement:'DUYURUYU YAYINLA', existingAnnouncements:'Mevcut Duyurular', exportData:'Dışa Aktar', exportDesc:'JSON olarak indir', exportBtn:'JSON İNDİR', importData:'İçe Aktar', importDesc:'JSON dosyasından yükle', importBtn:'DOSYA SEÇ', dangerZone:'Tehlikeli Bölge', resetBtn:'TÜM VERİLERİ SİL', tabOverview:'Genel Bakış', tabGallery:'Galeri', tabVideo:'Video', tabRules:'Kurallar', tabManual:'Kitapçık', playable:'OYNANABİLİR', comingSoon:'YAKINDA', category:'KATEGORİ', status:'DURUM', price:'FİYAT', play:'OYNA', buy:'SATIN AL', buyBalance:'BALANS İLE AL', demo:'DEMO', ageTitle:'Yaş Doğrulaması', ageTextSimple:'Bu içerik yalnızca 18 yaş ve üzeri içindir.<br>Devam etmek istiyor musunuz?', ageYes:'✅ Evet, 18+', ageNo:'❌ Hayır', ageDenied:'Bu içeriği görüntüleyemezsiniz!', buyTitle:'Satın Al', buyDesc:'Satın almak için bir yöntem seçin:', authTitle:'Hesap', loginTab:'Giriş', registerTab:'Kayıt', importTab:'Yükle', playerName:'OYUNCU İSMİ', birthdate:'DOĞUM TARİHİ', email:'E-POSTA', registerBtn:'KAYIT OL', uploadAvatar:'Avatar Yükle', importDbDesc:'JSON dosyanızı yükleyin.', importDbBtn:'DOSYA SEÇ', fullscreen:'TAM EKRAN', backToLauncher:'GERİ', profileWelcome:'K-Moon\'a Hoş Geldin', profileLogin:'Giriş Yap', profileRegister:'Kayıt Ol', profileImport:'Veri Yükle', profileLogout:'Çıkış Yap', profileEdit:'Düzenle', profileExport:'Dışa Aktar', loginRequired:'Giriş yapın', loginRequiredDesc:'Kayıt olun veya giriş yapın', totalGames:'Toplam Oyun', playedGames:'Oynanan Oyun', totalPlays:'Toplam Oynama', achievements:'Başarım', totalXP:'Toplam XP', badgesTitle:'Başarımlar & Ödüller', badgesSubtitle:'Görevleri tamamla, dolar kazan!', dailyLoginsTitle:'📅 Günlük Giriş Ödülleri', dailyLoginsSubtitle:'Her gün giriş yap, artan ödüller kazan! 30 günde bir döngü.', activitiesTitle:'Son Aktiviteler', activitiesSubtitle:'Son oyun aktivitelerin', noActivity:'Henüz aktivite yok.', loginSuccess:'Hoş geldin', loginFailed:'Geçersiz giriş!', registerSuccess:'Kayıt başarılı!', registerFailed:'Tüm alanları doldurun!', usernameExists:'Bu isim kullanılıyor!', gameSaved:'Oyun kaydedildi!', gameUpdated:'Oyun güncellendi!', gameDeleted:'Oyun silindi!', fillRequired:'Gerekli alanları doldurun!', deleteConfirm:'Silmek istediğinize emin misiniz?', resetConfirm:'TÜM VERİLER SİLİNECEK!', resetSuccess:'Sıfırlandı', exportSuccess:'Dışa aktarıldı!', importSuccess:'İçe aktarıldı!', importFailed:'Geçersiz dosya!', dbImportSuccess:'Yüklendi!', noGames:'Henüz oyun yok. Admin ekleyebilir.', noFilterResult:'Oyun bulunamadı', favoriteAdded:'Favorilere eklendi!', favoriteRemoved:'Favorilerden çıkarıldı!', purchasedSuccess:'Satın alındı!', htmlFileStatus:'✅ Yüklendi: ', demoFileStatus:'✅ Demo: ', online:'Çevrimiçi', memberSince:'Üye:', welcomeBack:'Tekrar hoş geldin', balanceLabel:'Bakiye', dailyReward:'Günlük Ödül', claimDaily:'GÜNLÜK ÖDÜL AL', dailyAvailable:'Ödül hazır!', dailyWait:'Sonraki:', dailyClaimed:'Bugün alındı', streakLabel:'Seri', totalEarned:'Toplam Kazanç', buyWithBalance:'Bakiye ile Satın Al', insufficientBalance:'Yetersiz bakiye!', purchaseSuccess:'Satın alındı!', claimReward:'ÖDÜLÜ AL', rewardClaimed:'ALINDI', allCompleteBonus:'🎉 TÜM GÖREVLER TAMAMLANDI! +20$ BONUS!', difficulty_easy:'KOLAY', difficulty_medium:'ORTA', difficulty_hard:'ZOR', difficulty_epic:'DESTANSI', difficulty_legendary:'EFSANE', aboutTitle:'Hakkında', infoDeveloper:'YAPIMCI', infoYear:'YAPIM YILI', infoVersion:'VERSİYON', infoLicense:'LİSANS', infoContributors:'KATKIDA BULUNANLAR', infoDonate:'Destek Ol', annDeleted:'Duyuru silindi!', annSaved:'Duyuru yayınlandı!', annUpdated:'Duyuru güncellendi!', catNews:'Haber', catNewGame:'Yeni Oyun', catUpdate:'Güncelleme', catFeature:'Yeni Özellik', priorityNormal:'Normal', priorityHigh:'Yüksek', priorityUrgent:'Acil', noAnnouncements:'Henüz duyuru yok', dayLabel:'Gün', videoTab:'Video', noVideo:'Video yok', openLink:'Linki Aç', watchVideo:'Videoyu İzle' },
-  en: { navStore:'STORE', navLibrary:'LIBRARY', navAnnouncements:'NEWS', navProfile:'PROFILE', storeTitle:'Store', storeSubtitle:'Discover games', libraryTitle:'My Library', librarySubtitle:'Your games', filters:'FILTERS', allGames:'All', favorites:'Favorites', recent:'Recent', free:'Free', purchased:'Purchased', categories:'CATEGORIES', sortName:'Name', sortRecent:'Recent', sortPrice:'Price', announcementsTitle:'Announcements', announcementsSubtitle:'News and updates', adminPanel:'ADMIN', adminLogin:'Login', password:'PASSWORD', loginBtn:'LOGIN', addGame:'Add Game', manageGames:'Manage', manageAnnouncements:'News', importExport:'I/O', gameCover:'COVER', clickUploadCover:'Upload cover', gameGallery:'GALLERY', clickUploadGallery:'Add images', gameTitle:'TITLE *', gameCategory:'CATEGORY *', gameSubtitle:'SUBTITLE', gameDesc:'DESCRIPTION', gamePrice:'PRICE (USD)', gamePlayable:'PLAYABLE', age18Label:'🔞 +18', gameLink:'GAME LINK (Optional)', gameYoutube:'YOUTUBE (Optional)', gameHTML:'HTML FILE', clickUploadHTML:'Upload HTML', demoHTML:'DEMO', clickUploadDemo:'Upload demo', gameRules:'RULES', gameManual:'MANUAL', saveGame:'SAVE', cancel:'CANCEL', addAnnouncement:'Add News', annTitle:'TITLE *', annCategory:'CATEGORY', annPriority:'PRIORITY', annContent:'CONTENT *', saveAnnouncement:'PUBLISH', existingAnnouncements:'Existing', exportData:'Export', exportDesc:'Download JSON', exportBtn:'JSON', importData:'Import', importDesc:'Load JSON', importBtn:'FILE', dangerZone:'Danger', resetBtn:'DELETE ALL', tabOverview:'Overview', tabGallery:'Gallery', tabVideo:'Video', tabRules:'Rules', tabManual:'Manual', playable:'PLAYABLE', comingSoon:'SOON', category:'CATEGORY', status:'STATUS', price:'PRICE', play:'PLAY', buy:'BUY', buyBalance:'BALANCE BUY', demo:'DEMO', ageTitle:'Age Check', ageTextSimple:'18+ only.<br>Continue?', ageYes:'✅ 18+', ageNo:'❌ No', ageDenied:'Cannot view!', buyTitle:'Buy', buyDesc:'Choose method:', authTitle:'Account', loginTab:'Login', registerTab:'Register', importTab:'Import', playerName:'NAME', birthdate:'BIRTHDATE', email:'EMAIL', registerBtn:'REGISTER', uploadAvatar:'Avatar', importDbDesc:'Load JSON.', importDbBtn:'FILE', fullscreen:'FULLSCREEN', backToLauncher:'BACK', profileWelcome:'Welcome to K-Moon', profileLogin:'Login', profileRegister:'Register', profileImport:'Import', profileLogout:'Logout', profileEdit:'Edit', profileExport:'Export', loginRequired:'Login required', loginRequiredDesc:'Register or login', totalGames:'Total', playedGames:'Played', totalPlays:'Plays', achievements:'Achievements', totalXP:'XP', badgesTitle:'Achievements', badgesSubtitle:'Earn rewards!', dailyLoginsTitle:'📅 Daily Login Rewards', dailyLoginsSubtitle:'Login daily for increasing rewards! 30-day cycle.', activitiesTitle:'Activities', activitiesSubtitle:'Recent', noActivity:'No activities.', loginSuccess:'Welcome!', loginFailed:'Invalid!', registerSuccess:'Registered!', registerFailed:'Fill all!', usernameExists:'Taken!', gameSaved:'Saved!', gameUpdated:'Updated!', gameDeleted:'Deleted!', fillRequired:'Fill required!', deleteConfirm:'Delete?', resetConfirm:'DELETE ALL?', resetSuccess:'Reset', exportSuccess:'Exported!', importSuccess:'Imported!', importFailed:'Invalid!', dbImportSuccess:'Loaded!', noGames:'No games yet.', noFilterResult:'No games', favoriteAdded:'Added!', favoriteRemoved:'Removed!', purchasedSuccess:'Purchased!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Demo: ', online:'Online', memberSince:'Member:', welcomeBack:'Welcome back', balanceLabel:'Balance', dailyReward:'Daily', claimDaily:'CLAIM DAILY', dailyAvailable:'Ready!', dailyWait:'Next:', dailyClaimed:'Claimed', streakLabel:'Streak', totalEarned:'Total Earned', buyWithBalance:'Buy with Balance', insufficientBalance:'Insufficient!', purchaseSuccess:'Purchased!', claimReward:'CLAIM', rewardClaimed:'CLAIMED', allCompleteBonus:'🎉 ALL DONE! +20$ BONUS!', difficulty_easy:'EASY', difficulty_medium:'MEDIUM', difficulty_hard:'HARD', difficulty_epic:'EPIC', difficulty_legendary:'LEGENDARY', aboutTitle:'About', infoDeveloper:'DEVELOPER', infoYear:'YEAR', infoVersion:'VERSION', infoLicense:'LICENSE', infoContributors:'CONTRIBUTORS', infoDonate:'Donate', annDeleted:'Deleted!', annSaved:'Published!', annUpdated:'Updated!', catNews:'News', catNewGame:'New Game', catUpdate:'Update', catFeature:'Feature', priorityNormal:'Normal', priorityHigh:'High', priorityUrgent:'Urgent', noAnnouncements:'No announcements', dayLabel:'Day', videoTab:'Video', noVideo:'No video', openLink:'Open Link', watchVideo:'Watch Video' },
-  ru: { navStore:'МАГАЗИН', navLibrary:'БИБЛИОТЕКА', navAnnouncements:'НОВОСТИ', navProfile:'ПРОФИЛЬ', storeTitle:'Магазин', storeSubtitle:'Игры', libraryTitle:'Библиотека', librarySubtitle:'Ваши игры', filters:'ФИЛЬТРЫ', allGames:'Все', favorites:'Избранное', recent:'Недавние', free:'Бесплатные', purchased:'Купленные', categories:'КАТЕГОРИИ', sortName:'Имя', sortRecent:'Недавние', sortPrice:'Цена', announcementsTitle:'Новости', announcementsSubtitle:'Новости и обновления', adminPanel:'АДМИН', adminLogin:'Вход', password:'ПАРОЛЬ', loginBtn:'ВОЙТИ', addGame:'Добавить', manageGames:'Управление', manageAnnouncements:'Новости', importExport:'И/Э', gameCover:'ОБЛОЖКА', clickUploadCover:'Загрузить', gameGallery:'ГАЛЕРЕЯ', clickUploadGallery:'Добавить', gameTitle:'НАЗВАНИЕ *', gameCategory:'КАТЕГОРИЯ *', gameSubtitle:'ПОДЗАГОЛОВОК', gameDesc:'ОПИСАНИЕ', gamePrice:'ЦЕНА (USD)', gamePlayable:'ИГРАБЕЛЬНАЯ', age18Label:'🔞 +18', gameLink:'ССЫЛКА', gameYoutube:'YOUTUBE', gameHTML:'HTML', clickUploadHTML:'Загрузить', demoHTML:'ДЕМО', clickUploadDemo:'Демо', gameRules:'ПРАВИЛА', gameManual:'РУКОВОДСТВО', saveGame:'СОХРАНИТЬ', cancel:'ОТМЕНА', addAnnouncement:'Добавить новость', annTitle:'ЗАГОЛОВОК *', annCategory:'КАТЕГОРИЯ', annPriority:'ПРИОРИТЕТ', annContent:'СОДЕРЖАНИЕ *', saveAnnouncement:'ОПУБЛИКОВАТЬ', existingAnnouncements:'Существующие', exportData:'Экспорт', exportDesc:'JSON', exportBtn:'JSON', importData:'Импорт', importDesc:'Из JSON', importBtn:'ФАЙЛ', dangerZone:'Опасно', resetBtn:'УДАЛИТЬ', tabOverview:'Обзор', tabGallery:'Галерея', tabVideo:'Видео', tabRules:'Правила', tabManual:'Руководство', playable:'ИГРАБЕЛЬНАЯ', comingSoon:'СКОРО', category:'КАТЕГОРИЯ', status:'СТАТУС', price:'ЦЕНА', play:'ИГРАТЬ', buy:'КУПИТЬ', buyBalance:'БАЛАНС', demo:'ДЕМО', ageTitle:'Возраст', ageTextSimple:'Только 18+.<br>Продолжить?', ageYes:'✅ 18+', ageNo:'❌ Нет', ageDenied:'Нельзя!', buyTitle:'Покупка', buyDesc:'Выберите:', authTitle:'Аккаунт', loginTab:'Войти', registerTab:'Регистрация', importTab:'Импорт', playerName:'ИМЯ', birthdate:'ДАТА РОЖДЕНИЯ', email:'EMAIL', registerBtn:'РЕГИСТРАЦИЯ', uploadAvatar:'Аватар', importDbDesc:'JSON.', importDbBtn:'ФАЙЛ', fullscreen:'ЭКРАН', backToLauncher:'НАЗАД', profileWelcome:'Добро пожаловать', profileLogin:'Войти', profileRegister:'Регистрация', profileImport:'Импорт', profileLogout:'Выйти', profileEdit:'Редактировать', profileExport:'Экспорт', loginRequired:'Войдите', loginRequiredDesc:'Зарегистрируйтесь', totalGames:'Всего', playedGames:'Сыграно', totalPlays:'Запусков', achievements:'Достижения', totalXP:'XP', badgesTitle:'Достижения', badgesSubtitle:'Зарабатывайте!', dailyLoginsTitle:'📅 Ежедневные награды', dailyLoginsSubtitle:'Входите ежедневно!', activitiesTitle:'Активность', activitiesSubtitle:'Последние', noActivity:'Нет активности.', loginSuccess:'Успешно!', loginFailed:'Ошибка!', registerSuccess:'Успешно!', registerFailed:'Заполните!', usernameExists:'Занято!', gameSaved:'Сохранено!', gameUpdated:'Обновлено!', gameDeleted:'Удалено!', fillRequired:'Заполните!', deleteConfirm:'Удалить?', resetConfirm:'ВСЁ УДАЛИТЬ?', resetSuccess:'Сброшено', exportSuccess:'Экспортировано!', importSuccess:'Импортировано!', importFailed:'Ошибка!', dbImportSuccess:'Загружено!', noGames:'Нет игр.', noFilterResult:'Нет игр', favoriteAdded:'Добавлено!', favoriteRemoved:'Удалено!', purchasedSuccess:'Куплено!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Демо: ', online:'В сети', memberSince:'Участник:', welcomeBack:'С возвращением', balanceLabel:'Баланс', dailyReward:'Ежедневно', claimDaily:'ПОЛУЧИТЬ', dailyAvailable:'Готово!', dailyWait:'Следующее:', dailyClaimed:'Получено', streakLabel:'Серия', totalEarned:'Всего заработано', buyWithBalance:'С баланса', insufficientBalance:'Недостаточно!', purchaseSuccess:'Куплено!', claimReward:'ПОЛУЧИТЬ', rewardClaimed:'ПОЛУЧЕНО', allCompleteBonus:'🎉 ВСЁ! +20$ БОНУС!', difficulty_easy:'ЛЕГКО', difficulty_medium:'СРЕДНЕ', difficulty_hard:'СЛОЖНО', difficulty_epic:'ЭПИЧЕСКИ', difficulty_legendary:'ЛЕГЕНДА', aboutTitle:'О программе', infoDeveloper:'РАЗРАБОТЧИК', infoYear:'ГОД', infoVersion:'ВЕРСИЯ', infoLicense:'ЛИЦЕНЗИЯ', infoContributors:'АВТОРЫ', infoDonate:'Поддержать', annDeleted:'Удалено!', annSaved:'Опубликовано!', annUpdated:'Обновлено!', catNews:'Новости', catNewGame:'Новая игра', catUpdate:'Обновление', catFeature:'Функция', priorityNormal:'Обычный', priorityHigh:'Высокий', priorityUrgent:'Срочный', noAnnouncements:'Нет новостей', dayLabel:'День', videoTab:'Видео', noVideo:'Нет видео', openLink:'Открыть', watchVideo:'Смотреть' },
-  ka: { navStore:'მაღაზია', navLibrary:'ბიბლიოთეკა', navAnnouncements:'ახალი ამბები', navProfile:'პროფილი', storeTitle:'მაღაზია', storeSubtitle:'თამაშები', libraryTitle:'ბიბლიოთეკა', librarySubtitle:'თამაშები', filters:'ფილტრები', allGames:'ყველა', favorites:'ფავორიტები', recent:'ბოლო', free:'უფასო', purchased:'ნაყიდი', categories:'კატეგორიები', sortName:'სახელი', sortRecent:'ბოლო', sortPrice:'ფასი', announcementsTitle:'ახალი ამბები', announcementsSubtitle:'სიახლეები', adminPanel:'ადმინი', adminLogin:'შესვლა', password:'პაროლი', loginBtn:'შესვლა', addGame:'დამატება', manageGames:'მართვა', manageAnnouncements:'სიახლეები', importExport:'იმპორტი', gameCover:'ყდა', clickUploadCover:'ატვირთვა', gameGallery:'გალერეა', clickUploadGallery:'დამატება', gameTitle:'სათაური *', gameCategory:'კატეგორია *', gameSubtitle:'ქვესათაური', gameDesc:'აღწერა', gamePrice:'ფასი (USD)', gamePlayable:'ითამაშება', age18Label:'🔞 +18', gameLink:'ლინკი', gameYoutube:'YOUTUBE', gameHTML:'HTML', clickUploadHTML:'ატვირთვა', demoHTML:'დემო', clickUploadDemo:'დემო', gameRules:'წესები', gameManual:'სახელმძღვანელო', saveGame:'შენახვა', cancel:'გაუქმება', addAnnouncement:'სიახლე', annTitle:'სათაური *', annCategory:'კატეგორია', annPriority:'პრიორიტეტი', annContent:'შინაარსი *', saveAnnouncement:'გამოქვეყნება', existingAnnouncements:'არსებული', exportData:'ექსპორტი', exportDesc:'JSON', exportBtn:'JSON', importData:'იმპორტი', importDesc:'JSON-დან', importBtn:'ფაილი', dangerZone:'საშიში', resetBtn:'წაშლა', tabOverview:'მიმოხილვა', tabGallery:'გალერეა', tabVideo:'ვიდეო', tabRules:'წესები', tabManual:'სახელმძღვანელო', playable:'ითამაშება', comingSoon:'მალე', category:'კატეგორია', status:'სტატუსი', price:'ფასი', play:'თამაში', buy:'ყიდვა', buyBalance:'ბალანსით', demo:'დემო', ageTitle:'ასაკი', ageTextSimple:'18+.<br>გაგრძელება?', ageYes:'✅ 18+', ageNo:'❌ არა', ageDenied:'არა!', buyTitle:'ყიდვა', buyDesc:'აირჩიეთ:', authTitle:'ანგარიში', loginTab:'შესვლა', registerTab:'რეგისტრაცია', importTab:'იმპორტი', playerName:'სახელი', birthdate:'დაბ. თარიღი', email:'EMAIL', registerBtn:'რეგისტრაცია', uploadAvatar:'ავატარი', importDbDesc:'JSON.', importDbBtn:'ფაილი', fullscreen:'სრული', backToLauncher:'უკან', profileWelcome:'K-Moon', profileLogin:'შესვლა', profileRegister:'რეგისტრაცია', profileImport:'ჩატვირთვა', profileLogout:'გასვლა', profileEdit:'რედაქტირება', profileExport:'ექსპორტი', loginRequired:'შესვლა', loginRequiredDesc:'დარეგისტრირდით', totalGames:'სულ', playedGames:'ნათამაშები', totalPlays:'სულ', achievements:'მიღწევები', totalXP:'XP', badgesTitle:'მიღწევები', badgesSubtitle:'მოიგე!', dailyLoginsTitle:'📅 ყოველდღიური', dailyLoginsSubtitle:'შესვლა ყოველდღიურად!', activitiesTitle:'აქტივობები', activitiesSubtitle:'ბოლო', noActivity:'არაფერი.', loginSuccess:'წარმატებული!', loginFailed:'შეცდომა!', registerSuccess:'წარმატებული!', registerFailed:'შეავსეთ!', usernameExists:'დაკავებული!', gameSaved:'შენახულია!', gameUpdated:'განახლებულია!', gameDeleted:'წაშლილია!', fillRequired:'შეავსეთ!', deleteConfirm:'წაშლა?', resetConfirm:'ყველაფერი წაიშლება!', resetSuccess:'განულებულია', exportSuccess:'ექსპორტი!', importSuccess:'იმპორტი!', importFailed:'შეცდომა!', dbImportSuccess:'ჩატვირთულია!', noGames:'არაფერი.', noFilterResult:'არაფერი', favoriteAdded:'დამატებული!', favoriteRemoved:'წაშლილი!', purchasedSuccess:'ნაყიდი!', htmlFileStatus:'✅ ', demoFileStatus:'✅ დემო: ', online:'ონლაინ', memberSince:'წევრი:', welcomeBack:'კეთილი', balanceLabel:'ბალანსი', dailyReward:'ყოველდღიური', claimDaily:'მიიღე', dailyAvailable:'მზად!', dailyWait:'შემდეგი:', dailyClaimed:'მიღებული', streakLabel:'სერია', totalEarned:'მთლიანი', buyWithBalance:'ბალანსით', insufficientBalance:'არაა!', purchaseSuccess:'ნაყიდი!', claimReward:'მიღება', rewardClaimed:'მიღებული', allCompleteBonus:'🎉 ყველა! +20$ ბონუსი!', difficulty_easy:'ადვილი', difficulty_medium:'საშუალო', difficulty_hard:'რთული', difficulty_epic:'ეპიკური', difficulty_legendary:'ლეგენდარული', aboutTitle:'შესახებ', infoDeveloper:'შემქმნელი', infoYear:'წელი', infoVersion:'ვერსია', infoLicense:'ლიცენზია', infoContributors:'ავტორები', infoDonate:'მხარდაჭერა', annDeleted:'წაშლილი!', annSaved:'გამოქვეყნდა!', annUpdated:'განახლდა!', catNews:'ახალი ამბები', catNewGame:'ახალი თამაში', catUpdate:'განახლება', catFeature:'ფუნქცია', priorityNormal:'ნორმალური', priorityHigh:'მაღალი', priorityUrgent:'სასწრაფო', noAnnouncements:'არაფერი', dayLabel:'დღე', videoTab:'ვიდეო', noVideo:'არა', openLink:'ლინკი', watchVideo:'ყურება' },
-  az: { navStore:'MAĞAZA', navLibrary:'KİTABXANA', navAnnouncements:'XƏBƏRLƏR', navProfile:'PROFİL', storeTitle:'Mağaza', storeSubtitle:'Oyunlar', libraryTitle:'Kitabxana', librarySubtitle:'Oyunlarınız', filters:'FİLTRLƏR', allGames:'Hamısı', favorites:'Sevimlilər', recent:'Son', free:'Pulsuz', purchased:'Alınan', categories:'KATEQORİYALAR', sortName:'Ad', sortRecent:'Son', sortPrice:'Qiymət', announcementsTitle:'Xəbərlər', announcementsSubtitle:'Yeniliklər', adminPanel:'ADMİN', adminLogin:'Giriş', password:'ŞİFRƏ', loginBtn:'GİRİŞ', addGame:'Əlavə', manageGames:'İdarə', manageAnnouncements:'Xəbərlər', importExport:'İdxal', gameCover:'QAPAQ', clickUploadCover:'Yüklə', gameGallery:'QALERİYA', clickUploadGallery:'Əlavə', gameTitle:'BAŞLIK *', gameCategory:'KATEQORİYA *', gameSubtitle:'ALT', gameDesc:'AÇIQLAMA', gamePrice:'QİYMƏT (USD)', gamePlayable:'OYNANILAN', age18Label:'🔞 +18', gameLink:'LİNK', gameYoutube:'YOUTUBE', gameHTML:'HTML', clickUploadHTML:'Yüklə', demoHTML:'DEMO', clickUploadDemo:'Demo', gameRules:'QAYDALAR', gameManual:'TƏLİMAT', saveGame:'SAXLA', cancel:'LƏĞV', addAnnouncement:'Xəbər əlavə', annTitle:'BAŞLIK *', annCategory:'KATEQORİYA', annPriority:'ÖNCELİK', annContent:'MƏZMUN *', saveAnnouncement:'YAYIMLA', existingAnnouncements:'Mövcud', exportData:'İxrac', exportDesc:'JSON', exportBtn:'JSON', importData:'İdxal', importDesc:'JSON-dan', importBtn:'FAYL', dangerZone:'Təhlükəli', resetBtn:'SİL', tabOverview:'İcmal', tabGallery:'Qaleriya', tabVideo:'Video', tabRules:'Qaydalar', tabManual:'Təlimat', playable:'OYNANILAN', comingSoon:'TEZLİKLƏ', category:'KATEQORİYA', status:'STATUS', price:'QİYMƏT', play:'OYNA', buy:'AL', buyBalance:'BALANS', demo:'DEMO', ageTitle:'Yaş', ageTextSimple:'18+.<br>Davam?', ageYes:'✅ 18+', ageNo:'❌ Xeyr', ageDenied:'Baxa bilməzsiniz!', buyTitle:'Al', buyDesc:'Seçin:', authTitle:'Hesab', loginTab:'Giriş', registerTab:'Qeydiyyat', importTab:'İdxal', playerName:'AD', birthdate:'DOĞUM', email:'EMAIL', registerBtn:'QEYDİYYAT', uploadAvatar:'Avatar', importDbDesc:'JSON.', importDbBtn:'FAYL', fullscreen:'TAM', backToLauncher:'GERİ', profileWelcome:'K-Moon', profileLogin:'Giriş', profileRegister:'Qeydiyyat', profileImport:'Yüklə', profileLogout:'Çıxış', profileEdit:'Redaktə', profileExport:'İxrac', loginRequired:'Giriş', loginRequiredDesc:'Qeydiyyat', totalGames:'Ümumi', playedGames:'Oynanan', totalPlays:'Toplam', achievements:'Nailiyyətlər', totalXP:'XP', badgesTitle:'Nailiyyətlər', badgesSubtitle:'Qazan!', dailyLoginsTitle:'📅 Gündəlik', dailyLoginsSubtitle:'Hər gün giriş!', activitiesTitle:'Fəaliyyətlər', activitiesSubtitle:'Son', noActivity:'Yoxdur.', loginSuccess:'Uğurlu!', loginFailed:'Səhv!', registerSuccess:'Uğurlu!', registerFailed:'Doldurun!', usernameExists:'Götürülüb!', gameSaved:'Saxlanıldı!', gameUpdated:'Yeniləndi!', gameDeleted:'Silindi!', fillRequired:'Doldurun!', deleteConfirm:'Sil?', resetConfirm:'HAMISI SİLİNƏCƏK!', resetSuccess:'Sıfırlandı', exportSuccess:'İxrac!', importSuccess:'İdxal!', importFailed:'Səhv!', dbImportSuccess:'Yükləndi!', noGames:'Yox.', noFilterResult:'Yox', favoriteAdded:'Əlavə!', favoriteRemoved:'Silindi!', purchasedSuccess:'Alındı!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Demo: ', online:'Onlayn', memberSince:'Üzv:', welcomeBack:'Xoş', balanceLabel:'Balans', dailyReward:'Gündəlik', claimDaily:'AL', dailyAvailable:'Hazır!', dailyWait:'Sonrakı:', dailyClaimed:'Alındı', streakLabel:'Seriya', totalEarned:'Toplam', buyWithBalance:'Balansla', insufficientBalance:'Kifayət deyil!', purchaseSuccess:'Alındı!', claimReward:'AL', rewardClaimed:'ALINDI', allCompleteBonus:'🎉 HAMISI! +20$ BONUS!', difficulty_easy:'ASAN', difficulty_medium:'ORTA', difficulty_hard:'ÇƏTİN', difficulty_epic:'EPOS', difficulty_legendary:'ƏFSANƏ', aboutTitle:'Haqqında', infoDeveloper:'YARADICI', infoYear:'İL', infoVersion:'VERSİYA', infoLicense:'LİSENZİYA', infoContributors:'MÜƏLLİFLƏR', infoDonate:'Dəstək', annDeleted:'Silindi!', annSaved:'Yayınlandı!', annUpdated:'Yeniləndi!', catNews:'Xəbər', catNewGame:'Yeni oyun', catUpdate:'Yeniləmə', catFeature:'Xüsusiyyət', priorityNormal:'Normal', priorityHigh:'Yüksək', priorityUrgent:'Təcili', noAnnouncements:'Yox', dayLabel:'Gün', videoTab:'Video', noVideo:'Yox', openLink:'Link', watchVideo:'İzlə' },
-  uk: { navStore:'МАГАЗИН', navLibrary:'БІБЛІОТЕКА', navAnnouncements:'НОВИНИ', navProfile:'ПРОФІЛЬ', storeTitle:'Магазин', storeSubtitle:'Ігри', libraryTitle:'Бібліотека', librarySubtitle:'Ваші ігри', filters:'ФІЛЬТРИ', allGames:'Всі', favorites:'Обрані', recent:'Недавні', free:'Безкоштовні', purchased:'Куплені', categories:'КАТЕГОРІЇ', sortName:'Ім\'я', sortRecent:'Недавні', sortPrice:'Ціна', announcementsTitle:'Новини', announcementsSubtitle:'Оновлення', adminPanel:'АДМІН', adminLogin:'Вхід', password:'ПАРОЛЬ', loginBtn:'УВІЙТИ', addGame:'Додати', manageGames:'Керувати', manageAnnouncements:'Новини', importExport:'Імпорт', gameCover:'ОБКЛАДИНКА', clickUploadCover:'Завантажити', gameGallery:'ГАЛЕРЕЯ', clickUploadGallery:'Додати', gameTitle:'НАЗВА *', gameCategory:'КАТЕГОРІЯ *', gameSubtitle:'ПІДЗАГОЛОВОК', gameDesc:'ОПИС', gamePrice:'ЦІНА (USD)', gamePlayable:'ГРАБЕЛЬНА', age18Label:'🔞 +18', gameLink:'ПОСИЛАННЯ', gameYoutube:'YOUTUBE', gameHTML:'HTML', clickUploadHTML:'Завантажити', demoHTML:'ДЕМО', clickUploadDemo:'Демо', gameRules:'ПРАВИЛА', gameManual:'ПОСІБНИК', saveGame:'ЗБЕРЕГТИ', cancel:'СКАСУВАТИ', addAnnouncement:'Новина', annTitle:'ЗАГОЛОВОК *', annCategory:'КАТЕГОРІЯ', annPriority:'ПРІОРИТЕТ', annContent:'ЗМІСТ *', saveAnnouncement:'ОПУБЛІКУВАТИ', existingAnnouncements:'Існуючі', exportData:'Експорт', exportDesc:'JSON', exportBtn:'JSON', importData:'Імпорт', importDesc:'З JSON', importBtn:'ФАЙЛ', dangerZone:'Небезпечно', resetBtn:'ВИДАЛИТИ', tabOverview:'Огляд', tabGallery:'Галерея', tabVideo:'Відео', tabRules:'Правила', tabManual:'Посібник', playable:'ГРАБЕЛЬНА', comingSoon:'СКОРО', category:'КАТЕГОРІЯ', status:'СТАТУС', price:'ЦІНА', play:'ГРАТИ', buy:'КУПИТИ', buyBalance:'БАЛАНС', demo:'ДЕМО', ageTitle:'Вік', ageTextSimple:'Тільки 18+.<br>Продовжити?', ageYes:'✅ 18+', ageNo:'❌ Ні', ageDenied:'Не можна!', buyTitle:'Купівля', buyDesc:'Виберіть:', authTitle:'Акаунт', loginTab:'Увійти', registerTab:'Реєстрація', importTab:'Імпорт', playerName:'ІМ\'Я', birthdate:'ДАТА НАРОДЖЕННЯ', email:'EMAIL', registerBtn:'ЗАРЕЄСТРУВАТИСЬ', uploadAvatar:'Аватар', importDbDesc:'JSON.', importDbBtn:'ФАЙЛ', fullscreen:'ПОВНИЙ', backToLauncher:'НАЗАД', profileWelcome:'Ласкаво', profileLogin:'Увійти', profileRegister:'Реєстрація', profileImport:'Завантажити', profileLogout:'Вийти', profileEdit:'Редагувати', profileExport:'Експорт', loginRequired:'Увійдіть', loginRequiredDesc:'Зареєструйтесь', totalGames:'Всього', playedGames:'Зіграно', totalPlays:'Запусків', achievements:'Досягнення', totalXP:'XP', badgesTitle:'Досягнення', badgesSubtitle:'Заробляйте!', dailyLoginsTitle:'📅 Щоденні', dailyLoginsSubtitle:'Щоденний вхід!', activitiesTitle:'Активність', activitiesSubtitle:'Остання', noActivity:'Немає.', loginSuccess:'Успішно!', loginFailed:'Помилка!', registerSuccess:'Успішно!', registerFailed:'Заповніть!', usernameExists:'Зайнято!', gameSaved:'Збережено!', gameUpdated:'Оновлено!', gameDeleted:'Видалено!', fillRequired:'Заповніть!', deleteConfirm:'Видалити?', resetConfirm:'ВСЕ ВИДАЛИТИ!', resetSuccess:'Скинуто', exportSuccess:'Експортовано!', importSuccess:'Імпортовано!', importFailed:'Помилка!', dbImportSuccess:'Завантажено!', noGames:'Немає.', noFilterResult:'Немає', favoriteAdded:'Додано!', favoriteRemoved:'Видалено!', purchasedSuccess:'Куплено!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Демо: ', online:'Онлайн', memberSince:'Учасник:', welcomeBack:'З поверненням', balanceLabel:'Баланс', dailyReward:'Щоденно', claimDaily:'ОТРИМАТИ', dailyAvailable:'Готово!', dailyWait:'Наступне:', dailyClaimed:'Отримано', streakLabel:'Серія', totalEarned:'Всього', buyWithBalance:'З балансу', insufficientBalance:'Недостатньо!', purchaseSuccess:'Куплено!', claimReward:'ОТРИМАТИ', rewardClaimed:'ОТРИМАНО', allCompleteBonus:'🎉 ВСЕ! +20$ БОНУС!', difficulty_easy:'ЛЕГКО', difficulty_medium:'СЕРЕДНЬО', difficulty_hard:'СКЛАДНО', difficulty_epic:'ЕПІЧНО', difficulty_legendary:'ЛЕГЕНДА', aboutTitle:'Про програму', infoDeveloper:'РОЗРОБНИК', infoYear:'РІК', infoVersion:'ВЕРСІЯ', infoLicense:'ЛІЦЕНЗІЯ', infoContributors:'АВТОРИ', infoDonate:'Підтримати', annDeleted:'Видалено!', annSaved:'Опубліковано!', annUpdated:'Оновлено!', catNews:'Новина', catNewGame:'Нова гра', catUpdate:'Оновлення', catFeature:'Функція', priorityNormal:'Звичайний', priorityHigh:'Високий', priorityUrgent:'Терміновий', noAnnouncements:'Немає', dayLabel:'День', videoTab:'Відео', noVideo:'Немає', openLink:'Відкрити', watchVideo:'Дивитися' }
+// ====================================================================
+// 🔥 FIREBASE CONFIG - BURAYA KENDİ BİLGİLERİNİZİ YAZIN!
+// Firebase Console → Project Settings → Your apps → Web app → Config
+// ====================================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBj5F26iRiXpoFj7B647pvM4wpCfc18Bh4",
+  authDomain: "k-moon.firebaseapp.com",
+  projectId: "k-moon",
+  storageBucket: "k-moon.firebasestorage.app",
+  messagingSenderId: "461760747689",
+  appId: "1:461760747689:web:0130cac0c1134acc0371b8"
+
 };
-// Diğer diller için en yakın çeviriyi kullan
-['hi','he','ja','zh','el','hy','ko','th','ar','fa'].forEach(l => translations[l] = translations.en);
+
+// Firebase'i başlat
+let db = null;
+let firebaseReady = false;
+
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  console.log('✅ Firebase başlatıldı');
+} catch(e) {
+  console.error('❌ Firebase başlatma hatası:', e);
+}
+
+// ====================================================================
+// ÇOKLU DİL
+// ====================================================================
+const translations = {
+  tr: { navStore:'MAĞAZA', navLibrary:'KÜTÜPHANE', navAnnouncements:'DUYURU', navProfile:'PROFİL', storeTitle:'Mağaza', storeSubtitle:'Admin tarafından eklenen oyunları keşfet', libraryTitle:'Kütüphanem', librarySubtitle:'Sahip olduğun tüm oyunlar', filters:'FİLTRELER', allGames:'Tüm Oyunlar', favorites:'Favoriler', recent:'Son Oynanan', free:'Ücretsiz', purchased:'Satın Alınan', categories:'KATEGORİLER', sortName:'İsme Göre', sortRecent:'Son Oynanan', sortPrice:'Fiyata Göre', announcementsTitle:'Duyurular', announcementsSubtitle:'Yeni oyunlar, güncellemeler ve haberler', adminPanel:'ADMIN PANELİ', adminLogin:'Admin Girişi', password:'ŞİFRE', loginBtn:'GİRİŞ YAP', addGame:'Oyun Ekle', manageGames:'Yönet', manageAnnouncements:'Duyurular', importExport:'İçe/Dışa', gameCover:'OYUN KAPAĞI', clickUploadCover:'Kapak resmi yükle', gameGallery:'GALERİ', clickUploadGallery:'Galeri resimleri ekle', gameTitle:'OYUN BAŞLIĞI *', gameCategory:'KATEGORİ *', gameSubtitle:'ALT BAŞLIK', gameDesc:'AÇIKLAMA', gamePrice:'FİYAT (USD)', gamePlayable:'OYNANABİLİR', age18Label:'🔞 +18 İçerik', gameLink:'OYUN LİNKİ (İsteğe bağlı)', gameYoutube:'YOUTUBE VİDEO (İsteğe bağlı)', gameHTML:'OYUN HTML DOSYASI', clickUploadHTML:'HTML dosyası yükle', demoHTML:'DEMO HTML', clickUploadDemo:'Demo HTML yükle', gameRules:'OYUN KURALLARI', gameManual:'OYNAMA KİTAPÇIĞI', saveGame:'KAYDET', cancel:'İPTAL', addAnnouncement:'Yeni Duyuru Ekle', annTitle:'BAŞLIK *', annCategory:'KATEGORİ', annPriority:'ÖNCELİK', annContent:'İÇERİK *', saveAnnouncement:'DUYURUYU YAYINLA', existingAnnouncements:'Mevcut Duyurular', exportData:'Dışa Aktar', exportDesc:'JSON olarak indir', exportBtn:'JSON İNDİR', importData:'İçe Aktar', importDesc:'JSON dosyasından yükle', importBtn:'DOSYA SEÇ', dangerZone:'Tehlikeli Bölge', resetBtn:'TÜM VERİLERİ SİL', tabOverview:'Genel Bakış', tabGallery:'Galeri', tabVideo:'Video', tabRules:'Kurallar', tabManual:'Kitapçık', playable:'OYNANABİLİR', comingSoon:'YAKINDA', category:'KATEGORİ', status:'DURUM', price:'FİYAT', play:'OYNA', buy:'SATIN AL', buyBalance:'BALANS İLE AL', demo:'DEMO', ageTitle:'Yaş Doğrulaması', ageTextSimple:'Bu içerik yalnızca 18 yaş ve üzeri içindir.<br>Devam etmek istiyor musunuz?', ageYes:'✅ Evet, 18+', ageNo:'❌ Hayır', ageDenied:'Bu içeriği görüntüleyemezsiniz!', buyTitle:'Satın Al', buyDesc:'Satın almak için bir yöntem seçin:', authTitle:'Hesap', loginTab:'Giriş', registerTab:'Kayıt', importTab:'Yükle', playerName:'OYUNCU İSMİ', birthdate:'DOĞUM TARİHİ', email:'E-POSTA', registerBtn:'KAYIT OL', uploadAvatar:'Avatar Yükle', importDbDesc:'JSON dosyanızı yükleyin.', importDbBtn:'DOSYA SEÇ', fullscreen:'TAM EKRAN', backToLauncher:'GERİ', profileWelcome:'K-Moon\'a Hoş Geldin', profileLogin:'Giriş Yap', profileRegister:'Kayıt Ol', profileImport:'Veri Yükle', profileLogout:'Çıkış Yap', profileEdit:'Düzenle', profileExport:'Dışa Aktar', loginRequired:'Giriş yapın', loginRequiredDesc:'Kayıt olun veya giriş yapın', totalGames:'Toplam Oyun', playedGames:'Oynanan Oyun', totalPlays:'Toplam Oynama', achievements:'Başarım', totalXP:'Toplam XP', badgesTitle:'Başarımlar & Ödüller', badgesSubtitle:'Görevleri tamamla, dolar kazan!', dailyLoginsTitle:'📅 Günlük Giriş Ödülleri', dailyLoginsSubtitle:'Her gün giriş yap, artan ödüller kazan! 30 günde bir döngü.', activitiesTitle:'Son Aktiviteler', activitiesSubtitle:'Son oyun aktivitelerin', noActivity:'Henüz aktivite yok.', loginSuccess:'Hoş geldin', loginFailed:'Geçersiz giriş!', registerSuccess:'Kayıt başarılı!', registerFailed:'Tüm alanları doldurun!', usernameExists:'Bu isim kullanılıyor!', gameSaved:'Oyun kaydedildi!', gameUpdated:'Oyun güncellendi!', gameDeleted:'Oyun silindi!', fillRequired:'Gerekli alanları doldurun!', deleteConfirm:'Silmek istediğinize emin misiniz?', resetConfirm:'TÜM VERİLER SİLİNECEK!', resetSuccess:'Sıfırlandı', exportSuccess:'Dışa aktarıldı!', importSuccess:'İçe aktarıldı!', importFailed:'Geçersiz dosya!', dbImportSuccess:'Yüklendi!', noGames:'Henüz oyun yok. Admin ekleyebilir.', noFilterResult:'Oyun bulunamadı', favoriteAdded:'Favorilere eklendi!', favoriteRemoved:'Favorilerden çıkarıldı!', purchasedSuccess:'Satın alındı!', htmlFileStatus:'✅ Yüklendi: ', demoFileStatus:'✅ Demo: ', online:'Çevrimiçi', memberSince:'Üye:', welcomeBack:'Tekrar hoş geldin', balanceLabel:'Bakiye', dailyReward:'Günlük Ödül', claimDaily:'GÜNLÜK ÖDÜL AL', dailyAvailable:'Ödül hazır!', dailyWait:'Sonraki:', dailyClaimed:'Bugün alındı', streakLabel:'Seri', totalEarned:'Toplam Kazanç', buyWithBalance:'Bakiye ile Satın Al', insufficientBalance:'Yetersiz bakiye!', purchaseSuccess:'Satın alındı!', claimReward:'ÖDÜLÜ AL', rewardClaimed:'ALINDI', allCompleteBonus:'🎉 TÜM GÖREVLER TAMAMLANDI! +20$ BONUS!', difficulty_easy:'KOLAY', difficulty_medium:'ORTA', difficulty_hard:'ZOR', difficulty_epic:'DESTANSI', difficulty_legendary:'EFSANE', aboutTitle:'Hakkında', infoDeveloper:'YAPIMCI', infoYear:'YAPIM YILI', infoVersion:'VERSİYON', infoLicense:'LİSANS', infoContributors:'KATKIDA BULUNANLAR', infoDonate:'Destek Ol', annDeleted:'Duyuru silindi!', annSaved:'Duyuru yayınlandı!', annUpdated:'Duyuru güncellendi!', catNews:'Haber', catNewGame:'Yeni Oyun', catUpdate:'Güncelleme', catFeature:'Yeni Özellik', priorityNormal:'Normal', priorityHigh:'Yüksek', priorityUrgent:'Acil', noAnnouncements:'Henüz duyuru yok', dayLabel:'Gün', videoTab:'Video', noVideo:'Video yok', openLink:'Linki Aç', watchVideo:'Videoyu İzle', syncing:'Senkronize ediliyor...', savedOnline:'Online kaydedildi!', firebaseError:'Veritabanı hatası!', offlineMode:'Çevrimdışı mod' },
+  en: { navStore:'STORE', navLibrary:'LIBRARY', navAnnouncements:'NEWS', navProfile:'PROFILE', storeTitle:'Store', storeSubtitle:'Discover games', libraryTitle:'My Library', librarySubtitle:'Your games', filters:'FILTERS', allGames:'All', favorites:'Favorites', recent:'Recent', free:'Free', purchased:'Purchased', categories:'CATEGORIES', sortName:'Name', sortRecent:'Recent', sortPrice:'Price', announcementsTitle:'Announcements', announcementsSubtitle:'News and updates', adminPanel:'ADMIN', adminLogin:'Login', password:'PASSWORD', loginBtn:'LOGIN', addGame:'Add Game', manageGames:'Manage', manageAnnouncements:'News', importExport:'I/O', gameCover:'COVER', clickUploadCover:'Upload cover', gameGallery:'GALLERY', clickUploadGallery:'Add images', gameTitle:'TITLE *', gameCategory:'CATEGORY *', gameSubtitle:'SUBTITLE', gameDesc:'DESCRIPTION', gamePrice:'PRICE (USD)', gamePlayable:'PLAYABLE', age18Label:'🔞 +18', gameLink:'GAME LINK (Optional)', gameYoutube:'YOUTUBE (Optional)', gameHTML:'HTML FILE', clickUploadHTML:'Upload HTML', demoHTML:'DEMO', clickUploadDemo:'Upload demo', gameRules:'RULES', gameManual:'MANUAL', saveGame:'SAVE', cancel:'CANCEL', addAnnouncement:'Add News', annTitle:'TITLE *', annCategory:'CATEGORY', annPriority:'PRIORITY', annContent:'CONTENT *', saveAnnouncement:'PUBLISH', existingAnnouncements:'Existing', exportData:'Export', exportDesc:'Download JSON', exportBtn:'JSON', importData:'Import', importDesc:'Load JSON', importBtn:'FILE', dangerZone:'Danger', resetBtn:'DELETE ALL', tabOverview:'Overview', tabGallery:'Gallery', tabVideo:'Video', tabRules:'Rules', tabManual:'Manual', playable:'PLAYABLE', comingSoon:'SOON', category:'CATEGORY', status:'STATUS', price:'PRICE', play:'PLAY', buy:'BUY', buyBalance:'BALANCE BUY', demo:'DEMO', ageTitle:'Age Check', ageTextSimple:'18+ only.<br>Continue?', ageYes:'✅ 18+', ageNo:'❌ No', ageDenied:'Cannot view!', buyTitle:'Buy', buyDesc:'Choose method:', authTitle:'Account', loginTab:'Login', registerTab:'Register', importTab:'Import', playerName:'NAME', birthdate:'BIRTHDATE', email:'EMAIL', registerBtn:'REGISTER', uploadAvatar:'Avatar', importDbDesc:'Load JSON.', importDbBtn:'FILE', fullscreen:'FULLSCREEN', backToLauncher:'BACK', profileWelcome:'Welcome to K-Moon', profileLogin:'Login', profileRegister:'Register', profileImport:'Import', profileLogout:'Logout', profileEdit:'Edit', profileExport:'Export', loginRequired:'Login required', loginRequiredDesc:'Register or login', totalGames:'Total', playedGames:'Played', totalPlays:'Plays', achievements:'Achievements', totalXP:'XP', badgesTitle:'Achievements', badgesSubtitle:'Earn rewards!', dailyLoginsTitle:'📅 Daily Login Rewards', dailyLoginsSubtitle:'Login daily for increasing rewards! 30-day cycle.', activitiesTitle:'Activities', activitiesSubtitle:'Recent', noActivity:'No activities.', loginSuccess:'Welcome!', loginFailed:'Invalid!', registerSuccess:'Registered!', registerFailed:'Fill all!', usernameExists:'Taken!', gameSaved:'Saved!', gameUpdated:'Updated!', gameDeleted:'Deleted!', fillRequired:'Fill required!', deleteConfirm:'Delete?', resetConfirm:'DELETE ALL?', resetSuccess:'Reset', exportSuccess:'Exported!', importSuccess:'Imported!', importFailed:'Invalid!', dbImportSuccess:'Loaded!', noGames:'No games yet.', noFilterResult:'No games', favoriteAdded:'Added!', favoriteRemoved:'Removed!', purchasedSuccess:'Purchased!', htmlFileStatus:'✅ ', demoFileStatus:'✅ Demo: ', online:'Online', memberSince:'Member:', welcomeBack:'Welcome back', balanceLabel:'Balance', dailyReward:'Daily', claimDaily:'CLAIM DAILY', dailyAvailable:'Ready!', dailyWait:'Next:', dailyClaimed:'Claimed', streakLabel:'Streak', totalEarned:'Total Earned', buyWithBalance:'Buy with Balance', insufficientBalance:'Insufficient!', purchaseSuccess:'Purchased!', claimReward:'CLAIM', rewardClaimed:'CLAIMED', allCompleteBonus:'🎉 ALL DONE! +20$ BONUS!', difficulty_easy:'EASY', difficulty_medium:'MEDIUM', difficulty_hard:'HARD', difficulty_epic:'EPIC', difficulty_legendary:'LEGENDARY', aboutTitle:'About', infoDeveloper:'DEVELOPER', infoYear:'YEAR', infoVersion:'VERSION', infoLicense:'LICENSE', infoContributors:'CONTRIBUTORS', infoDonate:'Donate', annDeleted:'Deleted!', annSaved:'Published!', annUpdated:'Updated!', catNews:'News', catNewGame:'New Game', catUpdate:'Update', catFeature:'Feature', priorityNormal:'Normal', priorityHigh:'High', priorityUrgent:'Urgent', noAnnouncements:'No announcements', dayLabel:'Day', videoTab:'Video', noVideo:'No video', openLink:'Open Link', watchVideo:'Watch Video', syncing:'Syncing...', savedOnline:'Saved online!', firebaseError:'Database error!', offlineMode:'Offline mode' }
+};
+['ru','ka','az','uk','hi','he','ja','zh','el','hy','ko','th','ar','fa'].forEach(l => translations[l] = translations.en);
 
 let currentLang = localStorage.getItem('kmoonLang') || 'tr';
 function t(key) { return translations[currentLang]?.[key] || translations.en[key] || key; }
@@ -939,7 +907,9 @@ function changeLanguage(lang) {
   renderStore(); renderLibrary(); renderProfile(); renderAnnouncements();
 }
 
-// ===== ŞİFRELENMİŞ ADMİN ŞİFRELERİ =====
+// ====================================================================
+// ŞİFRE SİSTEMLERİ
+// ====================================================================
 const ENCODED_ADMIN_PASSWORDS = [
   [152,143,162,159,157,92,90,92,98],      // nexus2026
   [139,142,151,147,152,91,92,93],          // admin123
@@ -975,7 +945,9 @@ function simpleHash(str) {
   return 'h_' + hash.toString(36) + '_' + hash2.toString(36) + '_' + hash3.toString(36);
 }
 
-// ===== BAŞARIMLAR =====
+// ====================================================================
+// BAŞARIMLAR
+// ====================================================================
 const ACHIEVEMENTS = [
   { id:'a1', icon:'🎮', name:'İlk Adım', desc:'İlk oyunu oyna', reward:0.10, difficulty:'easy', check: s => s.playedGames >= 1 },
   { id:'a2', icon:'🔍', name:'Keşif', desc:'3 farklı oyun oyna', reward:0.10, difficulty:'easy', check: s => s.playedGames >= 3 },
@@ -1000,9 +972,11 @@ const ACHIEVEMENTS = [
   { id:'a21', icon:'🏅', name:'Mükemmeliyetçi', desc:'Tüm başarımları tamamla', reward:20.00, difficulty:'legendary', check: (s, allClaimed) => allClaimed >= 20 }
 ];
 
-// ===== VERİ YÖNETİMİ - GLOBAL OYUNLAR =====
-let games = []; // GLOBAL - herkes için aynı
-let announcements = []; // GLOBAL - herkes için aynı
+// ====================================================================
+// VERİ YÖNETİMİ
+// ====================================================================
+let games = []; // GLOBAL - Firebase'den
+let announcements = []; // GLOBAL - Firebase'den
 let userProfile = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0, dailyLoginDays:[] };
 let users = [];
 let currentUser = null;
@@ -1017,34 +991,172 @@ let isAdminLoggedIn = false;
 let pendingAgeGameId = null;
 let currentModalGame = null;
 
-function createSVGCover(title, c1, c2, emoji) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${c1}"/><stop offset="100%" style="stop-color:${c2}"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><circle cx="80" cy="60" r="40" fill="rgba(255,255,255,0.1)"/><circle cx="320" cy="240" r="60" fill="rgba(255,255,255,0.08)"/><text x="200" y="160" font-size="100" text-anchor="middle">${emoji}</text><text x="200" y="250" font-size="24" font-weight="900" text-anchor="middle" fill="white" font-family="Arial">${title}</text></svg>`;
-  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+// ====================================================================
+// RESİM SIKIŞTIRMA (Firestore 1MB limiti için)
+// ====================================================================
+function compressImage(file, maxWidth = 800, quality = 0.8) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
-// GLOBAL oyunlar yükle/kaydet
-function loadGlobalGames() {
+// ====================================================================
+// FIREBASE FONKSİYONLARI
+// ====================================================================
+function updateFirebaseStatus(status, text) {
+  const el = document.getElementById('firebaseStatus');
+  if (!el) return;
+  el.className = 'firebase-status ' + status;
+  el.textContent = text;
+}
+
+// Oyunları Firebase'den gerçek zamanlı yükle
+function loadGamesFromFirebase() {
+  if (!db) {
+    updateFirebaseStatus('error', '❌ Firebase yapılandırılmamış');
+    return;
+  }
+  
   try {
-    const g = localStorage.getItem('kmoonGlobalGames');
-    games = g ? JSON.parse(g) : [];
-  } catch(e) { games = []; }
-}
-function saveGlobalGames() {
-  try { localStorage.setItem('kmoonGlobalGames', JSON.stringify(games)); }
-  catch(e) { showToast('⚠️ Depolama dolu!', 'error'); }
+    db.collection('games').onSnapshot((snapshot) => {
+      games = [];
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        games.push({ 
+          id: doc.id, 
+          ...data,
+          free: data.price === 'ÜCRETSİZ' || parsePrice(data.price) === 0
+        });
+      });
+      firebaseReady = true;
+      updateFirebaseStatus('connected', '✅ Online • ' + games.length + ' oyun');
+      renderStore();
+      renderLibrary();
+      if (isAdminLoggedIn) renderAdminGameList();
+      console.log('✅ Oyunlar yüklendi:', games.length);
+    }, (error) => {
+      console.error('❌ Firebase hatası:', error);
+      updateFirebaseStatus('error', '❌ Bağlantı hatası');
+      showToast(t('firebaseError'), 'error');
+    });
+  } catch(e) {
+    console.error(e);
+    updateFirebaseStatus('error', '❌ Hata');
+  }
 }
 
-// GLOBAL duyurular yükle/kaydet
-function loadGlobalAnnouncements() {
+// Duyuruları Firebase'den gerçek zamanlı yükle
+function loadAnnouncementsFromFirebase() {
+  if (!db) return;
+  
   try {
-    const a = localStorage.getItem('kmoonGlobalAnnouncements');
-    announcements = a ? JSON.parse(a) : [];
-  } catch(e) { announcements = []; }
-}
-function saveGlobalAnnouncements() {
-  try { localStorage.setItem('kmoonGlobalAnnouncements', JSON.stringify(announcements)); } catch(e) {}
+    db.collection('announcements').onSnapshot((snapshot) => {
+      announcements = [];
+      snapshot.forEach(doc => {
+        announcements.push({ id: doc.id, ...doc.data() });
+      });
+      renderAnnouncements();
+      if (isAdminLoggedIn) renderAdminAnnouncementList();
+      console.log('✅ Duyurular yüklendi:', announcements.length);
+    });
+  } catch(e) {
+    console.error(e);
+  }
 }
 
+// Oyunu Firebase'e kaydet
+async function saveGameToFirebase(gameData) {
+  if (!db) { showToast(t('firebaseError'), 'error'); return false; }
+  
+  try {
+    // Büyük verileri temizle (Firestore limiti için)
+    const cleanData = {...gameData};
+    if (cleanData.html && cleanData.html.length > 500000) {
+      cleanData.html = cleanData.html.substring(0, 500000) + '\n<!-- TRUNCATED -->';
+    }
+    if (cleanData.demo && cleanData.demo.length > 500000) {
+      cleanData.demo = cleanData.demo.substring(0, 500000) + '\n<!-- TRUNCATED -->';
+    }
+    
+    if (currentEditId) {
+      await db.collection('games').doc(currentEditId).set(cleanData);
+    } else {
+      cleanData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('games').add(cleanData);
+    }
+    return true;
+  } catch(e) {
+    console.error(e);
+    showToast(t('firebaseError') + ': ' + e.message, 'error');
+    return false;
+  }
+}
+
+// Oyunu Firebase'den sil
+async function deleteGameFromFirebase(id) {
+  if (!db) return false;
+  try {
+    await db.collection('games').doc(id).delete();
+    return true;
+  } catch(e) {
+    showToast(t('firebaseError'), 'error');
+    return false;
+  }
+}
+
+// Duyuruyu Firebase'e kaydet
+async function saveAnnouncementToFirebase(annData) {
+  if (!db) return false;
+  try {
+    if (currentEditAnnId) {
+      await db.collection('announcements').doc(currentEditAnnId).set(annData);
+    } else {
+      annData.date = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('announcements').add(annData);
+    }
+    return true;
+  } catch(e) {
+    showToast(t('firebaseError'), 'error');
+    return false;
+  }
+}
+
+// Duyuruyu Firebase'den sil
+async function deleteAnnouncementFromFirebase(id) {
+  if (!db) return false;
+  try {
+    await db.collection('announcements').doc(id).delete();
+    return true;
+  } catch(e) {
+    showToast(t('firebaseError'), 'error');
+    return false;
+  }
+}
+
+// ====================================================================
+// YEREL KULLANICI VERİLERİ (localStorage)
+// ====================================================================
 function loadUsers() {
   try {
     const u = localStorage.getItem('kmoonUsers');
@@ -1111,7 +1223,14 @@ function createParticles() {
 }
 createParticles();
 
-// ===== PENCERE BUTONLARI =====
+function createSVGCover(title, c1, c2, emoji) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${c1}"/><stop offset="100%" style="stop-color:${c2}"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><circle cx="80" cy="60" r="40" fill="rgba(255,255,255,0.1)"/><circle cx="320" cy="240" r="60" fill="rgba(255,255,255,0.08)"/><text x="200" y="160" font-size="100" text-anchor="middle">${emoji}</text><text x="200" y="250" font-size="24" font-weight="900" text-anchor="middle" fill="white" font-family="Arial">${title}</text></svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+}
+
+// ====================================================================
+// PENCERE BUTONLARI
+// ====================================================================
 function exportUserData() {
   if (!currentUser) { showToast(t('loginRequired'), 'warning'); openAuthModal('login'); return; }
   exportData();
@@ -1127,24 +1246,27 @@ function toggleLauncherFullscreen() {
 function closeLauncher() {
   if (confirm(t('deleteConfirm'))) {
     window.close();
-    // Eğer window.close çalışmazsa, en azından sayfayı temizle
     document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#8a8ab0;font-family:sans-serif;">🌙 K-Moon kapatıldı</div>';
   }
 }
 
+// ====================================================================
+// BAŞLANGIÇ
+// ====================================================================
 setTimeout(() => {
   document.getElementById('splash').classList.add('hide');
   document.getElementById('launcher').classList.add('show');
+  
+  // Yerel kullanıcı verileri
   loadUsers();
   loadCurrentUser();
-  loadGlobalGames();
-  loadGlobalAnnouncements();
+  
+  // Firebase'den global verileri yükle
+  loadGamesFromFirebase();
+  loadAnnouncementsFromFirebase();
+  
   document.getElementById('langSelect').value = currentLang;
   applyTranslations();
-  renderStore();
-  renderLibrary();
-  renderProfile();
-  renderAnnouncements();
   updateUserAvatar();
   updateBalanceDisplay();
 }, 3000);
@@ -1166,6 +1288,9 @@ function updateBalanceDisplay() {
   document.getElementById('balanceAmount').textContent = (userProfile.balance || 0).toFixed(2);
 }
 
+// ====================================================================
+// MAĞAZA & KÜTÜPHANE
+// ====================================================================
 function renderStore(filter='') {
   const grid = document.getElementById('gamesGrid');
   grid.innerHTML = '';
@@ -1285,7 +1410,9 @@ document.getElementById('searchInput').addEventListener('input', e => {
   if (p==='store') renderStore(q);
 });
 
-// ===== DUYURULAR =====
+// ====================================================================
+// DUYURULAR
+// ====================================================================
 function renderAnnouncements() {
   const list = document.getElementById('announcementsList');
   if (announcements.length === 0) {
@@ -1293,17 +1420,18 @@ function renderAnnouncements() {
     return;
   }
   
-  // Önce yüksek öncelikliler, sonra tarihe göre
   const sorted = [...announcements].sort((a,b) => {
     const pOrder = {urgent:0, high:1, normal:2};
     if (pOrder[a.priority] !== pOrder[b.priority]) return pOrder[a.priority] - pOrder[b.priority];
-    return new Date(b.date) - new Date(a.date);
+    const aDate = a.date?.toDate ? a.date.toDate() : new Date(a.date);
+    const bDate = b.date?.toDate ? b.date.toDate() : new Date(b.date);
+    return bDate - aDate;
   });
   
   list.innerHTML = sorted.map(a => {
     const catClass = {news:'cat-news', 'new-game':'cat-new-game', update:'cat-update', feature:'cat-feature'}[a.category] || 'cat-news';
     const catName = {news:t('catNews'), 'new-game':t('catNewGame'), update:t('catUpdate'), feature:t('catFeature')}[a.category] || t('catNews');
-    const date = new Date(a.date).toLocaleString();
+    const date = a.date?.toDate ? a.date.toDate().toLocaleString() : new Date(a.date).toLocaleString();
     const priorityIcon = a.priority === 'urgent' ? '⚡ ' : a.priority === 'high' ? '🔥 ' : '';
     
     return `
@@ -1321,9 +1449,10 @@ function renderAnnouncements() {
   }).join('');
 }
 
-// ===== GÜNLÜK GİRİŞ SİSTEMİ (30 GÜN, ARTAN ÖDÜLLER) =====
+// ====================================================================
+// GÜNLÜK GİRİŞ
+// ====================================================================
 function getDailyReward(day) {
-  // Her gün 0.10$ artarak: Gün 1 = 0.10$, Gün 2 = 0.20$, ... Gün 30 = 3.00$
   return 0.10 * day;
 }
 
@@ -1347,25 +1476,19 @@ function claimDailyReward() {
   const today = getTodayKey();
   userProfile.dailyLoginDays.push(today);
   
-  // 30 günden fazla biriktiyse en eskileri sil (döngü)
   if (userProfile.dailyLoginDays.length > 30) {
     userProfile.dailyLoginDays = userProfile.dailyLoginDays.slice(-30);
   }
   
-  // Mevcut gün sırası (1-30)
   const currentDay = userProfile.dailyLoginDays.length;
   const reward = getDailyReward(currentDay);
   
-  // Seri kontrolü
   const now = new Date();
   if (userProfile.lastLogin) {
     const last = new Date(userProfile.lastLogin);
     const dayDiff = Math.floor((now - last) / (1000*60*60*24));
-    if (dayDiff === 1) {
-      userProfile.streak = (userProfile.streak || 0) + 1;
-    } else if (dayDiff > 1) {
-      userProfile.streak = 1;
-    }
+    if (dayDiff === 1) userProfile.streak = (userProfile.streak || 0) + 1;
+    else if (dayDiff > 1) userProfile.streak = 1;
   } else {
     userProfile.streak = 1;
   }
@@ -1382,7 +1505,9 @@ function claimDailyReward() {
   showToast(`🎁 +${reward.toFixed(2)}$ - ${t('dayLabel')} ${currentDay}!`, 'reward');
 }
 
-// ===== BAŞARIM ÖDÜLÜ =====
+// ====================================================================
+// BAŞARIMLAR
+// ====================================================================
 function claimAchievementReward(achId) {
   if (!currentUser) return;
   const ach = ACHIEVEMENTS.find(a => a.id === achId);
@@ -1474,7 +1599,6 @@ function renderProfile() {
   const avatarHTML = currentUser.avatar ? `<img src="${currentUser.avatar}">` : '🎮';
   const canClaim = canClaimDaily();
   const currentDay = userProfile.dailyLoginDays.length;
-  const nextReward = currentDay < 30 ? getDailyReward(currentDay + 1) : 0;
   
   c.innerHTML = `
     <div class="profile-header">
@@ -1484,10 +1608,7 @@ function renderProfile() {
         <div class="profile-tag">@${currentUser.name.toLowerCase().replace(/\s+/g,'')} • 🟢 ${t('online')} • ${t('memberSince')} ${new Date(currentUser.joined).toLocaleDateString()}</div>
         <div class="profile-bio">${currentUser.email}</div>
         <div class="xp-bar-container">
-          <div class="xp-label">
-            <span>SEVİYE ${s.level}</span>
-            <span>${s.currentXP} / ${s.neededXP} XP</span>
-          </div>
+          <div class="xp-label"><span>SEVİYE ${s.level}</span><span>${s.currentXP} / ${s.neededXP} XP</span></div>
           <div class="xp-bar"><div class="xp-fill" style="width:${s.xpPercent}%"></div></div>
         </div>
       </div>
@@ -1519,7 +1640,6 @@ function renderProfile() {
       </div>
     </div>
     
-    <!-- GÜNLÜK GİRİŞ TAKVİMİ -->
     <div class="daily-calendar">
       <div class="daily-calendar-title">📅 ${t('dailyLoginsTitle')} <span style="font-size:12px; color:#8a8ab0; margin-left:auto;">${currentDay}/30 ${t('dayLabel')}</span></div>
       <div style="font-size:12px; color:#8a8ab0; margin-bottom:15px;">${t('dailyLoginsSubtitle')}</div>
@@ -1552,7 +1672,6 @@ function renderDailyCalendar() {
   const grid = document.getElementById('dailyCalendarGrid');
   if (!grid) return;
   
-  const today = getTodayKey();
   const loginDays = userProfile.dailyLoginDays || [];
   
   let html = '';
@@ -1603,11 +1722,8 @@ function renderAchievements() {
 }
 
 function openProfileOrLogin() {
-  if (currentUser) {
-    document.querySelector('.nav-item[data-page="profile"]').click();
-  } else {
-    openAuthModal('login');
-  }
+  if (currentUser) document.querySelector('.nav-item[data-page="profile"]').click();
+  else openAuthModal('login');
 }
 
 function openAuthModal(tab='login') {
@@ -1630,22 +1746,12 @@ function registerUser() {
   const email = document.getElementById('regEmail').value.trim();
   const password = document.getElementById('regPassword').value;
   
-  if (!name || !birthdate || !email || !password) {
-    showToast(t('registerFailed'), 'error');
-    return;
-  }
+  if (!name || !birthdate || !email || !password) { showToast(t('registerFailed'), 'error'); return; }
   
-  if (users.find(u => u.name.toLowerCase() === name.toLowerCase())) {
-    showToast(t('usernameExists'), 'error');
-    return;
-  }
+  if (users.find(u => u.name.toLowerCase() === name.toLowerCase())) { showToast(t('usernameExists'), 'error'); return; }
   
   const passwordHash = simpleHash(password);
-  const newUser = {
-    name, birthdate, email, passwordHash,
-    avatar: currentAvatar,
-    joined: new Date().toISOString()
-  };
+  const newUser = { name, birthdate, email, passwordHash, avatar: currentAvatar, joined: new Date().toISOString() };
   
   users.push(newUser);
   saveUsers();
@@ -1658,8 +1764,6 @@ function registerUser() {
   closeAuthModal();
   updateUserAvatar();
   renderProfile();
-  renderStore();
-  renderLibrary();
   updateBalanceDisplay();
   showToast(t('registerSuccess') + ', ' + name + '!', 'success');
   
@@ -1691,9 +1795,6 @@ function loginUser() {
   closeAuthModal();
   updateUserAvatar();
   renderProfile();
-  renderStore();
-  renderLibrary();
-  renderAnnouncements();
   updateBalanceDisplay();
   showToast(t('welcomeBack') + ', ' + user.name + '!', 'success');
   
@@ -1730,17 +1831,13 @@ function editAccount() {
   }
 }
 
-function handleAvatarUpload(e) {
+async function handleAvatarUpload(e) {
   const f = e.target.files[0];
   if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => {
-    currentAvatar = ev.target.result;
-    document.getElementById('avatarPreview').src = currentAvatar;
-    document.getElementById('avatarPreview').style.display = 'block';
-    document.getElementById('avatarPlaceholder').style.display = 'none';
-  };
-  r.readAsDataURL(f);
+  currentAvatar = await compressImage(f, 400, 0.8);
+  document.getElementById('avatarPreview').src = currentAvatar;
+  document.getElementById('avatarPreview').style.display = 'block';
+  document.getElementById('avatarPlaceholder').style.display = 'none';
 }
 
 function updateUserAvatar() {
@@ -1760,10 +1857,7 @@ function importDatabase(e) {
         const acc = data.account;
         let existingUser = users.find(u => u.name.toLowerCase() === acc.name.toLowerCase());
         if (existingUser) {
-          if (acc.passwordHash && existingUser.passwordHash !== acc.passwordHash) {
-            showToast(t('loginFailed'), 'error');
-            return;
-          }
+          if (acc.passwordHash && existingUser.passwordHash !== acc.passwordHash) { showToast(t('loginFailed'), 'error'); return; }
           currentUser = existingUser;
         } else {
           users.push(acc);
@@ -1779,8 +1873,6 @@ function importDatabase(e) {
         closeAuthModal();
         updateUserAvatar();
         renderProfile();
-        renderStore();
-        renderLibrary();
         updateBalanceDisplay();
         showToast(t('dbImportSuccess') + ', ' + currentUser.name + '!', 'success');
       } else {
@@ -1811,6 +1903,12 @@ function recordGamePlay(id) {
   saveProfileData();
 }
 
+function extractYoutubeId(url) {
+  if (!url) return null;
+  const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+  return match ? match[1] : null;
+}
+
 function openGameModal(id) {
   const g = games.find(x=>x.id===id);
   if (!g) return;
@@ -1820,12 +1918,6 @@ function openGameModal(id) {
     return;
   }
   showGameModalContent(g);
-}
-
-function extractYoutubeId(url) {
-  if (!url) return null;
-  const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
-  return match ? match[1] : null;
 }
 
 function showGameModalContent(g) {
@@ -1856,7 +1948,6 @@ function showGameModalContent(g) {
     ? `<div class="gallery">${gallery.map(img=>`<div class="gallery-img" style="background-image:url('${img}')"></div>`).join('')}</div>`
     : `<div style="color:#8a8ab0;padding:20px;">-</div>`;
   
-  // Video tab
   const ytId = extractYoutubeId(g.youtube);
   if (ytId) {
     document.getElementById('gtab-video').innerHTML = `
@@ -1999,10 +2090,7 @@ function buyWithBalance(id) {
   const g = games.find(x=>x.id===id);
   if (!g) return;
   const price = parsePrice(g.price);
-  if ((userProfile.balance || 0) < price) {
-    showToast(t('insufficientBalance'), 'error');
-    return;
-  }
+  if ((userProfile.balance || 0) < price) { showToast(t('insufficientBalance'), 'error'); return; }
   userProfile.balance -= price;
   if (!userProfile.purchased) userProfile.purchased = [];
   if (!userProfile.purchased.includes(id)) userProfile.purchased.push(id);
@@ -2067,12 +2155,13 @@ function toggleFullscreen() {
   }
 }
 
-// ===== INFO MODAL =====
 function openInfoModal() { document.getElementById('infoModal').classList.add('show'); }
 function closeInfoModal() { document.getElementById('infoModal').classList.remove('show'); }
 document.getElementById('infoModal').addEventListener('click', e => { if (e.target.id==='infoModal') closeInfoModal(); });
 
-// ===== ADMIN =====
+// ====================================================================
+// ADMIN
+// ====================================================================
 function openAdmin() {
   document.getElementById('adminModal').classList.add('show');
   if (!isAdminLoggedIn) {
@@ -2108,29 +2197,22 @@ document.querySelectorAll('.admin-tab').forEach(tab => {
   });
 });
 
-function handleCoverUpload(e) {
+async function handleCoverUpload(e) {
   const f = e.target.files[0];
   if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => {
-    currentCoverImage = ev.target.result;
-    document.getElementById('coverPreview').src = currentCoverImage;
-    document.getElementById('coverPreview').style.display = 'block';
-    document.getElementById('coverPlaceholder').style.display = 'none';
-  };
-  r.readAsDataURL(f);
+  currentCoverImage = await compressImage(f, 800, 0.85);
+  document.getElementById('coverPreview').src = currentCoverImage;
+  document.getElementById('coverPreview').style.display = 'block';
+  document.getElementById('coverPlaceholder').style.display = 'none';
 }
 
-function handleGalleryUpload(e) {
+async function handleGalleryUpload(e) {
   const files = Array.from(e.target.files);
-  files.forEach(f => {
-    const r = new FileReader();
-    r.onload = ev => {
-      currentGalleryImages.push(ev.target.result);
-      renderGalleryGrid();
-    };
-    r.readAsDataURL(f);
-  });
+  for (const f of files) {
+    const compressed = await compressImage(f, 600, 0.8);
+    currentGalleryImages.push(compressed);
+    renderGalleryGrid();
+  }
 }
 
 function renderGalleryGrid() {
@@ -2167,7 +2249,7 @@ function handleDemoUpload(e) {
   r.readAsText(f);
 }
 
-function saveGame() {
+async function saveGame() {
   if (!isAdminLoggedIn) { showToast(t('loginRequired'), 'error'); return; }
   
   const title = document.getElementById('gameTitle').value.trim();
@@ -2190,40 +2272,24 @@ function saveGame() {
   const finalHTML = htmlCode || currentHTML;
   const finalDemo = demoCode || currentDemoHTML;
   
-  if (currentEditId) {
-    const g = games.find(x=>x.id===currentEditId);
-    if (g) {
-      g.title = title; g.category = category; g.subtitle = subtitle; g.description = description;
-      g.price = price; g.free = price==='ÜCRETSİZ' || parsePrice(price)===0; g.playable = playable; g.age18 = age18;
-      g.link = link; g.youtube = youtube;
-      g.rules = rules; g.manual = manual;
-      if (currentCoverImage) g.cover = currentCoverImage;
-      if (currentGalleryImages.length>0) g.gallery = currentGalleryImages;
-      if (finalHTML) g.html = finalHTML;
-      if (finalDemo) g.demo = finalDemo;
-      showToast(t('gameUpdated'), 'success');
-    }
-  } else {
-    const newGame = {
-      id: 'game_' + Date.now(),
-      title, category, subtitle, description, price,
-      free: price==='ÜCRETSİZ' || parsePrice(price)===0,
-      playable, age18, link, youtube,
-      cover: currentCoverImage || createSVGCover(title.toUpperCase(), '#ffd700', '#ff6b00', '🌙'),
-      gallery: currentGalleryImages.length>0 ? currentGalleryImages : [],
-      rules, manual,
-      html: finalHTML,
-      demo: finalDemo
-    };
-    games.push(newGame);
-    showToast(t('gameSaved'), 'success');
-  }
+  const gameData = {
+    title, category, subtitle, description, price,
+    free: price==='ÜCRETSİZ' || parsePrice(price)===0,
+    playable, age18, link, youtube,
+    cover: currentCoverImage || createSVGCover(title.toUpperCase(), '#ffd700', '#ff6b00', '🌙'),
+    gallery: currentGalleryImages.length>0 ? currentGalleryImages : [],
+    rules, manual,
+    html: finalHTML,
+    demo: finalDemo
+  };
   
-  saveGlobalGames();
-  resetForm();
-  renderStore();
-  renderLibrary();
-  renderAdminGameList();
+  showToast(t('syncing'), 'warning');
+  const success = await saveGameToFirebase(gameData);
+  
+  if (success) {
+    showToast(currentEditId ? t('gameUpdated') : t('gameSaved') + ' ✅', 'success');
+    resetForm();
+  }
 }
 
 function resetForm() {
@@ -2311,20 +2377,16 @@ function editGame(id) {
   document.getElementById('atab-add').classList.add('active');
 }
 
-function deleteGame(id) {
+async function deleteGame(id) {
   const g = games.find(x=>x.id===id);
   if (!g) return;
   if (!confirm(t('deleteConfirm'))) return;
-  games = games.filter(x=>x.id!==id);
-  saveGlobalGames();
-  renderStore();
-  renderLibrary();
-  renderAdminGameList();
-  showToast(t('gameDeleted'), 'success');
+  
+  const success = await deleteGameFromFirebase(id);
+  if (success) showToast(t('gameDeleted'), 'success');
 }
 
-// ===== DUYURU YÖNETİMİ =====
-function saveAnnouncement() {
+async function saveAnnouncement() {
   if (!isAdminLoggedIn) return;
   const title = document.getElementById('annTitle').value.trim();
   const category = document.getElementById('annCategory').value;
@@ -2333,26 +2395,15 @@ function saveAnnouncement() {
   
   if (!title || !content) { showToast(t('fillRequired'), 'error'); return; }
   
-  if (currentEditAnnId) {
-    const a = announcements.find(x=>x.id===currentEditAnnId);
-    if (a) {
-      a.title = title; a.category = category; a.priority = priority; a.content = content;
-      a.editedDate = new Date().toISOString();
-      showToast(t('annUpdated'), 'success');
-    }
-  } else {
-    announcements.push({
-      id: 'ann_' + Date.now(),
-      title, category, priority, content,
-      date: new Date().toISOString()
-    });
-    showToast(t('annSaved'), 'success');
-  }
+  const annData = { title, category, priority, content };
   
-  saveGlobalAnnouncements();
-  resetAnnouncementForm();
-  renderAdminAnnouncementList();
-  renderAnnouncements();
+  showToast(t('syncing'), 'warning');
+  const success = await saveAnnouncementToFirebase(annData);
+  
+  if (success) {
+    showToast(currentEditAnnId ? t('annUpdated') : t('annSaved'), 'success');
+    resetAnnouncementForm();
+  }
 }
 
 function resetAnnouncementForm() {
@@ -2377,7 +2428,7 @@ function renderAdminAnnouncementList() {
         <div style="font-size:40px; text-align:center;">📢</div>
         <div>
           <h3>${priorityIcon}${a.title}</h3>
-          <p>${catName} • ${new Date(a.date).toLocaleDateString()} • ${a.content.substring(0,80)}...</p>
+          <p>${catName} • ${(a.content||'').substring(0,80)}...</p>
         </div>
         <div class="admin-announcement-actions">
           <button class="btn-edit" onclick="editAnnouncement('${a.id}')">✏️</button>
@@ -2399,24 +2450,19 @@ function editAnnouncement(id) {
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function deleteAnnouncement(id) {
+async function deleteAnnouncement(id) {
   if (!confirm(t('deleteConfirm'))) return;
-  announcements = announcements.filter(x=>x.id!==id);
-  saveGlobalAnnouncements();
-  renderAdminAnnouncementList();
-  renderAnnouncements();
-  showToast(t('annDeleted'), 'success');
+  const success = await deleteAnnouncementFromFirebase(id);
+  if (success) showToast(t('annDeleted'), 'success');
 }
 
 function exportData() {
   if (!currentUser) { showToast(t('loginRequired'), 'error'); return; }
   const data = { 
-    version:'8.0.0', 
+    version:'9.0.0', 
     exportDate:new Date().toISOString(), 
     account: currentUser,
-    profile:userProfile,
-    globalGames: games,
-    globalAnnouncements: announcements
+    profile:userProfile
   };
   const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -2441,13 +2487,7 @@ function importData(e) {
         userProfile = {...defaults, ...data.profile}; 
         saveProfileData(); 
       }
-      // Global verileri de yükle (admin ise)
-      if (isAdminLoggedIn) {
-        if (data.globalGames) { games = data.globalGames; saveGlobalGames(); }
-        if (data.globalAnnouncements) { announcements = data.globalAnnouncements; saveGlobalAnnouncements(); }
-      }
-      renderStore(); renderLibrary(); renderProfile(); renderAnnouncements();
-      if (isAdminLoggedIn) { renderAdminGameList(); renderAdminAnnouncementList(); }
+      renderProfile();
       updateBalanceDisplay();
       showToast(t('importSuccess'), 'success');
     } catch(err) { showToast(t('importFailed'), 'error'); }
@@ -2463,7 +2503,7 @@ function resetAllData() {
   }
   userProfile = { gamesPlayed:{}, favorites:[], activities:[], purchased:[], balance:0, lastDailyReward:null, lastLogin:null, streak:0, claimedAchievements:[], totalEarned:0, totalDailyClaims:0, dailyLoginDays:[] };
   saveProfileData();
-  renderStore(); renderLibrary(); renderProfile(); renderAnnouncements();
+  renderProfile();
   updateBalanceDisplay();
   showToast(t('resetSuccess'), 'success');
 }
