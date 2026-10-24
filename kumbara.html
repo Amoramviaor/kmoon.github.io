@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0a0a15">
+<title>🏆 K-Moon Kumbara Yarışması</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;user-select:none;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(ellipse at center,#1a0a3e 0%,#0a0a2e 50%,#000 100%);color:#fff;min-height:100vh;min-height:100dvh;overflow-x:hidden}
+button,input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:linear-gradient(#ffd700,#ff8c00);border-radius:4px}
+
+/* ===== SPLASH ===== */
+#splash{position:fixed;inset:0;z-index:9999;background:radial-gradient(circle,#1a0a3e,#000);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s;padding:20px}
+#splash.hide{opacity:0;pointer-events:none}
+.splash-logo{font-size:100px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+.splash-title{font-size:42px;font-weight:900;background:linear-gradient(90deg,#ffd700,#ff8c00,#ffd700);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shine 3s linear infinite;margin-top:20px;letter-spacing:3px;text-align:center}
+@keyframes shine{to{background-position:200% center}}
+.splash-sub{color:#8a8ab0;margin-top:10px;letter-spacing:3px;font-size:12px;text-align:center}
+
+/* ===== PARTICLES ===== */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0}
+.particle{position:absolute;width:4px;height:4px;border-radius:50%;background:#ffd700;opacity:0;animation:rise 15s linear infinite}
+@keyframes rise{0%{transform:translateY(100vh) translateX(0);opacity:0}10%,90%{opacity:0.6}100%{transform:translateY(-10vh) translateX(100px);opacity:0}}
+
+/* ===== TOP BAR ===== */
+.topbar{height:50px;background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);border-bottom:2px solid rgba(255,215,0,0.3);display:flex;align-items:center;padding:0 15px;gap:10px;position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.topbar-logo{font-size:18px;font-weight:900;background:linear-gradient(90deg,#ffd700,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.topbar-user{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.topbar-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden;border:2px solid #ffd700;flex-shrink:0}
+.topbar-avatar img{width:100%;height:100%;object-fit:cover}
+.topbar-name{font-size:12px;color:#ffd700;font-weight:700;white-space:nowrap;max-width:100px;overflow:hidden;text-overflow:ellipsis}
+.topbar-btn{padding:5px 12px;border-radius:6px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);color:#ffd700;cursor:pointer;font-size:11px;font-weight:600;transition:all .3s;white-space:nowrap}
+.topbar-btn:hover{background:#ffd700;color:#000}
+.topbar-btn.danger{border-color:#ff5f57;color:#ff5f57;background:rgba(255,95,87,0.1)}
+.topbar-btn.danger:hover{background:#ff5f57;color:#fff}
+.lang-select{background:#15152a;color:#fff;border:1px solid rgba(255,215,0,0.3);border-radius:6px;padding:5px;font-size:10px;max-width:110px;cursor:pointer}
+
+/* ===== SCREENS ===== */
+.screen{display:none;padding:15px;max-width:1400px;margin:0 auto;position:relative;z-index:1}
+.screen.active{display:block;animation:fadeIn .5s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== LOBBY ===== */
+.lobby-hero{text-align:center;padding:30px 20px;background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(255,140,0,0.08));border:1px solid rgba(255,215,0,0.2);border-radius:20px;margin-bottom:25px;position:relative;overflow:hidden}
+.lobby-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(255,215,0,0.15),transparent 50%)}
+.lobby-hero h1{font-size:32px;background:linear-gradient(90deg,#ffd700,#ff8c00,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;position:relative}
+.lobby-hero p{color:#c0c0e0;font-size:13px;position:relative}
+
+.lobby-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin-bottom:25px}
+.lobby-card{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.2);border-radius:16px;padding:22px;text-align:center;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
+.lobby-card:hover{transform:translateY(-5px);border-color:#ffd700;box-shadow:0 10px 40px rgba(255,215,0,0.2)}
+.lobby-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ffd700,#ff6b00)}
+.lobby-card-icon{font-size:45px;margin-bottom:12px}
+.lobby-card-title{font-size:16px;font-weight:700;color:#ffd700;margin-bottom:6px}
+.lobby-card-desc{font-size:11px;color:#8a8ab0;line-height:1.5}
+
+.live-rooms{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.2);border-radius:16px;padding:18px}
+.live-rooms h3{color:#ffd700;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:15px}
+.live-dot{width:10px;height:10px;border-radius:50%;background:#ff0000;animation:livePulse 1.5s infinite}
+@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,0,0,0.7)}50%{opacity:0.7;box-shadow:0 0 0 8px rgba(255,0,0,0)}}
+.room-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;transition:all .3s}
+.room-item:hover{border-color:rgba(255,215,0,0.3);background:rgba(255,215,0,0.05)}
+.room-info{flex:1;min-width:180px}
+.room-name{font-size:14px;font-weight:700;color:#ffd700;margin-bottom:3px}
+.room-meta{font-size:10px;color:#8a8ab0;display:flex;gap:10px;flex-wrap:wrap}
+.empty{text-align:center;padding:35px 20px;color:#8a8ab0}
+.empty-icon{font-size:50px;margin-bottom:10px}
+
+/* ===== MODAL ===== */
+.modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex;animation:fadeIn .3s}
+.modal-box{background:linear-gradient(135deg,#1a0a3e,#0a0a2e);border:1px solid rgba(255,215,0,0.3);border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .4s}
+.modal-box.large{max-width:900px}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{padding:15px 20px;border-bottom:1px solid rgba(255,215,0,0.2);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal-title{font-size:16px;font-weight:900;color:#ffd700;word-break:break-word}
+.modal-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;cursor:pointer;font-size:13px;flex-shrink:0}
+.modal-close:hover{background:#ff5f57;transform:rotate(90deg)}
+.modal-body{padding:20px}
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:10px;color:#8a8ab0;margin-bottom:5px;letter-spacing:1px}
+.input{width:100%;padding:9px 12px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:12px;outline:none;min-width:0}
+.input:focus{border-color:#ffd700;box-shadow:0 0 10px rgba(255,215,0,0.2)}
+textarea.input{min-height:70px;resize:vertical;font-family:inherit}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{padding:10px 20px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;transition:all .3s;border:none;text-align:center}
+.btn-primary{background:linear-gradient(90deg,#ffd700,#ff6b00);color:#000;width:100%}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,215,0,0.4)}
+.btn-ghost{background:rgba(255,255,255,0.05);color:#fff;border:1px solid rgba(255,255,255,0.2);width:100%}
+.btn-ghost:hover{background:rgba(255,255,255,0.1)}
+.btn-danger{background:rgba(255,95,87,0.2);color:#ff5f57;border:1px solid #ff5f57}
+.btn-danger:hover{background:#ff5f57;color:#fff}
+.btn-sm{padding:7px 14px;font-size:11px;width:auto}
+
+/* ===== WAITING ROOM ===== */
+.waiting-room{max-width:900px;margin:0 auto}
+.room-code-box{background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(255,140,0,0.15));border:2px solid #ffd700;border-radius:16px;padding:22px;text-align:center;margin-bottom:18px;position:relative;overflow:hidden}
+.room-code-box::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,215,0,0.2),transparent 60%)}
+.room-code-label{font-size:10px;color:#8a8ab0;letter-spacing:3px;margin-bottom:6px;position:relative}
+.room-code{font-size:36px;font-weight:900;color:#ffd700;letter-spacing:8px;font-family:monospace;text-shadow:0 0 20px rgba(255,215,0,0.5);position:relative;word-break:break-all}
+.room-code-actions{margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;position:relative}
+.players-viewers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.pv-box{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:12px}
+.pv-title{font-size:12px;font-weight:700;color:#ffd700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.pv-count{background:rgba(255,215,0,0.2);padding:2px 8px;border-radius:10px;font-size:10px}
+.pv-list{display:flex;flex-direction:column;gap:5px;max-height:220px;overflow-y:auto}
+.pv-item{display:flex;align-items:center;gap:8px;padding:7px;background:rgba(255,255,255,0.03);border-radius:7px}
+.pv-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;overflow:hidden}
+.pv-avatar img{width:100%;height:100%;object-fit:cover}
+.pv-name{flex:1;font-size:11px;font-weight:600;word-break:break-word}
+.pv-role{font-size:8px;padding:2px 6px;border-radius:4px;background:rgba(255,215,0,0.2);color:#ffd700;font-weight:700}
+.pv-role.host{background:rgba(255,0,230,0.2);color:#ff00e6}
+.pv-role.viewer{background:rgba(0,240,255,0.2);color:#00f0ff}
+.pv-btn{padding:3px 7px;border-radius:4px;font-size:9px;cursor:pointer;border:1px solid #ff5f57;background:transparent;color:#ff5f57}
+.pv-btn:hover{background:#ff5f57;color:#fff}
+
+.settings-panel{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:15px;margin-bottom:18px}
+.settings-title{font-size:13px;font-weight:700;color:#ffd700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.setting-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:7px;padding:10px}
+.setting-label{font-size:9px;color:#8a8ab0;margin-bottom:5px;letter-spacing:1px}
+.setting-value{display:flex;align-items:center;gap:6px}
+.setting-value input[type=number]{width:60px;padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,215,0,0.3);border-radius:5px;color:#ffd700;font-size:12px;font-weight:700;text-align:center;outline:none}
+.setting-value span{font-size:10px;color:#8a8ab0}
+
+.room-actions{display:flex;gap:8px;flex-wrap:wrap}
+.room-actions .btn{flex:1;min-width:130px}
+
+/* ===== GAME VIEW ===== */
+.game-container{display:grid;grid-template-columns:1fr 280px;gap:12px;max-width:1400px;margin:0 auto}
+.game-main{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.2);border-radius:16px;padding:18px;position:relative;overflow:hidden}
+.game-main::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,215,0,0.05),transparent 60%);pointer-events:none}
+.game-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;position:relative}
+.game-round{font-size:12px;color:#8a8ab0}
+.game-round b{color:#ffd700;font-size:15px}
+.game-timer{display:flex;align-items:center;gap:8px}
+.timer-circle{width:50px;height:50px;border-radius:50%;background:conic-gradient(#ffd700 var(--progress,100%),rgba(255,255,255,0.1) 0);display:flex;align-items:center;justify-content:center;position:relative}
+.timer-circle::before{content:'';position:absolute;inset:4px;background:#0a0a2e;border-radius:50%}
+.timer-text{position:relative;font-size:15px;font-weight:900;color:#ffd700;font-family:monospace}
+.timer-circle.danger{background:conic-gradient(#ff5f57 var(--progress,100%),rgba(255,255,255,0.1) 0)}
+.timer-circle.danger .timer-text{color:#ff5f57;animation:shake 0.5s infinite}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:15px}
+.stat-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,215,0,0.15);border-radius:8px;padding:10px;text-align:center}
+.stat-icon{font-size:18px;margin-bottom:3px}
+.stat-value{font-size:16px;font-weight:900;color:#ffd700}
+.stat-label{font-size:8px;color:#8a8ab0;letter-spacing:1px;margin-top:2px}
+
+.piggy-display{text-align:center;margin-bottom:15px}
+.piggy-icon{font-size:55px;margin-bottom:8px;filter:drop-shadow(0 0 20px rgba(255,215,0,0.5));animation:float 3s ease-in-out infinite}
+.balance-display{display:flex;justify-content:space-around;margin-bottom:15px;flex-wrap:wrap;gap:8px}
+.balance-item{text-align:center;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,215,0,0.15);min-width:100px;flex:1}
+.balance-item b{display:block;font-size:18px;color:#ffd700;margin-top:3px;word-break:break-all}
+.balance-item small{font-size:8px;color:#8a8ab0;letter-spacing:1px}
+
+.question-box{background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(255,140,0,0.05));border:2px solid rgba(255,215,0,0.3);border-radius:14px;padding:22px;margin-bottom:15px;position:relative;min-height:90px;display:flex;align-items:center;justify-content:center;text-align:center}
+.question-text{font-size:17px;font-weight:600;line-height:1.6;color:#fff;position:relative;word-break:break-word}
+.question-number{position:absolute;top:-12px;left:15px;background:linear-gradient(90deg,#ffd700,#ff6b00);color:#000;padding:3px 12px;border-radius:18px;font-size:10px;font-weight:900}
+
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
+.option{background:rgba(0,0,0,0.5);border:2px solid rgba(255,215,0,0.2);border-radius:10px;padding:13px 16px;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:10px;position:relative;overflow:hidden}
+.option:hover:not(.disabled):not(.selected){border-color:#ffd700;background:rgba(255,215,0,0.08);transform:translateY(-2px)}
+.option.selected{border-color:#ffd700;background:rgba(255,215,0,0.15);box-shadow:0 0 20px rgba(255,215,0,0.3)}
+.option.correct{border-color:#27c93f;background:rgba(39,201,63,0.2);animation:correctPulse 1s}
+.option.wrong{border-color:#ff5f57;background:rgba(255,95,87,0.2);animation:wrongShake 0.5s}
+.option.disabled{pointer-events:none;opacity:0.6}
+@keyframes correctPulse{0%,100%{box-shadow:0 0 0 0 rgba(39,201,63,0.7)}50%{box-shadow:0 0 0 15px rgba(39,201,63,0)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.option-letter{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);color:#000;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0}
+.option-text{flex:1;font-size:13px;font-weight:600;word-break:break-word}
+
+/* ===== PLAYERS BAR ===== */
+.players-bar{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.2);border-radius:10px;padding:10px;margin-bottom:12px}
+.players-bar-title{font-size:10px;color:#8a8ab0;margin-bottom:6px;letter-spacing:1px}
+.players-bar-list{display:flex;gap:6px;flex-wrap:wrap}
+.player-chip{display:flex;align-items:center;gap:5px;padding:4px 9px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:18px;font-size:10px;word-break:break-word;max-width:100%}
+.player-chip.eliminated{opacity:0.4;text-decoration:line-through}
+.player-chip.answering{border-color:#ffd700;background:rgba(255,215,0,0.15);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,0.5)}50%{box-shadow:0 0 0 6px rgba(255,215,0,0)}}
+.player-chip-avatar{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:9px;overflow:hidden;flex-shrink:0}
+.player-chip-avatar img{width:100%;height:100%;object-fit:cover}
+
+/* ===== GAME SIDEBAR ===== */
+.game-sidebar{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.2);border-radius:14px;padding:12px;height:fit-content;position:sticky;top:65px}
+.sidebar-title{font-size:12px;font-weight:700;color:#ffd700;margin-bottom:8px}
+.player-list{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto}
+.player-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px;display:flex;align-items:center;gap:8px}
+.player-item.is-me{border-color:#ffd700;background:rgba(255,215,0,0.08)}
+.player-item.eliminated{opacity:0.4}
+.player-item.answering{border-color:#ffd700;animation:pulse 1.5s infinite}
+.player-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:13px;overflow:hidden;flex-shrink:0}
+.player-avatar img{width:100%;height:100%;object-fit:cover}
+.player-info{flex:1;min-width:0}
+.player-name{font-size:11px;font-weight:700;word-break:break-word}
+.player-score{font-size:10px;color:#ffd700;font-weight:700}
+.player-status{font-size:8px;color:#8a8ab0}
+
+.viewer-banner{background:linear-gradient(90deg,rgba(255,0,0,0.2),rgba(255,0,230,0.2));border:1px solid #ff0000;border-radius:10px;padding:10px 15px;margin-bottom:12px;display:flex;align-items:center;gap:8px;animation:livePulse 2s infinite}
+.viewer-banner b{color:#ff0000}
+
+/* ===== ROUND END / RESULT ===== */
+.round-end,.result-screen{text-align:center;padding:30px 20px;max-width:700px;margin:0 auto}
+.round-end-icon,.result-icon{font-size:80px;margin-bottom:15px;animation:float 3s ease-in-out infinite}
+.round-end-title,.result-title{font-size:32px;font-weight:900;background:linear-gradient(90deg,#ffd700,#ff6b00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.result-amount{font-size:48px;font-weight:900;color:#ffd700;margin:15px 0;text-shadow:0 0 30px rgba(255,215,0,0.5);word-break:break-all}
+.result-sub{color:#c0c0e0;font-size:13px;margin-bottom:20px}
+.winners{background:rgba(0,0,0,0.4);border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:18px;margin-bottom:18px}
+.winner{display:flex;align-items:center;gap:10px;padding:8px;border-radius:7px;margin-bottom:6px;background:rgba(255,255,255,0.03)}
+.winner.first{background:linear-gradient(90deg,rgba(255,215,0,0.2),rgba(255,140,0,0.1));border:1px solid #ffd700}
+.winner-rank{font-size:20px;font-weight:900;color:#ffd700;width:35px;flex-shrink:0}
+.winner-name{flex:1;font-size:12px;font-weight:700;word-break:break-word}
+.winner-score{font-size:12px;color:#ffd700;font-weight:700;flex-shrink:0}
+
+.lock-money-box{margin:18px 0;padding:18px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:12px}
+.lock-money-box b{color:#ffd700;display:block;margin-bottom:10px}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:20px;right:20px;padding:12px 18px;background:rgba(0,0,0,0.95);border:1px solid #ffd700;border-radius:10px;z-index:9000;font-size:12px;max-width:320px;animation:slideUp .3s;box-shadow:0 10px 30px rgba(255,215,0,0.3);word-break:break-word}
+.toast.error{border-color:#ff5f57}
+.toast.success{border-color:#27c93f}
+
+.invite-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,215,0,0.3);border-radius:18px;font-size:10px;margin:3px;cursor:pointer;transition:.2s;word-break:break-word}
+.invite-chip:hover{background:rgba(255,215,0,0.15)}
+.invite-chip.selected{background:rgba(255,215,0,0.2);border-color:#ffd700}
+.invite-chip img{width:18px;height:18px;border-radius:50%;object-fit:cover}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  .game-container{grid-template-columns:1fr}
+  .game-sidebar{position:static}
+  .players-viewers{grid-template-columns:1fr}
+  .options-grid{grid-template-columns:1fr}
+  .question-text{font-size:15px}
+  .lobby-hero h1{font-size:26px}
+  .splash-title{font-size:32px}
+  .room-code{font-size:28px;letter-spacing:5px}
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .row{grid-template-columns:1fr}
+}
+@media(max-width:500px){
+  .topbar{padding:0 8px;gap:6px}
+  .topbar-logo{font-size:14px}
+  .topbar-name{display:none}
+  .screen{padding:10px}
+  .lobby-hero{padding:20px 15px}
+  .lobby-hero h1{font-size:22px}
+  .splash-logo{font-size:70px}
+  .splash-title{font-size:26px}
+  .room-code{font-size:24px;letter-spacing:4px}
+  .piggy-icon{font-size:45px}
+  .balance-item b{font-size:15px}
+  .timer-circle{width:42px;height:42px}
+  .timer-text{font-size:13px}
+  .question-box{padding:18px;min-height:70px}
+  .question-text{font-size:14px}
+  .option{padding:10px 12px}
+  .option-letter{width:24px;height:24px;font-size:11px}
+  .option-text{font-size:12px}
+  .stats-bar{grid-template-columns:1fr 1fr;gap:6px}
+  .stat-box{padding:8px}
+  .stat-value{font-size:14px}
+  .result-title{font-size:24px}
+  .result-amount{font-size:36px}
+  .round-end-title{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">🏆</div>
+  <div class="splash-title" data-t="title">KUMBARA YARIŞMASI</div>
+  <div class="splash-sub" data-t="subtitle">K-MOON EDITION • MULTIPLAYER</div>
+</div>
+
+<div class="particles" id="particles"></div>
+
+<!-- TOP BAR -->
+<div class="topbar" id="topbar" style="display:none">
+  <div class="topbar-logo">🏆 <span data-t="shortTitle">KUMBARA</span></div>
+  <select class="lang-select" id="langSelect" onchange="setLang(this.value)">
+    <option value="tr">🇹🇷 Türkçe</option>
+    <option value="en">🇬🇧 English</option>
+    <option value="ru">🇷 Русский</option>
+    <option value="ka">🇬🇪 ქართული</option>
+    <option value="az">🇦🇿 Azərbaycan</option>
+    <option value="uk">🇺🇦 Українська</option>
+    <option value="hi">🇮🇳 हिन्दी</option>
+    <option value="he">🇮🇱 עברית</option>
+    <option value="ja">🇯🇵 日本語</option>
+    <option value="zh">🇨🇳 中文</option>
+    <option value="el">🇬🇷 Ελληνικά</option>
+    <option value="hy">🇦🇲 Հայերեն</option>
+    <option value="ko">🇰🇷 한국어</option>
+    <option value="th">🇹🇭 ไทย</option>
+    <option value="ar">🇸🇦 العربية</option>
+    <option value="fa">🇮🇷 فارسی</option>
+  </select>
+  <button class="topbar-btn" onclick="goScreen('lobby')" data-t="backLobby">🏠 Lobi</button>
+  <div class="topbar-user">
+    <div class="topbar-avatar" id="topAvatar">🎮</div>
+    <div class="topbar-name" id="topName">Misafir</div>
+    <button class="topbar-btn danger" onclick="leaveCurrentRoom()" data-t="leave">🚪 Ayrıl</button>
+  </div>
+</div>
+
+<!-- LOBBY -->
+<div class="screen active" id="screen-lobby">
+  <div class="lobby-hero">
+    <h1 data-t="lobbyTitle">🏆 KUMBARA YARIŞMASI</h1>
+    <p data-t="lobbySub">2-8 oyuncu • Canlı izleme • Tur bazlı bilgi yarışması</p>
+  </div>
+
+  <div class="lobby-grid">
+    <div class="lobby-card" onclick="openModal('createRoomModal')">
+      <div class="lobby-card-icon">🎮</div>
+      <div class="lobby-card-title" data-t="createRoom">Oda Oluştur</div>
+      <div class="lobby-card-desc" data-t="createRoomDesc">Yeni yarışma odası kur ve arkadaşlarını davet et</div>
+    </div>
+    <div class="lobby-card" onclick="openModal('joinRoomModal')">
+      <div class="lobby-card-icon">🔑</div>
+      <div class="lobby-card-title" data-t="joinRoom">Odaya Katıl</div>
+      <div class="lobby-card-desc" data-t="joinRoomDesc">6 haneli kod ile mevcut bir odaya katıl</div>
+    </div>
+  </div>
+
+  <div class="live-rooms">
+    <h3><span class="live-dot"></span> <span data-t="liveRooms">Canlı Odalar</span></h3>
+    <div id="liveRoomsList"><div class="empty"><div class="empty-icon">📺</div><div data-t="noLiveRooms">Şu an aktif yarışma yok</div></div></div>
+  </div>
+</div>
+
+<!-- WAITING ROOM -->
+<div class="screen" id="screen-waiting">
+  <div class="waiting-room">
+    <div class="room-code-box">
+      <div class="room-code-label" data-t="roomCodeLabel">ODA KODU</div>
+      <div class="room-code" id="waitingRoomCode">------</div>
+      <div class="room-code-actions">
+        <button class="btn btn-ghost btn-sm" onclick="copyRoomCode()" data-t="copyCode">📋 Kodu Kopyala</button>
+        <button class="btn btn-primary btn-sm" onclick="openModal('invitePlayersModal')" id="inviteBtn" style="display:none" data-t="invitePlayers">📨 Oyuncu Davet Et</button>
+      </div>
+    </div>
+
+    <div class="players-viewers">
+      <div class="pv-box">
+        <div class="pv-title">🎮 <span data-t="players">Oyuncular</span> <span class="pv-count" id="playerCount">0/8</span></div>
+        <div class="pv-list" id="playersList"></div>
+      </div>
+      <div class="pv-box">
+        <div class="pv-title">👁 <span data-t="viewers">İzleyiciler</span> <span class="pv-count" id="viewerCount">0</span></div>
+        <div class="pv-list" id="viewersList"></div>
+      </div>
+    </div>
+
+    <div class="settings-panel" id="hostSettings" style="display:none">
+      <div class="settings-title">⚙️ <span data-t="gameSettings">Oyun Ayarları</span></div>
+      <div class="settings-grid">
+        <div class="setting-item">
+          <div class="setting-label" data-t="setTotalRounds">TOPLAM TUR</div>
+          <div class="setting-value">
+            <input type="number" id="setTotalRounds" value="5" min="1" max="20">
+            <span>tur</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-label" data-t="setQuestionsPerRound">TUR BAŞI SORU</div>
+          <div class="setting-value">
+            <input type="number" id="setQPerRound" value="3" min="1" max="10">
+            <span>soru</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-label" data-t="setTimePerQ">SORU SÜRESİ</div>
+          <div class="setting-value">
+            <input type="number" id="setTimePerQ" value="30" min="10" max="120">
+            <span>sn</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-label" data-t="setPrizePerQ">SORU ÖDÜLÜ (₺)</div>
+          <div class="setting-value">
+            <input type="number" id="setPrizePerQ" value="1000" min="100" max="100000">
+            <span>₺</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <button class="btn btn-ghost btn-sm" onclick="saveSettings()" data-t="saveSettings">💾 Ayarları Kaydet</button>
+      </div>
+    </div>
+
+    <div class="room-actions">
+      <button class="btn btn-primary" id="startGameBtn" style="display:none" onclick="startGame()" data-t="startGame">▶ YARIŞMAYI BAŞLAT</button>
+      <button class="btn btn-ghost" onclick="leaveCurrentRoom()" data-t="leaveRoom">🚪 Odadan Ayrıl</button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME VIEW -->
+<div class="screen" id="screen-game">
+  <div id="viewerBanner" style="display:none" class="viewer-banner">
+    <div style="font-size:20px">👁</div>
+    <div style="flex:1;font-size:12px"><b data-t="viewerMode">CANLI İZLEME</b> • <span data-t="viewerInfo">Sadece izliyorsun</span></div>
+  </div>
+
+  <div class="players-bar">
+    <div class="players-bar-title" data-t="playersBar">🎮 OYUNCULAR</div>
+    <div class="players-bar-list" id="gamePlayersBar"></div>
+  </div>
+
+  <div class="game-container">
+    <div class="game-main">
+      <div class="game-header">
+        <div class="game-round">
+          <span data-t="round">TUR</span> <b id="gameRound">1</b> / <span id="gameTotalRounds">5</span>
+          • <span data-t="question">SORU</span> <b id="gameQNum">1</b> / <span id="gameTotalQ">3</span>
+        </div>
+        <div class="game-timer">
+          <div class="timer-circle" id="timerCircle" style="--progress:100%">
+            <div class="timer-text" id="timerText">30</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-box">
+          <div class="stat-icon">🐷</div>
+          <div class="stat-value" id="statPiggy">₺0</div>
+          <div class="stat-label" data-t="piggyBank">KUMBARA</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon">🔒</div>
+          <div class="stat-value" id="statSafe">₺0</div>
+          <div class="stat-label" data-t="safeBalance">GÜVENLİ</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value" id="statCorrect">0</div>
+          <div class="stat-label" data-t="correct">DOĞRU</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-icon">❌</div>
+          <div class="stat-value" id="statWrong">0</div>
+          <div class="stat-label" data-t="wrong">YANLIŞ</div>
+        </div>
+      </div>
+
+      <div class="piggy-display">
+        <div class="piggy-icon">🐷</div>
+        <div class="balance-display">
+          <div class="balance-item">
+            <small data-t="currentPiggy">KUMBARA</small>
+            <b id="balPiggy">₺0</b>
+          </div>
+          <div class="balance-item">
+            <small data-t="prizePerQ">SORU ÖDÜLÜ</small>
+            <b id="balPrize">+₺1000</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-box">
+        <div class="question-number" id="qNumber" data-t="qLabel">SORU 1</div>
+        <div class="question-text" id="qText" data-t="qLoading">Soru yükleniyor...</div>
+      </div>
+
+      <div class="options-grid" id="optionsGrid"></div>
+
+      <div id="currentPlayerInfo" style="text-align:center;margin-top:10px;font-size:12px;color:#8a8ab0"></div>
+    </div>
+
+    <div class="game-sidebar">
+      <div class="sidebar-title" data-t="sidebarPlayers">🎮 OYUNCULAR</div>
+      <div class="player-list" id="sidebarPlayers"></div>
+      
+      <div style="margin-top:12px">
+        <div class="sidebar-title">👁 <span data-t="sidebarViewers">İZLEYİCİLER</span> (<span id="sidebarViewerCount">0</span>)</div>
+        <div class="player-list" id="sidebarViewers"></div>
+      </div>
+
+      <div id="hostControls" style="display:none;margin-top:12px">
+        <div class="sidebar-title" data-t="hostControls">👑 HOST KONTROL</div>
+        <button class="btn btn-danger btn-sm" style="width:100%" onclick="endGame()" data-t="endGame">⏹ Yarışmayı Bitir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROUND END -->
+<div class="screen" id="screen-roundEnd">
+  <div class="round-end">
+    <div class="round-end-icon">🎊</div>
+    <div class="round-end-title" data-t="roundComplete">TUR TAMAMLANDI!</div>
+    <div class="result-sub" id="roundEndSub"></div>
+    
+    <div class="balance-display" style="margin:18px 0">
+      <div class="balance-item">
+        <small data-t="currentPiggy">KUMBARA</small>
+        <b id="rePiggy">₺0</b>
+      </div>
+      <div class="balance-item">
+        <small data-t="safeBalance">GÜVENLİ</small>
+        <b id="reSafe">₺0</b>
+      </div>
+    </div>
+
+    <div id="hostLockBox" style="display:none">
+      <div class="lock-money-box">
+        <b data-t="lockMoneyQ">Parayı kilitlemek istiyor musunuz?</b>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="lockMoney(true)" data-t="lockYes">✅ Evet, Kilitle</button>
+          <button class="btn btn-ghost btn-sm" onclick="lockMoney(false)" data-t="lockNo">❌ Hayır, Devam</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="viewerWaitBox" style="display:none">
+      <div style="color:#8a8ab0;font-size:12px;margin:15px 0" data-t="waitingHost">Host kararını bekliyor...</div>
+    </div>
+
+    <button class="btn btn-primary" id="nextRoundBtn" style="display:none;margin-top:15px" onclick="nextRound()" data-t="nextRound">▶ SONRAKİ TURA GEÇ</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="screen-result">
+  <div class="result-screen">
+    <div class="result-icon">🏆</div>
+    <div class="result-title" data-t="gameOver">YARIŞMA BİTTİ!</div>
+    <div class="result-sub" id="resultSub"></div>
+    <div class="winners" id="resultWinners"></div>
+    <button class="btn btn-primary" onclick="backToLobby()" data-t="backToLobby">🏠 Lobiye Dön</button>
+  </div>
+</div>
+
+<!-- MODALS -->
+<!-- CREATE ROOM -->
+<div class="modal" id="createRoomModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title" data-t="createRoom">🎮 Oda Oluştur</div>
+      <button class="modal-close" onclick="closeModal('createRoomModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" data-t="roomName">ODA İSMİ</label>
+        <input class="input" id="newRoomName" placeholder="Benim yarışmam" maxlength="30">
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label class="form-label" data-t="maxPlayers">MAKS OYUNCU</label>
+          <select class="input" id="newRoomMax">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="6">6</option>
+            <option value="8">8</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-t="visibility">Görünürlük</label>
+          <select class="input" id="newRoomPublic">
+            <option value="true" data-t="public">🌍 Herkese Açık</option>
+            <option value="false" data-t="private">🔒 Sadece Kod ile</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="createRoom()" data-t="create">🎮 OLUŞTUR</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOIN ROOM -->
+<div class="modal" id="joinRoomModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title" data-t="joinRoom">🔑 Odaya Katıl</div>
+      <button class="modal-close" onclick="closeModal('joinRoomModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" data-t="roomCode">ODA KODU (6 haneli)</label>
+        <input class="input" id="joinRoomCode" placeholder="ABC123" maxlength="6" style="text-align:center;font-size:22px;letter-spacing:6px;font-weight:900;font-family:monospace">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-t="joinAs">KATILIM TÜRÜ</label>
+        <select class="input" id="joinAs">
+          <option value="player" data-t="asPlayer">🎮 Oyuncu olarak</option>
+          <option value="viewer" data-t="asViewer">👁 İzleyici olarak</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="joinRoom()" data-t="join">🚀 KATIL</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVITE PLAYERS -->
+<div class="modal" id="invitePlayersModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title" data-t="invitePlayers">📨 Oyuncu Davet Et</div>
+      <button class="modal-close" onclick="closeModal('invitePlayersModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:12px;font-size:11px;color:#8a8ab0" data-t="selectOnline">Davet etmek istediğin online oyuncuları seç:</div>
+      <div id="invitePlayersList" style="max-height:300px;overflow-y:auto;margin-bottom:12px"></div>
+      <button class="btn btn-primary" onclick="sendInvites()" data-t="sendInvites">📨 DAVETLERİ GÖNDER</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   FIREBASE CONFIG
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyBj5F26iRiXpoFj7B647pvM4wpCfc18Bh4",
+  authDomain: "k-moon.firebaseapp.com",
+  projectId: "k-moon",
+  storageBucket: "k-moon.firebasestorage.app",
+  messagingSenderId: "461760747689",
+  appId: "1:461760747689:web:0130cac0c1134acc0371b8"
+};
+
+const ONLINE = !firebaseConfig.apiKey.startsWith("YOUR_");
+let db = null, rtdb = null;
+
+if (ONLINE) {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    rtdb = firebase.database();
+  } catch(e) { console.error(e); }
+}
+
+/* ============================================================
+   16 DİL
+   ============================================================ */
+const I18N = {
+  tr: {
+    title:'KUMBARA YARIŞMASI',subtitle:'K-MOON EDITION • MULTIPLAYER',shortTitle:'KUMBARA',
+    backLobby:'🏠 Lobi',leave:'🚪 Ayrıl',
+    lobbyTitle:'🏆 KUMBARA YARIŞMASI',lobbySub:'2-8 oyuncu • Canlı izleme • Tur bazlı bilgi yarışması',
+    createRoom:'Oda Oluştur',createRoomDesc:'Yeni yarışma odası kur ve arkadaşlarını davet et',
+    joinRoom:'Odaya Katıl',joinRoomDesc:'6 haneli kod ile mevcut bir odaya katıl',
+    liveRooms:'Canlı Odalar',noLiveRooms:'Şu an aktif yarışma yok',
+    roomCodeLabel:'ODA KODU',copyCode:'📋 Kodu Kopyala',invitePlayers:'📨 Oyuncu Davet Et',
+    players:'Oyuncular',viewers:'İzleyiciler',
+    gameSettings:'Oyun Ayarları',setTotalRounds:'TOPLAM TUR',setQuestionsPerRound:'TUR BAŞI SORU',
+    setTimePerQ:'SORU SÜRESİ',setPrizePerQ:'SORU ÖDÜLÜ (₺)',saveSettings:'💾 Ayarları Kaydet',
+    startGame:'▶ YARIŞMAYI BAŞLAT',leaveRoom:'🚪 Odadan Ayrıl',
+    round:'TUR',question:'SORU',piggyBank:'KUMBARA',safeBalance:'GÜVENLİ',correct:'DOĞRU',wrong:'YANLIŞ',
+    currentPiggy:'KUMBARA',prizePerQ:'SORU ÖDÜLÜ',qLabel:'SORU',qLoading:'Soru yükleniyor...',
+    sidebarPlayers:'OYUNCULAR',sidebarViewers:'İZLEYİCİLER',hostControls:'HOST KONTROL',endGame:'⏹ Yarışmayı Bitir',
+    viewerMode:'CANLI İZLEME',viewerInfo:'Sadece izliyorsun',
+    roundComplete:'TUR TAMAMLANDI!',lockMoneyQ:'Parayı kilitlemek istiyor musunuz?',
+    lockYes:'✅ Evet, Kilitle',lockNo:'❌ Hayır, Devam',waitingHost:'Host kararını bekliyor...',
+    nextRound:'▶ SONRAKİ TURA GEÇ',gameOver:'YARIŞMA BİTTİ!',backToLobby:'🏠 Lobiye Dön',
+    roomName:'ODA İSMİ',maxPlayers:'MAKS OYUNCU',visibility:'Görünürlük',public:'🌍 Herkese Açık',private:'🔒 Sadece Kod ile',create:'🎮 OLUŞTUR',
+    roomCode:'ODA KODU',joinAs:'KATILIM TÜRÜ',asPlayer:'🎮 Oyuncu olarak',asViewer:'👁 İzleyici olarak',join:'🚀 KATIL',
+    selectOnline:'Davet etmek istediğin online oyuncuları seç:',sendInvites:'📨 DAVETLERİ GÖNDER',
+    codeCopied:'Kod kopyalandı!',roomCreated:'Oda oluşturuldu!',roomJoined:'Odaya katıldın!',
+    gameStarted:'Yarışma başladı!',gameEnded:'Yarışma bitti',
+    needLogin:'Önce giriş yapın (launcher\'dan gelin)',onlineRequired:'Online mod gerekli',
+    roomFull:'Oda dolu',roomNotFound:'Oda bulunamadı',gameAlreadyEnded:'Oyun bitti',
+    hostOnly:'Sadece host yapabilir',minPlayers:'En az 1 oyuncu gerekli',
+    invitesSent:'davet gönderildi!',noOnlineUsers:'Online kullanıcı yok',
+    you:'(Sen)',host:'👑 Host',playerRole:'🎮 Oyuncu',viewerRole:'👁 İzleyici',
+    kicked:'Odadan atıldın',yourTurn:'🎯 Senin sıran!',waitTurn:'⏳ Sıranı bekle...',
+    correctAnswer:'✅ Doğru!',wrongAnswer:'❌ Yanlış!',timeUp:'⏰ Süre doldu!',
+    winner:'KAZANDI',totalPrize:'Toplam ödül',
+    rank:'Sıralama',
+    loginFirst:'Lütfen launcher üzerinden giriş yapın',
+    loginInfo:'K-Moon Launcher\'dan otomatik giriş yapılır',
+    goLauncher:'🚀 Launcher\'a Git'
+  },
+  en: {
+    title:'PIGGY BANK QUIZ',subtitle:'K-MOON EDITION • MULTIPLAYER',shortTitle:'PIGGY BANK',
+    backLobby:'🏠 Lobby',leave:'🚪 Leave',
+    lobbyTitle:'🏆 PIGGY BANK QUIZ',lobbySub:'2-8 players • Live watch • Round-based quiz',
+    createRoom:'Create Room',createRoomDesc:'Create a new quiz room and invite friends',
+    joinRoom:'Join Room',joinRoomDesc:'Join an existing room with 6-digit code',
+    liveRooms:'Live Rooms',noLiveRooms:'No active games now',
+    roomCodeLabel:'ROOM CODE',copyCode:'📋 Copy Code',invitePlayers:'📨 Invite Players',
+    players:'Players',viewers:'Viewers',
+    gameSettings:'Game Settings',setTotalRounds:'TOTAL ROUNDS',setQuestionsPerRound:'QUESTIONS/ROUND',
+    setTimePerQ:'QUESTION TIME',setPrizePerQ:'PRIZE/Q (₺)',saveSettings:'💾 Save Settings',
+    startGame:'▶ START GAME',leaveRoom:'🚪 Leave Room',
+    round:'ROUND',question:'QUESTION',piggyBank:'PIGGY',safeBalance:'SAFE',correct:'CORRECT',wrong:'WRONG',
+    currentPiggy:'PIGGY BANK',prizePerQ:'PRIZE/Q',qLabel:'Q',qLoading:'Loading question...',
+    sidebarPlayers:'PLAYERS',sidebarViewers:'VIEWERS',hostControls:'HOST CONTROL',endGame:'⏹ End Game',
+    viewerMode:'LIVE VIEWING',viewerInfo:'You are just watching',
+    roundComplete:'ROUND COMPLETE!',lockMoneyQ:'Lock the money?',
+    lockYes:'✅ Yes, Lock',lockNo:'❌ No, Continue',waitingHost:'Waiting for host...',
+    nextRound:'▶ NEXT ROUND',gameOver:'GAME OVER!',backToLobby:'🏠 Back to Lobby',
+    roomName:'ROOM NAME',maxPlayers:'MAX PLAYERS',visibility:'Visibility',public:'🌍 Public',private:'🔒 Code only',create:'🎮 CREATE',
+    roomCode:'ROOM CODE',joinAs:'JOIN AS',asPlayer:'🎮 As player',asViewer:'👁 As viewer',join:'🚀 JOIN',
+    selectOnline:'Select online players to invite:',sendInvites:'📨 SEND INVITES',
+    codeCopied:'Code copied!',roomCreated:'Room created!',roomJoined:'Joined room!',
+    gameStarted:'Game started!',gameEnded:'Game ended',
+    needLogin:'Login first (come from launcher)',onlineRequired:'Online mode required',
+    roomFull:'Room full',roomNotFound:'Room not found',gameAlreadyEnded:'Game already ended',
+    hostOnly:'Host only',minPlayers:'At least 1 player needed',
+    invitesSent:'invites sent!',noOnlineUsers:'No online users',
+    you:'(You)',host:'👑 Host',playerRole:'🎮 Player',viewerRole:'👁 Viewer',
+    kicked:'Kicked from room',yourTurn:'🎯 Your turn!',waitTurn:'⏳ Wait your turn...',
+    correctAnswer:'✅ Correct!',wrongAnswer:'❌ Wrong!',timeUp:'⏰ Time\'s up!',
+    winner:'WON',totalPrize:'Total prize',
+    rank:'Ranking',
+    loginFirst:'Please login via launcher',
+    loginInfo:'Auto-login from K-Moon Launcher',
+    goLauncher:'🚀 Go to Launcher'
+  },
+  ru: {
+    title:'ИГРА КОПИЛКА',subtitle:'K-MOON EDITION • МУЛЬТИПЛЕЕР',shortTitle:'КОПИЛКА',
+    backLobby:'🏠 Лобби',leave:'🚪 Выйти',
+    lobbyTitle:'🏆 ИГРА КОПИЛКА',lobbySub:'2-8 игроков • Прямой просмотр • Раунды',
+    createRoom:'Создать комнату',createRoomDesc:'Создайте новую комнату',
+    joinRoom:'Войти в комнату',joinRoomDesc:'Войдите по 6-значному коду',
+    liveRooms:'Прямые комнаты',noLiveRooms:'Нет активных игр',
+    roomCodeLabel:'КОД КОМНАТЫ',copyCode:'📋 Копировать',invitePlayers:'📨 Пригласить',
+    players:'Игроки',viewers:'Зрители',
+    gameSettings:'Настройки',setTotalRounds:'РАУНДЫ',setQuestionsPerRound:'ВОПРОСОВ/РАУНД',
+    setTimePerQ:'ВРЕМЯ',setPrizePerQ:'ПРИЗ (₺)',saveSettings:'💾 Сохранить',
+    startGame:'▶ НАЧАТЬ',leaveRoom:'🚪 Выйти',
+    round:'РАУНД',question:'ВОПРОС',piggyBank:'КОПИЛКА',safeBalance:'СЕЙФ',correct:'ВЕРНО',wrong:'НЕВЕРНО',
+    currentPiggy:'КОПИЛКА',prizePerQ:'ПРИЗ',qLabel:'В',qLoading:'Загрузка...',
+    sidebarPlayers:'ИГРОКИ',sidebarViewers:'ЗРИТЕЛИ',hostControls:'УПРАВЛЕНИЕ',endGame:'⏹ Завершить',
+    viewerMode:'ПРОСМОТР',viewerInfo:'Только просмотр',
+    roundComplete:'РАУНД ЗАВЕРШЁН!',lockMoneyQ:'Заблокировать деньги?',
+    lockYes:'✅ Да',lockNo:'❌ Нет',waitingHost:'Ожидание хоста...',
+    nextRound:'▶ СЛЕДУЮЩИЙ РАУНД',gameOver:'ИГРА ОКОНЧЕНА!',backToLobby:'🏠 В лобби',
+    roomName:'ИМЯ',maxPlayers:'МАКС',visibility:'Видимость',public:'🌍 Публичная',private:'🔒 По коду',create:'🎮 СОЗДАТЬ',
+    roomCode:'КОД',joinAs:'КАК',asPlayer:'🎮 Игрок',asViewer:'👁 Зритель',join:'🚀 ВОЙТИ',
+    selectOnline:'Выберите игроков:',sendInvites:'📨 ОТПРАВИТЬ',
+    codeCopied:'Скопировано!',roomCreated:'Создано!',roomJoined:'Вошли!',
+    gameStarted:'Началось!',gameEnded:'Закончилось',
+    needLogin:'Войдите сначала',onlineRequired:'Нужен онлайн',
+    roomFull:'Полно',roomNotFound:'Не найдена',gameAlreadyEnded:'Закончена',
+    hostOnly:'Только хост',minPlayers:'Минимум 1 игрок',
+    invitesSent:'отправлено!',noOnlineUsers:'Нет онлайн',
+    you:'(Вы)',host:'👑 Хост',playerRole:'🎮 Игрок',viewerRole:'👁 Зритель',
+    kicked:'Выгнан',yourTurn:'🎯 Ваш ход!',waitTurn:'⏳ Ждите...',
+    correctAnswer:'✅ Верно!',wrongAnswer:'❌ Неверно!',timeUp:'⏰ Время!',
+    winner:'ПОБЕДИЛ',totalPrize:'Приз',
+    rank:'Рейтинг',
+    loginFirst:'Войдите через launcher',
+    loginInfo:'Авто-вход из K-Moon Launcher',
+    goLauncher:'🚀 В Launcher'
+  },
+  ka: {
+    title:'კუმბარა',subtitle:'K-MOON EDITION • მულტიპლეიერი',shortTitle:'კუმბარა',
+    backLobby:'🏠 ლობი',leave:'🚪 გასვლა',
+    lobbyTitle:'🏆 კუმბარა',lobbySub:'2-8 მოთამაშე • პირდაპირი',
+    createRoom:'ოთახის შექმნა',createRoomDesc:'ახალი ოთახი',
+    joinRoom:'შესვლა',joinRoomDesc:'კოდით შესვლა',
+    liveRooms:'პირდაპირი',noLiveRooms:'არაა',
+    roomCodeLabel:'კოდი',copyCode:'📋 კოპირება',invitePlayers:'📨 მოწვევა',
+    players:'მოთამაშეები',viewers:'მაყურებლები',
+    gameSettings:'პარამეტრები',setTotalRounds:'რაუნდები',setQuestionsPerRound:'კითხვები',
+    setTimePerQ:'დრო',setPrizePerQ:'პრიზი (₺)',saveSettings:'💾 შენახვა',
+    startGame:'▶ დაწყება',leaveRoom:'🚪 გასვლა',
+    round:'რაუნდი',question:'კითხვა',piggyBank:'კუმბარა',safeBalance:'სეიფი',correct:'სწორი',wrong:'მცდარი',
+    currentPiggy:'კუმბარა',prizePerQ:'პრიზი',qLabel:'კ',qLoading:'იტვირთება...',
+    sidebarPlayers:'მოთამაშეები',sidebarViewers:'მაყურებლები',hostControls:'მართვა',endGame:'⏹ დასრულება',
+    viewerMode:'ყურება',viewerInfo:'მხოლოდ ყურება',
+    roundComplete:'რაუნდი დასრულდა!',lockMoneyQ:'ფულის დაბლოკვა?',
+    lockYes:'✅ დიახ',lockNo:'❌ არა',waitingHost:'მოლოდინი...',
+    nextRound:'▶ შემდეგი',gameOver:'დასრულდა!',backToLobby:'🏠 ლობი',
+    roomName:'სახელი',maxPlayers:'მაქს',visibility:'ხილვადობა',public:'🌍 საჯარო',private:'🔒 კოდით',create:'🎮 შექმნა',
+    roomCode:'კოდი',joinAs:'როგორც',asPlayer:'🎮 მოთამაშე',asViewer:'👁 მაყურებელი',join:'🚀 შესვლა',
+    selectOnline:'აირჩიეთ:',sendInvites:'📨 გაგზავნა',
+    codeCopied:'დაკოპირდა!',roomCreated:'შეიქმნა!',roomJoined:'შევიდა!',
+    gameStarted:'დაიწყო!',gameEnded:'დასრულდა',
+    needLogin:'შესვლა საჭიროა',onlineRequired:'ონლაინ რეჟიმი',
+    roomFull:'სავსე',roomNotFound:'ვერ მოიძებნა',gameAlreadyEnded:'დასრულებული',
+    hostOnly:'მხოლოდ ჰოსტი',minPlayers:'მინიმუმ 1',
+    invitesSent:'გაგზავნილი!',noOnlineUsers:'არავინ',
+    you:'(თქვენ)',host:'👑 ჰოსტი',playerRole:'🎮 მოთამაშე',viewerRole:'👁 მაყურებელი',
+    kicked:'გადგენილი',yourTurn:'🎯 თქვენი!',waitTurn:'⏳ მოცდა...',
+    correctAnswer:'✅ სწორი!',wrongAnswer:'❌ მცდარი!',timeUp:'⏰ დრო!',
+    winner:'მოიგო',totalPrize:'პრიზი',
+    rank:'რეიტინგი',
+    loginFirst:'შედით launcher-დან',
+    loginInfo:'ავტო-შესვლა',
+    goLauncher:'🚀 Launcher'
+  }
+};
+// Diğer diller için EN taban
+['az','uk','hi','he','ja','zh','el','hy','ko','th','ar','fa'].forEach(l => I18N[l] = I18N.en);
+
+let lang = localStorage.getItem('km_lang') || 'tr';
+function t(k){return (I18N[lang]||I18N.en)[k]||I18N.en[k]||k;}
+function applyLanguage(){
+  document.getElementById('langSelect').value = lang;
+  document.body.style.direction = ['ar','he','fa'].includes(lang) ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const k = el.dataset.t, v = t(k);
+    if(v){
+      if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = v;
+      else if(el.tagName === 'OPTION') el.textContent = v;
+      else el.textContent = v;
+    }
+  });
+}
+function setLang(l){
+  lang = l;
+  localStorage.setItem('km_lang', l);
+  applyLanguage();
+}
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let currentUser = null; // {name, avatar}
+let currentRoom = null;
+let roomRef = null;
+let roomListener = null;
+let isHost = false;
+let isViewer = false;
+let selectedAnswer = null;
+let timerInterval = null;
+let selectedInvites = [];
+let onlineUsers = {};
+let presenceRef = null;
+let presenceListener = null;
+let inviteListener = null;
+
+/* ============================================================
+   INIT - Launcher'dan otomatik giriş
+   ============================================================ */
+window.addEventListener('load', () => {
+  createParticles();
+  applyLanguage();
+  
+  // Launcher'dan kullanıcı bilgisi al
+  loadUserFromLauncher();
+  
+  // Online değilse veya kullanıcı yoksa bilgi göster
+  if(!currentUser){
+    setTimeout(()=>{
+      document.getElementById('splash').classList.add('hide');
+      document.getElementById('topbar').style.display = 'flex';
+      document.getElementById('screen-lobby').innerHTML = `
+        <div class="empty" style="padding:80px 20px">
+          <div class="empty-icon">🔐</div>
+          <h2 style="margin-bottom:10px;color:#ffd700">${t('loginFirst')}</h2>
+          <p style="margin-bottom:25px;color:#8a8ab0">${t('loginInfo')}</p>
+          <button class="btn btn-primary" style="width:auto;padding:12px 30px" onclick="window.location.href='index.html'">${t('goLauncher')}</button>
+        </div>
+      `;
+    }, 1500);
+    return;
+  }
+  
+  updateTopBar();
+  subscribeLiveRooms();
+  subscribeOnlineUsers();
+  subscribeInvites();
+  setupPresence();
+  
+  // URL parametreleri ile oda kodu varsa direkt katıl
+  const urlParams = new URLSearchParams(window.location.search);
+  const roomCode = urlParams.get('room');
+  const asViewer = urlParams.get('view');
+  if(roomCode){
+    setTimeout(() => {
+      document.getElementById('joinRoomCode').value = roomCode;
+      document.getElementById('joinAs').value = asViewer ? 'viewer' : 'player';
+      joinRoom();
+    }, 1500);
+  }
+  
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+    document.getElementById('topbar').style.display = 'flex';
+  }, 2000);
+});
+
+function loadUserFromLauncher(){
+  try{
+    // Launcher'dan session al
+    const session = localStorage.getItem('km_session');
+    if(!session) return;
+    
+    const key = 'km_user_' + session.toLowerCase().replace(/[^a-z0-9_ğüşıöç]/gi,'_');
+    const data = localStorage.getItem(key);
+    if(!data) return;
+    
+    const u = JSON.parse(data);
+    currentUser = {
+      name: u.account.name,
+      avatar: u.account.avatar || null,
+      email: u.account.email
+    };
+  }catch(e){
+    console.error('Launcher user load error:', e);
+  }
+}
+
+function createParticles(){
+  const c = document.getElementById('particles');
+  for(let i=0;i<25;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100 + '%';
+    p.style.animationDelay = Math.random()*15 + 's';
+    p.style.animationDuration = (10+Math.random()*10) + 's';
+    p.style.background = Math.random()>.5 ? '#ffd700' : '#ff6b00';
+    c.appendChild(p);
+  }
+}
+
+function updateTopBar(){
+  document.getElementById('topName').textContent = currentUser.name;
+  const av = document.getElementById('topAvatar');
+  av.innerHTML = currentUser.avatar ? `<img src="${currentUser.avatar}">` : '🏆';
+}
+
+/* ============================================================
+   PRESENCE - Online durumu
+   ============================================================ */
+function setupPresence(){
+  if(!ONLINE || !rtdb || !currentUser) return;
+  presenceRef = rtdb.ref('kumbara/presence/' + currentUser.name.toLowerCase());
+  presenceRef.onDisconnect().remove();
+  presenceRef.set({
+    name: currentUser.name,
+    avatar: currentUser.avatar,
+    lastSeen: Date.now()
+  });
+  setInterval(()=>{
+    if(currentUser && presenceRef){
+      presenceRef.update({lastSeen: Date.now()});
+    }
+  }, 30000);
+}
+
+function subscribeOnlineUsers(){
+  if(!ONLINE || !rtdb) return;
+  presenceListener = rtdb.ref('kumbara/presence').on('value', snap=>{
+    onlineUsers = snap.val() || {};
+  });
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function goScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('screen-' + name);
+  if(el) el.classList.add('active');
+}
+
+/* ============================================================
+   MODALS
+   ============================================================ */
+function openModal(id){
+  document.getElementById(id).classList.add('show');
+  if(id === 'invitePlayersModal') renderInviteList();
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove('show');
+}
+document.querySelectorAll('.modal').forEach(m=>{
+  m.addEventListener('click', e=>{if(e.target === m) m.classList.remove('show');});
+});
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+function toast(msg, type='success'){
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);}, 3000);
+}
+
+/* ============================================================
+   LIVE ROOMS
+   ============================================================ */
+function subscribeLiveRooms(){
+  if(!ONLINE || !rtdb){
+    document.getElementById('liveRoomsList').innerHTML = `<div class="empty"><div class="empty-icon">📡</div><div>Online mod değil</div></div>`;
+    return;
+  }
+  
+  rtdb.ref('kumbara/rooms').on('value', snap=>{
+    const data = snap.val() || {};
+    const rooms = Object.entries(data)
+      .map(([code, r])=>({code, ...r}))
+      .filter(r=>r.public !== false && r.status !== 'finished')
+      .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    
+    const el = document.getElementById('liveRoomsList');
+    if(rooms.length === 0){
+      el.innerHTML = `<div class="empty"><div class="empty-icon">📺</div><div>${t('noLiveRooms')}</div></div>`;
+      return;
+    }
+    
+    el.innerHTML = rooms.map(r=>{
+      const pc = r.players ? Object.keys(r.players).length : 0;
+      const vc = r.viewers ? Object.keys(r.viewers).length : 0;
+      const status = r.status === 'playing' ? '🔴 CANLI' : '⏳ Bekliyor';
+      return `
+        <div class="room-item">
+          <div class="room-info">
+            <div class="room-name">${escapeHtml(r.name || 'Oda')} • ${status}</div>
+            <div class="room-meta">
+              <span>👤 ${pc}/${r.maxPlayers||8}</span>
+              <span>👁 ${vc}</span>
+              <span>🎯 ${r.host}</span>
+              <span>🏆 ₺${(r.piggyBank||0).toLocaleString()}</span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="spectateRoom('${r.code}')">👁 İzle</button>
+        </div>
+      `;
+    }).join('');
+  });
+}
+
+async function spectateRoom(code){
+  if(!currentUser){toast(t('needLogin'),'error');return;}
+  if(!ONLINE){toast(t('onlineRequired'),'error');return;}
+  document.getElementById('joinRoomCode').value = code;
+  document.getElementById('joinAs').value = 'viewer';
+  await joinRoom();
+}
+
+/* ============================================================
+   ROOM MANAGEMENT
+   ============================================================ */
+function generateRoomCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for(let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
+  return code;
+}
+
+async function createRoom(){
+  if(!currentUser){toast(t('needLogin'),'error');return;}
+  if(!ONLINE){toast(t('onlineRequired'),'error');return;}
+  
+  const name = document.getElementById('newRoomName').value.trim() || (currentUser.name + ' yarışması');
+  const max = parseInt(document.getElementById('newRoomMax').value);
+  const isPublic = document.getElementById('newRoomPublic').value === 'true';
+  
+  const code = generateRoomCode();
+  const myKey = currentUser.name.toLowerCase();
+  
+  const room = {
+    code: code,
+    name: name,
+    host: currentUser.name,
+    hostAvatar: currentUser.avatar,
+    maxPlayers: max,
+    public: isPublic,
+    status: 'waiting',
+    settings: {
+      totalRounds: 5,
+      questionsPerRound: 3,
+      timePerQuestion: 30,
+      prizePerQuestion: 1000
+    },
+    players: {},
+    viewers: {},
+    invites: {},
+    piggyBank: 0,
+    safeBalance: 0,
+    currentRound: 1,
+    currentQuestionIdx: 0,
+    questions: [],
+    createdAt: Date.now()
+  };
+  
+  // Host'u oyuncu olarak ekle
+  room.players[myKey] = {
+    name: currentUser.name,
+    avatar: currentUser.avatar,
+    score: 0,
+    correctCount: 0,
+    wrongCount: 0,
+    alive: true,
+    isHost: true,
+    currentAnswer: null,
+    answered: false
+  };
+  
+  try{
+    await rtdb.ref('kumbara/rooms/' + code).set(room);
+    currentRoom = room;
+    isHost = true;
+    isViewer = false;
+    closeModal('createRoomModal');
+    enterWaitingRoom();
+    toast(t('roomCreated') + ': ' + code);
+  }catch(e){
+    toast('Hata: ' + e.message, 'error');
+  }
+}
+
+async function joinRoom(){
+  if(!currentUser){toast(t('needLogin'),'error');return;}
+  if(!ONLINE){toast(t('onlineRequired'),'error');return;}
+  
+  const code = document.getElementById('joinRoomCode').value.trim().toUpperCase();
+  const joinAs = document.getElementById('joinAs').value;
+  
+  if(code.length !== 6){toast('Geçersiz kod','error');return;}
+  
+  try{
+    const snap = await rtdb.ref('kumbara/rooms/' + code).get();
+    if(!snap.exists()){toast(t('roomNotFound'),'error');return;}
+    
+    const room = snap.val();
+    if(room.status === 'finished'){toast(t('gameAlreadyEnded'),'error');return;}
+    
+    const myKey = currentUser.name.toLowerCase();
+    
+    // Host kontrolü
+    if(room.host.toLowerCase() === myKey){
+      isHost = true;
+      isViewer = false;
+    }else if(joinAs === 'viewer' || room.status === 'playing'){
+      isHost = false;
+      isViewer = true;
+      await rtdb.ref('kumbara/rooms/' + code + '/viewers/' + myKey).set({
+        name: currentUser.name,
+        avatar: currentUser.avatar,
+        joinedAt: Date.now()
+      });
+      rtdb.ref('kumbara/rooms/' + code + '/viewers/' + myKey).onDisconnect().remove();
+    }else{
+      const pc = Object.keys(room.players || {}).length;
+      if(pc >= room.maxPlayers){toast(t('roomFull'),'error');return;}
+      isHost = false;
+      isViewer = false;
+      await rtdb.ref('kumbara/rooms/' + code + '/players/' + myKey).set({
+        name: currentUser.name,
+        avatar: currentUser.avatar,
+        score: 0,
+        correctCount: 0,
+        wrongCount: 0,
+        alive: true,
+        isHost: false,
+        currentAnswer: null,
+        answered: false
+      });
+      rtdb.ref('kumbara/rooms/' + code + '/players/' + myKey).onDisconnect().remove();
+    }
+    
+    currentRoom = room;
+    closeModal('joinRoomModal');
+    enterWaitingRoom();
+    toast(t('roomJoined'));
+  }catch(e){
+    toast('Hata: ' + e.message, 'error');
+  }
+}
+
+function enterWaitingRoom(){
+  goScreen('waiting');
+  document.getElementById('waitingRoomCode').textContent = currentRoom.code;
+  document.getElementById('hostSettings').style.display = isHost ? 'block' : 'none';
+  document.getElementById('startGameBtn').style.display = isHost ? 'block' : 'none';
+  document.getElementById('inviteBtn').style.display = isHost ? 'inline-block' : 'none';
+  
+  if(isHost){
+    document.getElementById('setTotalRounds').value = currentRoom.settings.totalRounds;
+    document.getElementById('setQPerRound').value = currentRoom.settings.questionsPerRound;
+    document.getElementById('setTimePerQ').value = currentRoom.settings.timePerQuestion;
+    document.getElementById('setPrizePerQ').value = currentRoom.settings.prizePerQuestion;
+  }
+  
+  subscribeToRoom();
+}
+
+function subscribeToRoom(){
+  if(roomListener && roomRef){
+    roomRef.off('value', roomListener);
+  }
+  roomRef = rtdb.ref('kumbara/rooms/' + currentRoom.code);
+  
+  roomListener = roomRef.on('value', snap=>{
+    if(!snap.exists()){
+      toast('Oda kapatıldı','error');
+      backToLobby();
+      return;
+    }
+    
+    currentRoom = snap.val();
+    const myKey = currentUser.name.toLowerCase();
+    
+    // Host mu?
+    isHost = currentRoom.host.toLowerCase() === myKey;
+    
+    // Oyuncu mu izleyici mi?
+    if(currentRoom.viewers && currentRoom.viewers[myKey]){
+      isViewer = true;
+    }else if(currentRoom.players && currentRoom.players[myKey]){
+      isViewer = false;
+    }else if(!isHost){
+      isViewer = true;
+    }
+    
+    // Oyuncu atılmış mı?
+    if(!isHost && !isViewer && !(currentRoom.players && currentRoom.players[myKey]) && !(currentRoom.viewers && currentRoom.viewers[myKey])){
+      toast(t('kicked'),'warning');
+      backToLobby();
+      return;
+    }
+    
+    if(currentRoom.status === 'waiting'){
+      renderWaitingRoom();
+    }else if(currentRoom.status === 'playing'){
+      if(!document.getElementById('screen-game').classList.contains('active')){
+        goScreen('game');
+        initGameView();
+      }
+      renderGameState();
+    }else if(currentRoom.status === 'roundEnd'){
+      goScreen('roundEnd');
+      renderRoundEnd();
+    }else if(currentRoom.status === 'finished'){
+      goScreen('result');
+      showResults();
+    }
+  });
+}
+
+function renderWaitingRoom(){
+  document.getElementById('waitingRoomCode').textContent = currentRoom.code;
+  
+  const players = currentRoom.players || {};
+  const pc = Object.keys(players).length;
+  document.getElementById('playerCount').textContent = pc + '/' + currentRoom.maxPlayers;
+  
+  document.getElementById('playersList').innerHTML = Object.entries(players).map(([key, p])=>{
+    const isMe = key === currentUser.name.toLowerCase();
+    const isPlayerHost = p.isHost || key === currentRoom.host.toLowerCase();
+    return `
+      <div class="pv-item">
+        <div class="pv-avatar">${p.avatar?`<img src="${p.avatar}">`:'🏆'}</div>
+        <div class="pv-name">${escapeHtml(p.name)} ${isMe?t('you'):''}</div>
+        ${isPlayerHost?`<span class="pv-role host">${t('host')}</span>`:`<span class="pv-role">${t('playerRole')}</span>`}
+        ${isHost && !isPlayerHost ? `<button class="pv-btn" onclick="kickPlayer('${key}')">🚫</button>` : ''}
+      </div>
+    `;
+  }).join('') || `<div style="color:#8a8ab0;font-size:10px;text-align:center;padding:10px">Henüz oyuncu yok</div>`;
+  
+  const viewers = currentRoom.viewers || {};
+  const vc = Object.keys(viewers).length;
+  document.getElementById('viewerCount').textContent = vc;
+  
+  document.getElementById('viewersList').innerHTML = Object.entries(viewers).map(([key, v])=>{
+    const isMe = key === currentUser.name.toLowerCase();
+    return `
+      <div class="pv-item">
+        <div class="pv-avatar">${v.avatar?`<img src="${v.avatar}">`:'👁'}</div>
+        <div class="pv-name">${escapeHtml(v.name)} ${isMe?t('you'):''}</div>
+        <span class="pv-role viewer">${t('viewerRole')}</span>
+        ${isHost ? `<button class="pv-btn" onclick="kickViewer('${key}')">🚫</button>` : ''}
+      </div>
+    `;
+  }).join('') || `<div style="color:#8a8ab0;font-size:10px;text-align:center;padding:10px">İzleyici yok</div>`;
+}
+
+async function kickPlayer(key){
+  if(!isHost) return;
+  if(!confirm('Bu oyuncu atılacak. Emin misiniz?')) return;
+  try{
+    await rtdb.ref('kumbara/rooms/' + currentRoom.code + '/players/' + key).remove();
+    toast('Oyuncu atıldı');
+  }catch(e){toast('Hata','error');}
+}
+
+async function kickViewer(key){
+  if(!isHost) return;
+  if(!confirm('Bu izleyici atılacak. Emin misiniz?')) return;
+  try{
+    await rtdb.ref('kumbara/rooms/' + currentRoom.code + '/viewers/' + key).remove();
+    toast('İzleyici atıldı');
+  }catch(e){toast('Hata','error');}
+}
+
+function copyRoomCode(){
+  navigator.clipboard.writeText(currentRoom.code).then(()=>{
+    toast(t('codeCopied') + ': ' + currentRoom.code);
+  });
+}
+
+async function saveSettings(){
+  if(!isHost) return;
+  const settings = {
+    totalRounds: parseInt(document.getElementById('setTotalRounds').value) || 5,
+    questionsPerRound: parseInt(document.getElementById('setQPerRound').value) || 3,
+    timePerQuestion: parseInt(document.getElementById('setTimePerQ').value) || 30,
+    prizePerQuestion: parseInt(document.getElementById('setPrizePerQ').value) || 1000
+  };
+  try{
+    await rtdb.ref('kumbara/rooms/' + currentRoom.code + '/settings').set(settings);
+    toast('Ayarlar kaydedildi');
+  }catch(e){toast('Hata','error');}
+}
+
+/* ============================================================
+   INVITE SYSTEM
+   ============================================================ */
+function renderInviteList(){
+  const list = document.getElementById('invitePlayersList');
+  selectedInvites = [];
+  
+  const onlineList = Object.entries(onlineUsers).filter(([n, u])=>{
+    if(!currentUser) return false;
+    if(n === currentUser.name.toLowerCase()) return false;
+    return Date.now() - u.lastSeen < 120000;
+  });
+  
+  if(onlineList.length === 0){
+    list.innerHTML = `<div style="text-align:center;padding:20px;color:#8a8ab0">${t('noOnlineUsers')}</div>`;
+    return;
+  }
+  
+  list.innerHTML = onlineList.map(([name, u])=>`
+    <div class="invite-chip" data-user="${name}" onclick="toggleInvite('${name}')">
+      ${u.avatar?`<img src="${u.avatar}">`:'🏆'}
+      ${escapeHtml(u.name)}
+    </div>
+  `).join('');
+}
+
+function toggleInvite(name){
+  const idx = selectedInvites.indexOf(name);
+  if(idx >= 0){
+    selectedInvites.splice(idx, 1);
+  }else{
+    selectedInvites.push(name);
+  }
+  document.querySelectorAll('.invite-chip').forEach(el=>{
+    el.classList.toggle('selected', selectedInvites.includes(el.dataset.user));
+  });
+}
+
+async function sendInvites(){
+  if(!currentRoom || selectedInvites.length === 0){
+    toast('Kimse seçmediniz','warning');
+    return;
+  }
+  try{
+    for(const name of selectedInvites){
+      const inviteId = 'kminv_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+      await rtdb.ref('kumbara/invites/' + name.toLowerCase() + '/' + inviteId).set({
+        from: currentUser.name,
+        roomCode: currentRoom.code,
+        roomName: currentRoom.name,
+        timestamp: Date.now(),
+        status: 'pending'
+      });
+    }
+    closeModal('invitePlayersModal');
+    toast(selectedInvites.length + ' ' + t('invitesSent'));
+  }catch(e){toast('Hata: ' + e.message,'error');}
+}
+
+function subscribeInvites(){
+  if(!ONLINE || !rtdb || !currentUser) return;
+  inviteListener = rtdb.ref('kumbara/invites/' + currentUser.name.toLowerCase()).on('value', snap=>{
+    const data = snap.val() || {};
+    const invites = Object.entries(data).filter(([id,inv])=>inv.status === 'pending');
+    if(invites.length > 0){
+      // İlk daveti otomatik kabul et (şimdilik basit)
+      const [id, inv] = invites[0];
+      // Burada kullanıcıya bildirim gösterilebilir
+      // Şimdilik sessizce temizle
+      rtdb.ref('kumbara/invites/' + currentUser.name.toLowerCase() + '/' + id).remove();
+    }
+  });
+}
+
+/* ============================================================
+   GAME START
+   ============================================================ */
+async function startGame(){
+  if(!isHost) return;
+  
+  const pc = Object.keys(currentRoom.players || {}).length;
+  if(pc < 1){toast(t('minPlayers'),'error');return;}
+  
+  // Soru havuzu oluştur (örnek sorular - gerçek uygulamada Firestore'dan çekilebilir)
+  const pool = buildQuestionPool(currentRoom.settings.totalRounds * currentRoom.settings.questionsPerRound);
+  
+  try{
+    const playerKeys = Object.keys(currentRoom.players);
+    await rtdb.ref('kumbara/rooms/' + currentRoom.code).update({
+      status: 'playing',
+      currentRound: 1,
+      currentQuestionIdx: 0,
+      questions: pool,
+      phase: 'answering',
+      currentPlayer: playerKeys[0],
+      answers: {},
+      piggyBank: 0,
+      safeBalance: 0,
+      roundCorrect: 0,
+      roundWrong: 0,
+      questionsAnsweredInRound: 0,
+      startedAt: Date.now(),
+      timerEnd: Date.now() + (currentRoom.settings.timePerQuestion * 1000)
+    });
+    toast(t('gameStarted'));
+  }catch(e){toast('Hata: ' + e.message,'error');}
+}
+
+function buildQuestionPool(total){
+  // Örnek soru havuzu (gerçek uygulamada admin tarafından eklenen sorular kullanılır)
+  const sampleQuestions = [
+    {question:"Türkiye'nin başkenti neresidir?",options:["İstanbul","Ankara","İzmir","Bursa"],correct:1,difficulty:"easy"},
+    {question:"Hangi gezegen Güneş'e en yakın?",options:["Venüs","Mars","Merkür","Jüpiter"],correct:2,difficulty:"easy"},
+    {question:"Bir yılda kaç ay vardır?",options:["10","11","12","13"],correct:2,difficulty:"easy"},
+    {question:"Mona Lisa'nın ressamı kimdir?",options:["Picasso","Da Vinci","Van Gogh","Michelangelo"],correct:1,difficulty:"easy"},
+    {question:"İnsan vücudunda kaç kemik vardır?",options:["186","206","226","256"],correct:1,difficulty:"medium"},
+    {question:"Hangi element sembolü 'Au' olan?",options:["Gümüş","Altın","Bakır","Demir"],correct:1,difficulty:"medium"},
+    {question:"II. Dünya Savaşı hangi yıl bitti?",options:["1943","1944","1945","1946"],correct:2,difficulty:"medium"},
+    {question:"Dünyanın en büyük okyanusu hangisidir?",options:["Atlas","Hint","Pasifik","Arktik"],correct:2,difficulty:"medium"},
+    {question:"Mozart hangi ülkede doğdu?",options:["Almanya","Avusturya","İtalya","Fransa"],correct:1,difficulty:"hard"},
+    {question:"Bir üçgenin iç açıları toplamı kaç derecedir?",options:["90","180","270","360"],correct:1,difficulty:"hard"},
+    {question:"Hangi gezegen 'Kızıl Gezegen' olarak bilinir?",options:["Venüs","Mars","Jüpiter","Satürn"],correct:1,difficulty:"hard"},
+    {question:"İstanbul Boğazı hangi iki denizi bağlar?",options:["Ege-Akdeniz","Karadeniz-Marmara","Marmara-Ege","Akdeniz-Karadeniz"],correct:1,difficulty:"medium"},
+    {question:"DNA'yı keşfeden bilim insanları kimlerdir?",options:["Einstein-Newton","Watson-Crick","Darwin-Mendel","Curie-Pasteur"],correct:1,difficulty:"hard"},
+    {question:"Hangi yıl İstanbul fethedildi?",options:["1453","1454","1455","1456"],correct:0,difficulty:"medium"},
+    {question:"Pi sayısının ilk basamağı nedir?",options:["3.14","2.71","1.61","1.41"],correct:0,difficulty:"easy"},
+    {question:"En uzun nehir hangisidir?",options:["Amazon","Nil","Mississippi","Yangtze"],correct:1,difficulty:"medium"},
+    {question:"Hangi ülke dünyanın en kalabalık ülkesidir?",options:["ABD","Hindistan","Çin","Endonezya"],correct:1,difficulty:"easy"},
+    {question:"Güneş sistemimizdeki en büyük gezegen?",options:["Satürn","Jüpiter","Uranüs","Neptün"],correct:1,difficulty:"easy"},
+    {question:"İnsan vücudunda en büyük organ?",options:["Karaciğer","Beyin","Deri","Kalp"],correct:2,difficulty:"medium"},
+    {question:"Hangisi bir programming dili değildir?",options:["Python","Java","HTML","C++"],correct:2,difficulty:"easy"}
+  ];
+  
+  const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+  const pool = [];
+  
+  while(pool.length < total){
+    const q = sampleQuestions[pool.length % sampleQuestions.length];
+    pool.push({...q, id: 'q_' + pool.length + '_' + Date.now()});
+    if(pool.length >= sampleQuestions.length * 2) break;
+  }
+  
+  return shuffle(pool).slice(0, total);
+}
+
+/* ============================================================
+   GAME VIEW
+   ============================================================ */
+function initGameView(){
+  document.getElementById('viewerBanner').style.display = isViewer ? 'flex' : 'none';
+  document.getElementById('hostControls').style.display = isHost ? 'block' : 'none';
+  document.getElementById('gameTotalRounds').textContent = currentRoom.settings.totalRounds;
+  document.getElementById('gameTotalQ').textContent = currentRoom.settings.questionsPerRound;
+}
+
+function renderGameState(){
+  if(!currentRoom || currentRoom.status !== 'playing') return;
+  
+  const qIdx = currentRoom.currentQuestionIdx || 0;
+  const qPool = currentRoom.questions || [];
+  const q = qPool[qIdx];
+  
+  if(!q){
+    document.getElementById('qText').textContent = 'Soru yok';
+    return;
+  }
+  
+  document.getElementById('gameRound').textContent = currentRoom.currentRound || 1;
+  document.getElementById('gameQNum').textContent = (qIdx % currentRoom.settings.questionsPerRound) + 1;
+  document.getElementById('qNumber').textContent = t('qLabel') + ' ' + (qIdx + 1);
+  document.getElementById('qText').textContent = q.question;
+  
+  // Stats
+  document.getElementById('statPiggy').textContent = '₺' + (currentRoom.piggyBank || 0).toLocaleString();
+  document.getElementById('statSafe').textContent = '₺' + (currentRoom.safeBalance || 0).toLocaleString();
+  document.getElementById('statCorrect').textContent = currentRoom.roundCorrect || 0;
+  document.getElementById('statWrong').textContent = currentRoom.roundWrong || 0;
+  document.getElementById('balPiggy').textContent = '₺' + (currentRoom.piggyBank || 0).toLocaleString();
+  document.getElementById('balPrize').textContent = '+₺' + (currentRoom.settings.prizePerQuestion || 1000).toLocaleString();
+  
+  // Players bar
+  renderGamePlayersBar();
+  renderSidebarPlayers();
+  
+  // Options
+  renderOptions(q);
+  
+  // Current player info
+  const cp = currentRoom.players[currentRoom.currentPlayer];
+  const info = document.getElementById('currentPlayerInfo');
+  if(cp){
+    const myKey = currentUser.name.toLowerCase();
+    if(currentRoom.currentPlayer === myKey && !isViewer){
+      info.innerHTML = `<span style="color:#ffd700;font-weight:700">🎯 ${t('yourTurn')}</span>`;
+    }else{
+      info.innerHTML = `<span>⏳ ${escapeHtml(cp.name)} ${t('waitTurn')}</span>`;
+    }
+  }
+  
+  // Timer
+  if(currentRoom.phase === 'answering' && currentRoom.timerEnd){
+    startTimerDisplay(currentRoom.timerEnd);
+  }
+}
+
+function renderGamePlayersBar(){
+  const players = currentRoom.players || {};
+  const cp = currentRoom.currentPlayer;
+  
+  document.getElementById('gamePlayersBar').innerHTML = Object.entries(players).map(([key, p])=>{
+    const isCurrent = key === cp;
+    const isMe = key === currentUser.name.toLowerCase();
+    return `
+      <div class="player-chip ${!p.alive?'eliminated':''} ${isCurrent?'answering':''}">
+        <div class="player-chip-avatar">${p.avatar?`<img src="${p.avatar}">`:'🏆'}</div>
+        <div>${escapeHtml(p.name)} ${isMe?t('you'):''}</div>
+        ${!p.alive?'<span style="color:#ff5f57">✗</span>':''}
+        <span style="color:#ffd700;font-size:9px">₺${(p.score||0).toLocaleString()}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderSidebarPlayers(){
+  const players = currentRoom.players || {};
+  const viewers = currentRoom.viewers || {};
+  const cp = currentRoom.currentPlayer;
+  
+  document.getElementById('sidebarPlayers').innerHTML = Object.entries(players).map(([key, p])=>{
+    const isCurrent = key === cp;
+    const isMe = key === currentUser.name.toLowerCase();
+    return `
+      <div class="player-item ${isMe?'is-me':''} ${!p.alive?'eliminated':''} ${isCurrent?'answering':''}">
+        <div class="player-avatar">${p.avatar?`<img src="${p.avatar}">`:'🏆'}</div>
+        <div class="player-info">
+          <div class="player-name">${escapeHtml(p.name)} ${isMe?t('you'):''} ${p.isHost?'👑':''}</div>
+          <div class="player-score">₺${(p.score||0).toLocaleString()}</div>
+        </div>
+        <div class="player-status">${!p.alive?'🚫':isCurrent?'🎯':'⏳'}</div>
+      </div>
+    `;
+  }).join('');
+  
+  document.getElementById('sidebarViewerCount').textContent = Object.keys(viewers).length;
+  document.getElementById('sidebarViewers').innerHTML = Object.entries(viewers).map(([key, v])=>`
+    <div class="player-item">
+      <div class="player-avatar">${v.avatar?`<img src="${v.avatar}">`:'👁'}</div>
+      <div class="player-info">
+        <div class="player-name">${escapeHtml(v.name)}</div>
+        <div class="player-status">👁 ${t('viewerRole')}</div>
+      </div>
+    </div>
+  `).join('') || `<div style="color:#8a8ab0;font-size:10px;padding:8px">İzleyici yok</div>`;
+}
+
+function renderOptions(q){
+  const letters = ['A','B','C','D'];
+  const myKey = currentUser.name.toLowerCase();
+  const isMyTurn = currentRoom.currentPlayer === myKey;
+  const myPlayer = currentRoom.players[myKey];
+  
+  let html = '';
+  q.options.forEach((opt, i)=>{
+    const isSelected = myPlayer?.currentAnswer === i;
+    const isCorrectReveal = currentRoom.phase === 'revealing' && i === q.correct;
+    const isWrongReveal = currentRoom.phase === 'revealing' && myPlayer?.currentAnswer === i && i !== q.correct;
+    
+    let cls = 'option';
+    if(isSelected && currentRoom.phase === 'answering') cls += ' selected';
+    if(isCorrectReveal) cls += ' correct';
+    if(isWrongReveal) cls += ' wrong';
+    if(!isMyTurn || currentRoom.phase !== 'answering' || isViewer || !myPlayer?.alive) cls += ' disabled';
+    
+    html += `
+      <div class="${cls}" onclick="selectAnswer(${i})">
+        <div class="option-letter">${letters[i]}</div>
+        <div class="option-text">${escapeHtml(opt)}</div>
+      </div>
+    `;
+  });
+  
+  document.getElementById('optionsGrid').innerHTML = html;
+}
+
+async function selectAnswer(idx){
+  if(isViewer) return;
+  if(currentRoom.currentPlayer !== currentUser.name.toLowerCase()) return;
+  if(currentRoom.phase !== 'answering') return;
+  
+  const myKey = currentUser.name.toLowerCase();
+  const myPlayer = currentRoom.players[myKey];
+  if(!myPlayer || !myPlayer.alive) return;
+  if(myPlayer.answered) return;
+  
+  try{
+    await roomRef.child('players/' + myKey).update({
+      currentAnswer: idx,
+      answered: true
+    });
+    
+    if(isHost){
+      setTimeout(()=>revealAnswer(idx), 500);
+    }
+  }catch(e){toast('Hata','error');}
+}
+
+async function revealAnswer(answerIdx){
+  if(!isHost) return;
+  
+  const myKey = currentRoom.currentPlayer;
+  const player = currentRoom.players[myKey];
+  const q = currentRoom.questions[currentRoom.currentQuestionIdx];
+  
+  await roomRef.update({phase: 'revealing'});
+  
+  const isCorrect = answerIdx === q.correct;
+  
+  setTimeout(async ()=>{
+    if(isCorrect){
+      const newPiggy = (currentRoom.piggyBank || 0) + currentRoom.settings.prizePerQuestion;
+      const newScore = (player.score || 0) + currentRoom.settings.prizePerQuestion;
+      const newCorrect = (player.correctCount || 0) + 1;
+      
+      await roomRef.child('players/' + myKey).update({
+        score: newScore,
+        correctCount: newCorrect
+      });
+      await roomRef.update({
+        piggyBank: newPiggy,
+        roundCorrect: (currentRoom.roundCorrect || 0) + 1,
+        questionsAnsweredInRound: (currentRoom.questionsAnsweredInRound || 0) + 1
+      });
+    }else{
+      const newWrong = (player.wrongCount || 0) + 1;
+      await roomRef.child('players/' + myKey).update({
+        alive: false,
+        wrongCount: newWrong
+      });
+      await roomRef.update({
+        roundWrong: (currentRoom.roundWrong || 0) + 1,
+        questionsAnsweredInRound: (currentRoom.questionsAnsweredInRound || 0) + 1
+      });
+    }
+    
+    setTimeout(()=>nextQuestion(), 2000);
+  }, 1500);
+}
+
+async function nextQuestion(){
+  if(!isHost) return;
+  
+  const qIdx = currentRoom.currentQuestionIdx || 0;
+  const qPerRound = currentRoom.settings.questionsPerRound;
+  const totalRounds = currentRoom.settings.totalRounds;
+  const currentRound = currentRoom.currentRound || 1;
+  
+  // Bu turda kaç soru cevaplandı?
+  const answeredInRound = (currentRoom.questionsAnsweredInRound || 0) + 1;
+  
+  // Tur bitti mi?
+  if(answeredInRound >= qPerRound){
+    await endRound();
+    return;
+  }
+  
+  const nextQIdx = qIdx + 1;
+  
+  // Tüm oyuncular elendi mi?
+  const alivePlayers = Object.entries(currentRoom.players || {}).filter(([k,p])=>p.alive);
+  if(alivePlayers.length === 0){
+    await endRound();
+    return;
+  }
+  
+  // Sıradaki oyuncu
+  const currentKey = currentRoom.currentPlayer;
+  const keys = alivePlayers.map(([k])=>k);
+  const currentIdx = keys.indexOf(currentKey);
+  const nextKey = keys[(currentIdx + 1) % keys.length];
+  
+  // Oyuncu değişti mi?
+  let nextRound = currentRound;
+  if(keys.indexOf(nextKey) <= currentIdx && currentIdx !== -1){
+    // Yeni tura geçiş kontrolü
+  }
+  
+  try{
+    const updates = {};
+    for(const [key] of Object.entries(currentRoom.players || {})){
+      updates['players/' + key + '/currentAnswer'] = null;
+      updates['players/' + key + '/answered'] = false;
+    }
+    
+    await roomRef.update({
+      ...updates,
+      currentPlayer: nextKey,
+      currentQuestionIdx: nextQIdx,
+      phase: 'answering',
+      questionsAnsweredInRound: answeredInRound,
+      timerEnd: Date.now() + (currentRoom.settings.timePerQuestion * 1000)
+    });
+  }catch(e){console.error(e);}
+}
+
+async function endRound(){
+  if(!isHost) return;
+  
+  const currentRound = currentRoom.currentRound || 1;
+  const totalRounds = currentRoom.settings.totalRounds;
+  
+  if(currentRound >= totalRounds){
+    await roomRef.update({
+      status: 'finished',
+      finishedAt: Date.now()
+    });
+  }else{
+    await roomRef.update({
+      status: 'roundEnd',
+      roundEndedAt: Date.now()
+    });
+  }
+}
+
+function renderRoundEnd(){
+  document.getElementById('rePiggy').textContent = '₺' + (currentRoom.piggyBank || 0).toLocaleString();
+  document.getElementById('reSafe').textContent = '₺' + (currentRoom.safeBalance || 0).toLocaleString();
+  document.getElementById('roundEndSub').textContent = `Tur ${currentRoom.currentRound} / ${currentRoom.settings.totalRounds}`;
+  
+  document.getElementById('hostLockBox').style.display = isHost ? 'block' : 'none';
+  document.getElementById('viewerWaitBox').style.display = !isHost ? 'block' : 'none';
+  document.getElementById('nextRoundBtn').style.display = isHost ? 'inline-block' : 'none';
+}
+
+async function lockMoney(lock){
+  if(!isHost) return;
+  if(lock){
+    await roomRef.update({
+      safeBalance: (currentRoom.safeBalance || 0) + (currentRoom.piggyBank || 0),
+      piggyBank: 0
+    });
+  }
+}
+
+async function nextRound(){
+  if(!isHost) return;
+  
+  const nextRound = (currentRoom.currentRound || 1) + 1;
+  const totalQ = currentRoom.settings.totalRounds * currentRoom.settings.questionsPerRound;
+  const currentQIdx = currentRoom.currentQuestionIdx || 0;
+  
+  // Yeterli soru var mı?
+  if(currentQIdx + 1 >= (currentRoom.questions || []).length){
+    // Oyunu bitir
+    await roomRef.update({
+      status: 'finished',
+      finishedAt: Date.now()
+    });
+    return;
+  }
+  
+  const updates = {};
+  for(const [key] of Object.entries(currentRoom.players || {})){
+    updates['players/' + key + '/currentAnswer'] = null;
+    updates['players/' + key + '/answered'] = false;
+  }
+  
+  await roomRef.update({
+    ...updates,
+    status: 'playing',
+    currentRound: nextRound,
+    currentQuestionIdx: currentQIdx + 1,
+    phase: 'answering',
+    currentPlayer: Object.keys(currentRoom.players)[0],
+    roundCorrect: 0,
+    roundWrong: 0,
+    questionsAnsweredInRound: 0,
+    timerEnd: Date.now() + (currentRoom.settings.timePerQuestion * 1000)
+  });
+}
+
+async function endGame(){
+  if(!isHost) return;
+  if(!confirm('Yarışmayı bitirmek istediğinize emin misiniz?')) return;
+  try{
+    await roomRef.update({
+      status: 'finished',
+      finishedAt: Date.now()
+    });
+  }catch(e){toast('Hata','error');}
+}
+
+function showResults(){
+  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+  
+  const players = currentRoom.players || {};
+  const sorted = Object.entries(players).sort((a,b)=>(b[1].score||0)-(a[1].score||0));
+  const winner = sorted[0];
+  
+  document.getElementById('resultSub').textContent = winner ? 
+    `${escapeHtml(winner[1].name)} ${t('winner')}!` : t('gameOver');
+  
+  document.getElementById('resultWinners').innerHTML = 
+    `<h3 style="color:#ffd700;margin-bottom:12px">🏅 ${t('rank')}</h3>` +
+    sorted.map(([key, p], i)=>`
+      <div class="winner ${i===0?'first':''}">
+        <div class="winner-rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</div>
+        <div class="winner-name">${escapeHtml(p.name)}</div>
+        <div class="winner-score">₺${(p.score||0).toLocaleString()}</div>
+      </div>
+    `).join('');
+}
+
+/* ============================================================
+   TIMER
+   ============================================================ */
+function startTimerDisplay(endTime){
+  if(timerInterval) clearInterval(timerInterval);
+  
+  const totalTime = currentRoom.settings.timePerQuestion;
+  
+  timerInterval = setInterval(()=>{
+    const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+    const progress = (remaining / totalTime) * 100;
+    
+    document.getElementById('timerText').textContent = remaining;
+    document.getElementById('timerCircle').style.setProperty('--progress', progress + '%');
+    
+    if(remaining <= 5){
+      document.getElementById('timerCircle').classList.add('danger');
+    }else{
+      document.getElementById('timerCircle').classList.remove('danger');
+    }
+    
+    if(remaining <= 0){
+      clearInterval(timerInterval);
+      if(isHost && currentRoom.phase === 'answering'){
+        const myKey = currentRoom.currentPlayer;
+        if(currentRoom.players[myKey] && !currentRoom.players[myKey].answered){
+          roomRef.child('players/' + myKey).update({
+            currentAnswer: -1,
+            answered: true
+          });
+          setTimeout(()=>revealAnswer(-1), 500);
+        }
+      }
+    }
+  }, 100);
+}
+
+/* ============================================================
+   LEAVE / BACK
+   ============================================================ */
+async function leaveCurrentRoom(){
+  if(!currentRoom){goScreen('lobby');return;}
+  if(!confirm('Odadan ayrılmak istediğinize emin misiniz?')) return;
+  
+  try{
+    const myKey = currentUser.name.toLowerCase();
+    if(isHost){
+      await rtdb.ref('kumbara/rooms/' + currentRoom.code).remove();
+    }else if(isViewer){
+      await rtdb.ref('kumbara/rooms/' + currentRoom.code + '/viewers/' + myKey).remove();
+    }else{
+      await rtdb.ref('kumbara/rooms/' + currentRoom.code + '/players/' + myKey).remove();
+    }
+  }catch(e){console.error(e);}
+  
+  backToLobby();
+}
+
+function backToLobby(){
+  if(roomListener && roomRef){
+    roomRef.off('value', roomListener);
+    roomListener = null;
+  }
+  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+  
+  currentRoom = null;
+  isHost = false;
+  isViewer = false;
+  selectedAnswer = null;
+  
+  goScreen('lobby');
+}
+
+/* ============================================================
+   UTILS
+   ============================================================ */
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('touchstart', function(){}, {passive: true});
+</script>
+</body>
+</html>
