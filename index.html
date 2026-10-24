@@ -4,12 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0a0a15">
-<title>K-Moon Launcher v11.0.0</title>
+<title>K-Moon Launcher v11.1.0</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;user-select:none;-webkit-tap-highlight-color:transparent}
@@ -81,15 +80,13 @@ button,input,select,textarea{font-family:inherit}
 .section-sub{color:#8a8ab0;font-size:11px;margin-bottom:20px}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
-.game-card{background:#15152a;border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden;cursor:pointer;transition:.35s;position:relative}
+.game-card{background:#15152a;border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden;cursor:pointer;transition:.35s}
 .game-card:hover{transform:translateY(-5px);border-color:#ffd700;box-shadow:0 10px 30px rgba(255,215,0,.15)}
 .cover{height:170px;background-size:cover;background-position:center;position:relative}
 .cover::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.85))}
 .cover.blur18{filter:blur(14px)}
-.card-badge{position:absolute;top:8px;right:8px;padding:3px 8px;background:rgba(0,0,0,.7);border:1px solid #ffd700;border-radius:5px;color:#ffd700;font-size:9px;font-weight:700;z-index:2}
+.card-badge{position:absolute;top:8px;right:8px;padding:3px 8px;background:rgba(0,0,0,.6);border:1px solid #ffd700;border-radius:5px;color:#ffd700;font-size:9px;font-weight:700;z-index:2}
 .card-badge.age{left:8px;right:auto;border-color:#ff0000;color:#ff5f57}
-.card-badge.live{background:rgba(255,0,0,.9);border-color:#ff0000;color:#fff;animation:livePulse 1.5s infinite}
-@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.6}}
 .card-info{padding:13px}
 .card-title{font-size:16px;font-weight:700;margin-bottom:4px;word-break:break-word}
 .card-genre{font-size:10px;color:#8a8ab0;margin-bottom:8px}
@@ -98,75 +95,6 @@ button,input,select,textarea{font-family:inherit}
 .empty{text-align:center;padding:50px 20px;color:#8a8ab0}
 .empty-icon{font-size:60px;margin-bottom:12px}
 
-/* CHAT */
-.chat-container{display:grid;grid-template-columns:1fr 280px;gap:15px;height:calc(100vh - 200px);min-height:400px}
-.chat-main{background:rgba(0,0,0,.3);border:1px solid rgba(255,215,0,.2);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
-.chat-header{padding:14px 18px;background:rgba(0,0,0,.4);border-bottom:1px solid rgba(255,215,0,.2);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.chat-title{font-size:16px;font-weight:700;color:#ffd700}
-.chat-online{font-size:11px;color:#27c93f}
-.chat-messages{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
-.chat-msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp .3s}
-.chat-msg.own{flex-direction:row-reverse}
-.chat-msg-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;overflow:hidden}
-.chat-msg-avatar img{width:100%;height:100%;object-fit:cover}
-.chat-msg-body{max-width:70%;background:rgba(255,255,255,.05);padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08)}
-.chat-msg.own .chat-msg-body{background:rgba(255,215,0,.1);border-color:rgba(255,215,0,.3)}
-.chat-msg-name{font-size:11px;font-weight:700;color:#ffd700;margin-bottom:3px}
-.chat-msg-text{font-size:13px;line-height:1.5;word-break:break-word}
-.chat-msg-time{font-size:9px;color:#8a8ab0;margin-top:3px}
-.chat-msg.system{justify-content:center}
-.chat-msg.system .chat-msg-body{background:rgba(255,0,230,.1);border-color:rgba(255,0,230,.3);text-align:center;max-width:90%}
-.chat-input-area{padding:12px;background:rgba(0,0,0,.4);border-top:1px solid rgba(255,215,0,.2);display:flex;gap:8px;align-items:center;flex-shrink:0}
-.chat-input{flex:1;padding:10px 14px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#fff;outline:none;font-size:13px;min-width:0}
-.chat-input:focus{border-color:#ffd700}
-.emoji-btn,.send-btn{padding:8px 14px;border-radius:20px;border:none;cursor:pointer;font-size:14px;font-weight:700;transition:.3s}
-.emoji-btn{background:rgba(255,255,255,.05);color:#ffd700;border:1px solid rgba(255,215,0,.3)}
-.send-btn{background:linear-gradient(90deg,#ffd700,#ff6b00);color:#fff}
-.emoji-picker{position:absolute;bottom:60px;right:15px;background:#15152a;border:1px solid rgba(255,215,0,.3);border-radius:12px;padding:12px;display:none;grid-template-columns:repeat(8,1fr);gap:4px;max-width:320px;z-index:100;box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.emoji-picker.show{display:grid}
-.emoji-item{font-size:22px;cursor:pointer;padding:5px;border-radius:6px;text-align:center;transition:.2s}
-.emoji-item:hover{background:rgba(255,215,0,.2);transform:scale(1.2)}
-
-.chat-sidebar{background:rgba(0,0,0,.3);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:15px;overflow-y:auto}
-.chat-sidebar h4{color:#ffd700;font-size:13px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,215,0,.2)}
-.online-user{display:flex;gap:8px;align-items:center;padding:8px;border-radius:6px;margin-bottom:4px;cursor:pointer;transition:.2s}
-.online-user:hover{background:rgba(255,215,0,.1)}
-.online-user .dot{width:8px;height:8px;border-radius:50%;background:#27c93f;box-shadow:0 0 6px #27c93f;flex-shrink:0}
-.online-user-name{font-size:12px;flex:1;word-break:break-word}
-
-/* SPECTATE */
-.spectate-layout{display:grid;grid-template-columns:1fr 300px;gap:15px;height:calc(100vh - 200px);min-height:400px}
-.spectate-main{background:rgba(0,0,0,.5);border:1px solid rgba(255,215,0,.2);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
-.spectate-header{padding:12px 18px;background:rgba(0,0,0,.4);border-bottom:1px solid rgba(255,215,0,.2);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.spectate-title{font-size:15px;font-weight:700;color:#ffd700;display:flex;align-items:center;gap:8px}
-.live-dot{width:10px;height:10px;border-radius:50%;background:#ff0000;animation:livePulse 1.5s infinite}
-.spectate-frame{flex:1;border:none;background:#000;width:100%}
-.spectate-controls{padding:10px 15px;background:rgba(0,0,0,.4);border-top:1px solid rgba(255,215,0,.2);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.spectate-sidebar{background:rgba(0,0,0,.3);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:15px;overflow-y:auto;display:flex;flex-direction:column;gap:15px}
-.viewer-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:10px;display:flex;gap:10px;align-items:center}
-.viewer-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden}
-.viewer-avatar img{width:100%;height:100%;object-fit:cover}
-.viewer-info{flex:1;min-width:0}
-.viewer-name{font-size:12px;font-weight:700;word-break:break-word}
-.viewer-role{font-size:9px;color:#8a8ab0}
-.voice-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;background:#27c93f;margin-left:5px;animation:livePulse 1s infinite}
-
-/* ROOM */
-.room-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:18px;margin-bottom:12px;transition:.3s}
-.room-card:hover{border-color:#ffd700;transform:translateY(-2px)}
-.room-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.room-title{font-size:16px;font-weight:700;color:#ffd700;display:flex;align-items:center;gap:8px}
-.room-code{font-family:monospace;font-size:13px;color:#c0c0e0;background:rgba(255,255,255,.05);padding:4px 10px;border-radius:6px;letter-spacing:2px}
-.room-stats{display:flex;gap:15px;font-size:11px;color:#8a8ab0;flex-wrap:wrap}
-.room-stat{display:flex;align-items:center;gap:4px}
-
-/* BAN SCREEN */
-.ban-screen{position:fixed;inset:0;z-index:9999;background:#0a0a15;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:30px;text-align:center}
-.ban-icon{font-size:100px;margin-bottom:20px;animation:pulse 2s infinite}
-.ban-title{font-size:32px;font-weight:900;color:#ff5f57;margin-bottom:15px}
-.ban-text{color:#c0c0e0;font-size:14px;line-height:1.8;max-width:500px;margin-bottom:20px}
-
-/* USERS */
 .users-layout{display:grid;grid-template-columns:220px 1fr;gap:20px}
 .users-sidebar{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:15px;height:fit-content;position:sticky;top:0}
 .user-search{width:100%;padding:9px 12px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#fff;outline:none;font-size:11px;margin-bottom:12px}
@@ -174,6 +102,7 @@ button,input,select,textarea{font-family:inherit}
 .user-filter.active{background:rgba(255,215,0,.1);color:#ffd700;border-left:2px solid #ffd700}
 .user-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:15px;display:flex;gap:12px;align-items:center;transition:.3s;margin-bottom:10px}
 .user-card:hover{border-color:rgba(255,215,0,.3)}
+.user-card.banned{border-color:#ff5f57;background:rgba(255,95,87,.05)}
 .user-avatar{width:55px;height:55px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;position:relative;flex-shrink:0}
 .user-avatar img{width:100%;height:100%;object-fit:cover}
 .user-status{position:absolute;bottom:2px;right:2px;width:12px;height:12px;border-radius:50%;border:2px solid #0a0a15}
@@ -188,9 +117,9 @@ button,input,select,textarea{font-family:inherit}
 .btn-sm:hover{background:#ffd700;color:#000}
 .btn-sm.primary{background:linear-gradient(90deg,#ffd700,#ff6b00);color:#fff;border:none}
 .btn-sm.danger{border-color:#ff5f57;color:#ff5f57;background:rgba(255,95,87,.1)}
+.btn-sm.danger:hover{background:#ff5f57;color:#fff}
 .btn-sm.warn{border-color:#ff9500;color:#ff9500;background:rgba(255,149,0,.1)}
 
-/* LIBRARY */
 .lib-layout{display:grid;grid-template-columns:200px 1fr;gap:20px}
 .sidebar{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:15px;height:fit-content;position:sticky;top:0}
 .filter-title{font-size:9px;color:#8a8ab0;letter-spacing:2px;margin-bottom:8px}
@@ -199,7 +128,6 @@ button,input,select,textarea{font-family:inherit}
 .count{background:rgba(255,255,255,.1);border-radius:10px;padding:1px 6px;font-size:9px}
 .sort{margin-top:12px;width:100%;background:#15152a;color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:7px;font-size:10px}
 
-/* PROFILE */
 .profile-head{display:grid;grid-template-columns:auto 1fr auto;gap:20px;padding:22px;border-radius:16px;border:1px solid rgba(255,215,0,.2);background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,107,0,.05));margin-bottom:18px}
 .big-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:50px;position:relative;overflow:visible;box-shadow:0 0 30px rgba(255,215,0,.3);flex-shrink:0}
 .big-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
@@ -226,10 +154,10 @@ button,input,select,textarea{font-family:inherit}
 .b-value{font-size:24px;font-weight:900;color:#ffd700;margin-bottom:3px;word-break:break-all}
 .b-label{font-size:10px;color:#8a8ab0}
 
-.calendar{background:rgba(0,0,0,.3);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:18px;margin-bottom:18px}
+.calendar{background:rgba(0,0,0,.3);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:18px;margin-bottom:18px;overflow:hidden}
 .cal-title{font-size:15px;font-weight:700;color:#ffd700;margin-bottom:6px}
 .cal-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-top:10px}
-.cal-day{aspect-ratio:1;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;position:relative}
+.cal-day{aspect-ratio:1;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;position:relative;min-width:0}
 .cal-day small{font-size:7px;color:#ffd700;font-weight:700}
 .cal-day.done{background:rgba(39,201,63,.2);border-color:#27c93f}
 .cal-day.done::after{content:'✓';position:absolute;top:1px;right:3px;color:#27c93f;font-size:8px;font-weight:900}
@@ -282,7 +210,7 @@ button,input,select,textarea{font-family:inherit}
 .modal{width:100%;max-width:1000px;max-height:90vh;background:linear-gradient(#15152a,#0a0a15);border:1px solid rgba(255,215,0,.25);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;animation:fadeUp .4s}
 .modal.small{max-width:480px}
 .modal.admin{border-color:rgba(255,0,230,.3)}
-.modal-head{padding:15px 20px;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;gap:8px}
+.modal-head{padding:15px 20px;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;gap:10px}
 .modal-title{font-size:18px;font-weight:900;word-break:break-word}
 .close-btn{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .close-btn:hover{background:#ff5f57;transform:rotate(90deg)}
@@ -290,12 +218,12 @@ button,input,select,textarea{font-family:inherit}
 .form-group{margin-bottom:14px}
 .form-label{display:block;font-size:10px;color:#8a8ab0;margin-bottom:6px;letter-spacing:1px}
 .input{width:100%;padding:10px 13px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:12px;outline:none;min-width:0}
-.input:focus{border-color:#ffd700}
-textarea.input{min-height:80px;resize:vertical}
+.input:focus{border-color:#ffd700;box-shadow:0 0 8px rgba(255,215,0,.2)}
+textarea.input{min-height:80px;resize:vertical;font-family:inherit}
 textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.upload{border:2px dashed rgba(255,215,0,.3);border-radius:8px;padding:18px;text-align:center;cursor:pointer;color:#8a8ab0;font-size:11px;background:rgba(255,215,0,.04)}
-.upload:hover{border-color:#ffd700}
+.upload{border:2px dashed rgba(255,215,0,.3);border-radius:8px;padding:18px;text-align:center;cursor:pointer;color:#8a8ab0;font-size:11px;background:rgba(255,215,0,.04);transition:.3s;word-break:break-word}
+.upload:hover{border-color:#ffd700;background:rgba(255,215,0,.1)}
 .upload img{max-width:100%;max-height:160px;border-radius:6px;margin-top:8px}
 .thumb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;margin-top:8px}
 .thumb{aspect-ratio:1;border-radius:6px;background-size:cover;background-position:center;position:relative}
@@ -380,21 +308,10 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 
 .toast{position:fixed;bottom:20px;right:20px;padding:13px 18px;background:rgba(0,0,0,.95);border:1px solid #ffd700;border-radius:10px;z-index:3000;font-size:12px;max-width:360px;animation:fadeUp .3s;box-shadow:0 10px 25px rgba(255,215,0,.2);word-break:break-word}
 .toast.error{border-color:#ff5f57}.toast.warning{border-color:#ff9500}.toast.success{border-color:#27c93f}
-
 .particles{position:fixed;inset:0;pointer-events:none;z-index:0}
 .particle{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffd700;animation:floatUp 15s linear infinite}
 @keyframes floatUp{from{transform:translateY(100vh);opacity:0}10%,90%{opacity:.4}to{transform:translateY(-10vh) translateX(60px);opacity:0}}
 
-/* REPORT / MESSAGE MODAL */
-.report-box{padding:20px}
-.report-user{display:flex;gap:12px;align-items:center;margin-bottom:15px;padding:12px;background:rgba(255,255,255,.03);border-radius:10px}
-.report-reasons{display:flex;flex-direction:column;gap:8px;margin-bottom:15px}
-.report-reason{display:flex;gap:10px;align-items:center;padding:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;cursor:pointer;transition:.2s}
-.report-reason:hover{border-color:#ffd700}
-.report-reason.selected{background:rgba(255,215,0,.1);border-color:#ffd700}
-.report-reason input{accent-color:#ffd700}
-
-/* ADMIN MODERATION */
 .mod-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px;margin-bottom:10px}
 .mod-card.report{border-left:3px solid #ff9500}
 .mod-card.message{border-left:3px solid #00f0ff}
@@ -404,23 +321,22 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 .mod-body{font-size:12px;color:#c0c0e0;line-height:1.6;margin-bottom:10px;word-break:break-word}
 .mod-actions{display:flex;gap:6px;flex-wrap:wrap}
 
-/* VOICE */
-.voice-panel{background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.2);border-radius:10px;padding:12px}
-.voice-title{font-size:12px;font-weight:700;color:#ffd700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.voice-btn{width:100%;padding:10px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:12px;transition:.3s;margin-bottom:6px}
-.voice-btn.connect{background:linear-gradient(90deg,#27c93f,#00f0ff);color:#fff}
-.voice-btn.disconnect{background:linear-gradient(90deg,#ff5f57,#ff0066);color:#fff}
-.voice-btn.mute{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}
-.voice-status{font-size:10px;color:#8a8ab0;margin-top:6px}
+.report-box{padding:15px}
+.report-user{display:flex;gap:10px;align-items:center;margin-bottom:12px;padding:10px;background:rgba(255,255,255,.03);border-radius:8px}
+.report-reasons{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.report-reason{display:flex;gap:8px;align-items:center;padding:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px;cursor:pointer;font-size:12px}
+.report-reason:hover{border-color:#ffd700}
+.report-reason.selected{background:rgba(255,215,0,.1);border-color:#ffd700}
+.report-reason input{accent-color:#ffd700}
 
-/* RESPONSIVE */
+.ban-screen{position:fixed;inset:0;z-index:9999;background:#0a0a15;display:none;align-items:center;justify-content:center;flex-direction:column;padding:30px;text-align:center}
+.ban-icon{font-size:100px;margin-bottom:20px;animation:pulse 2s infinite}
+.ban-title{font-size:32px;font-weight:900;color:#ff5f57;margin-bottom:15px}
+.ban-text{color:#c0c0e0;font-size:14px;line-height:1.8;max-width:500px;margin-bottom:20px}
+
 @media (max-width:1024px){
   .nav{padding:12px 15px}
-  .nav-logo{font-size:16px;margin-right:12px}
-  .nav-item{padding:6px 10px;font-size:11px}
   .content{padding:15px}
-  .chat-container,.spectate-layout{grid-template-columns:1fr;height:auto}
-  .chat-sidebar{max-height:300px}
   .users-layout,.lib-layout{grid-template-columns:180px 1fr;gap:15px}
   .profile-head{grid-template-columns:auto 1fr;gap:15px;padding:18px}
   .big-avatar{width:80px;height:80px;font-size:40px}
@@ -474,10 +390,8 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   .tabbar{gap:2px}
   .tab{padding:7px 10px;font-size:10px}
   .game-cover-big{height:160px}
-  #gmTitle{font-size:22px!important}
   .game-side{flex-direction:column;align-items:stretch}
   .big-price{font-size:22px;text-align:center}
-  .game-actions{width:100%;justify-content:center;flex-wrap:wrap}
   .age-box{padding:18px}
   .age-ico{font-size:60px}
   .age-title{font-size:18px}
@@ -499,8 +413,8 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   .splash-moon{font-size:60px}
   .tb-title{font-size:10px}
   #connStatus{font-size:8px;margin-left:6px}
-  .info-btn{width:38px;height:38px;font-size:17px;bottom:10px;left:10px}
-  .toast{left:10px;right:10px;bottom:10px;max-width:none;font-size:11px;padding:10px 14px}
+  .info-btn{width:38px;height:38px;font-size:17px;bottom:12px;left:12px}
+  .toast{left:15px;right:15px;bottom:15px;max-width:none;font-size:11px;padding:10px 14px}
   .game-bar{padding:0 8px;gap:5px}
   .game-bar-title{font-size:10px}
   .balance-pill{padding:4px 8px;font-size:10px}
@@ -509,11 +423,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   .avatar-btn{width:28px;height:28px;font-size:14px}
   .btn-admin{padding:5px 8px;font-size:10px}
   .notif-bell{font-size:15px;padding:4px 7px}
-  .chat-container{height:calc(100vh - 180px);min-height:300px}
-  .chat-msg-body{max-width:85%}
-  .emoji-picker{grid-template-columns:repeat(6,1fr);max-width:260px;right:10px;bottom:55px}
-  .spectate-layout{height:auto}
-  .spectate-frame{min-height:250px}
 }
 
 @media (max-width:400px){
@@ -527,14 +436,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   .nav-right{gap:3px}
   .balance-pill{padding:3px 7px;font-size:9px}
   .btn-admin{padding:4px 7px;font-size:9px}
-}
-
-@media (max-height:500px) and (orientation:landscape){
-  .modal{max-height:100vh}
-  .game-cover-big{height:110px}
-  .big-avatar{width:60px;height:60px}
-  .profile-head{padding:12px}
-  .cal-grid{grid-template-columns:repeat(10,1fr)}
 }
 
 @media (hover:none) and (pointer:coarse){
@@ -559,11 +460,10 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 </head>
 <body>
 
-<!-- BAN SCREEN (gizli, banlanınca gösterilir) -->
-<div class="ban-screen" id="banScreen" style="display:none">
+<div class="ban-screen" id="banScreen">
   <div class="ban-icon">🚫</div>
   <div class="ban-title" data-t="banned">HESAP BANLANDI</div>
-  <div class="ban-text" data-t="bannedText">Bu IP adresi K-Moon Launcher'a erişimi engellendi. Detaylar için admin ile iletişime geçin.</div>
+  <div class="ban-text" data-t="bannedText">Bu hesap K-Moon'a erişimi engellendi.</div>
   <div id="banReason" style="color:#ff9500;font-size:13px;margin-bottom:20px"></div>
 </div>
 
@@ -571,7 +471,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   <div class="splash-moon">🌙</div>
   <div class="logo">K-MOON</div>
   <div class="splash-sub">GAME LAUNCHER</div>
-  <div class="splash-ver">VERSION 11.0.0 • ONLINE</div>
+  <div class="splash-ver">VERSION 11.1.0 • ONLINE</div>
   <div class="loader"><div></div></div>
   <div id="loadText" data-t="loading">Bağlanılıyor...</div>
 </div>
@@ -582,12 +482,12 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   <div class="titlebar">
     <div class="tb-left">
       <div class="tb-logo">🌙</div>
-      <div class="tb-title">K-Moon Launcher v11.0.0</div>
+      <div class="tb-title">K-Moon Launcher v11.1.0</div>
       <span id="connStatus">● ONLINE</span>
     </div>
     <div class="win-controls">
-      <button class="win w-yellow" onclick="windowExport()" title="Export"></button>
-      <button class="win w-green" onclick="fullApp()" title="Fullscreen"></button>
+      <button class="win w-yellow" onclick="windowExport()"></button>
+      <button class="win w-green" onclick="fullApp()"></button>
       <button class="win w-red" onclick="closeApp()"></button>
     </div>
   </div>
@@ -599,8 +499,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
     <div class="nav-logo">🌙 K-MOON</div>
     <div class="nav-item desktop-only active" data-page="store" data-t="store">🏪 MAĞAZA</div>
     <div class="nav-item desktop-only" data-page="library" data-t="library">📚 KÜTÜPHANE</div>
-    <div class="nav-item desktop-only" data-page="spectate" data-t="spectate">👁 İZLE</div>
-    <div class="nav-item desktop-only" data-page="chat" data-t="chat">💬 CHAT</div>
     <div class="nav-item desktop-only" data-page="news" data-t="news">📢 DUYURU</div>
     <div class="nav-item desktop-only" data-page="users" data-t="users">👥 KULLANICILAR</div>
     <div class="nav-item desktop-only" data-page="profile" data-t="profile">👤 PROFİL</div>
@@ -626,8 +524,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   <div class="mobile-menu" id="mobileMenu">
     <div class="nav-item active" data-page="store" data-t="store" onclick="mobileNav('store')">🏪 MAĞAZA</div>
     <div class="nav-item" data-page="library" data-t="library" onclick="mobileNav('library')">📚 KÜTÜPHANE</div>
-    <div class="nav-item" data-page="spectate" data-t="spectate" onclick="mobileNav('spectate')">👁 İZLE</div>
-    <div class="nav-item" data-page="chat" data-t="chat" onclick="mobileNav('chat')">💬 CHAT</div>
     <div class="nav-item" data-page="news" data-t="news" onclick="mobileNav('news')">📢 DUYURU</div>
     <div class="nav-item" data-page="users" data-t="users" onclick="mobileNav('users')">👥 KULLANICILAR</div>
     <div class="nav-item" data-page="profile" data-t="profile" onclick="mobileNav('profile')">👤 PROFİL</div>
@@ -662,45 +558,15 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
       </div>
     </div>
 
-    <div class="page" id="page-spectate">
-      <div class="section-title">👁 <span data-t="spectateTitle">Canlı İzleme</span></div>
-      <div class="section-sub" data-t="spectateSub">Diğer oyuncuların oyunlarını canlı izle</div>
-      <div id="spectateContent"></div>
-    </div>
-
-    <div class="page" id="page-chat">
-      <div class="section-title">💬 <span data-t="chatTitle">Global Chat</span></div>
-      <div class="section-sub" data-t="chatSub">Tüm oyuncularla sohbet et • Emoji destekli</div>
-      <div class="chat-container">
-        <div class="chat-main">
-          <div class="chat-header">
-            <div class="chat-title" data-t="chatRoom">💬 Sohbet Odası</div>
-            <div class="chat-online"><span id="chatOnlineCount">0</span> <span data-t="onlineNow">çevrimiçi</span></div>
-          </div>
-          <div class="chat-messages" id="chatMessages"></div>
-          <div class="chat-input-area" style="position:relative">
-            <button class="emoji-btn" onclick="toggleEmojiPicker()">😊</button>
-            <input class="chat-input" id="chatInput" data-t="chatPlaceholder" placeholder="Mesaj yaz..." onkeydown="if(event.key==='Enter')sendChatMessage()" maxlength="500">
-            <button class="send-btn" onclick="sendChatMessage()">➤</button>
-            <div class="emoji-picker" id="emojiPicker"></div>
-          </div>
-        </div>
-        <div class="chat-sidebar">
-          <h4 data-t="onlineUsers">🟢 Çevrimiçi Kullanıcılar</h4>
-          <div id="chatOnlineList"></div>
-        </div>
-      </div>
-    </div>
-
     <div class="page" id="page-news">
       <div class="section-title">📢 <span data-t="newsTitle">Duyurular</span></div>
-      <div class="section-sub" data-t="newsSub">Yeni oyunlar, güncellemeler ve gelecek yenilikler</div>
+      <div class="section-sub" data-t="newsSub">Yeni oyunlar, güncellemeler</div>
       <div id="newsList"></div>
     </div>
 
     <div class="page" id="page-users">
       <div class="section-title">👥 <span data-t="usersTitle">Kullanıcılar</span></div>
-      <div class="section-sub" data-t="usersSub">Tüm kayıtlı oyuncuları gör, oyuna davet et, şikayet et</div>
+      <div class="section-sub" data-t="usersSub">Tüm kayıtlı oyuncuları gör, davet et, şikayet et</div>
       <div class="users-layout">
         <div class="users-sidebar">
           <input type="text" class="user-search" id="userSearch" data-t="userSearch" placeholder="🔍 Kullanıcı ara..." oninput="renderUsers()">
@@ -730,11 +596,11 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
     <div class="modal-head"><div class="modal-title" data-t="about">ℹ️ Hakkında</div><button class="close-btn" onclick="closeModal('infoModal')">✕</button></div>
     <div class="modal-body">
       <div class="info-hero">
-        <div class="m">🌙</div><h2>K-Moon Launcher</h2><p>Version 11.0.0 • Online Edition</p>
+        <div class="m">🌙</div><h2>K-Moon Launcher</h2><p>Version 11.1.0 • Online Edition</p>
         <div class="info-grid">
           <div class="info-cell"><small data-t="dev">YAPIMCI</small><b>K-Moon Studio</b></div>
           <div class="info-cell"><small data-t="year">YIL</small><b>2026</b></div>
-          <div class="info-cell"><small data-t="version">VERSİYON</small><b>11.0.0</b></div>
+          <div class="info-cell"><small data-t="version">VERSİYON</small><b>11.1.0</b></div>
           <div class="info-cell"><small data-t="license">LİSANS</small><b>MIT</b></div>
         </div>
         <div class="contrib">
@@ -769,17 +635,17 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
         <div class="report-user" id="reportUser"></div>
         <div class="form-label" data-t="reportReason">Şikayet sebebi *</div>
         <div class="report-reasons" id="reportReasons">
-          <label class="report-reason"><input type="radio" name="rr" value="spam"> 🚫 Spam / Reklam</label>
-          <label class="report-reason"><input type="radio" name="rr" value="harassment"> 😡 Taciz / Küfür</label>
+          <label class="report-reason"><input type="radio" name="rr" value="spam"> 🚫 Spam</label>
+          <label class="report-reason"><input type="radio" name="rr" value="harassment"> 😡 Taciz</label>
           <label class="report-reason"><input type="radio" name="rr" value="cheating"> 🎭 Hile</label>
-          <label class="report-reason"><input type="radio" name="rr" value="inappropriate"> 🔞 Uygunsuz içerik</label>
+          <label class="report-reason"><input type="radio" name="rr" value="inappropriate"> 🔞 Uygunsuz</label>
           <label class="report-reason"><input type="radio" name="rr" value="other"> ❓ Diğer</label>
         </div>
         <div class="form-group">
-          <label class="form-label" data-t="reportDetails">Detaylar (opsiyonel)</label>
+          <label class="form-label" data-t="reportDetails">Detaylar</label>
           <textarea class="input" id="reportDetails" rows="3"></textarea>
         </div>
-        <button class="btn primary" style="width:100%" onclick="submitReport()" data-t="reportSubmit">ŞİKAYETİ GÖNDER</button>
+        <button class="btn primary" style="width:100%" onclick="submitReport()" data-t="reportSubmit">GÖNDER</button>
       </div>
     </div>
   </div>
@@ -790,90 +656,24 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   <div class="modal small">
     <div class="modal-head"><div class="modal-title">📨 <span data-t="adminMsgTitle">Admin'e Mesaj</span></div><button class="close-btn" onclick="closeModal('adminMsgModal')">✕</button></div>
     <div class="modal-body">
-      <div style="padding:10px 0">
-        <div class="form-group">
-          <label class="form-label" data-t="msgType">Tür</label>
-          <select class="input" id="msgType">
-            <option value="request">💡 İstek / Öneri</option>
-            <option value="complaint">⚠️ Şikayet</option>
-            <option value="bug">🐛 Hata Bildirimi</option>
-            <option value="other">📝 Diğer</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" data-t="msgSubject">Konu *</label>
-          <input class="input" id="msgSubject" maxlength="100">
-        </div>
-        <div class="form-group">
-          <label class="form-label" data-t="msgBody">Mesajınız *</label>
-          <textarea class="input" id="msgBody" rows="5" maxlength="1000"></textarea>
-        </div>
-        <button class="btn primary" style="width:100%" onclick="sendAdminMessage()" data-t="msgSend">GÖNDER</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- CREATE ROOM MODAL -->
-<div class="overlay" id="roomModal">
-  <div class="modal small">
-    <div class="modal-head"><div class="modal-title">🎮 <span data-t="createRoom">Oda Oluştur</span></div><button class="close-btn" onclick="closeModal('roomModal')">✕</button></div>
-    <div class="modal-body">
       <div class="form-group">
-        <label class="form-label" data-t="roomGame">Oyun Seç *</label>
-        <select class="input" id="roomGame"></select>
-      </div>
-      <div class="form-group">
-        <label class="form-label" data-t="roomName">Oda İsmi</label>
-        <input class="input" id="roomName" placeholder="Benim odam" maxlength="30">
-      </div>
-      <div class="form-group">
-        <label class="form-label" data-t="roomMax">Maksimum İzleyici</label>
-        <select class="input" id="roomMax">
-          <option value="5">5</option>
-          <option value="10" selected>10</option>
-          <option value="25">25</option>
-          <option value="50">50</option>
+        <label class="form-label" data-t="msgType">Tür</label>
+        <select class="input" id="msgType">
+          <option value="request">💡 İstek</option>
+          <option value="complaint">⚠️ Şikayet</option>
+          <option value="bug">🐛 Hata</option>
+          <option value="other">📝 Diğer</option>
         </select>
       </div>
       <div class="form-group">
-        <label style="display:flex;gap:8px;align-items:center;font-size:11px;color:#c0c0e0;cursor:pointer">
-          <input type="checkbox" id="roomVoice" style="width:16px;height:16px"> 🎤 Sesli sohbet aktif
-        </label>
+        <label class="form-label" data-t="msgSubject">Konu *</label>
+        <input class="input" id="msgSubject" maxlength="100">
       </div>
-      <button class="btn primary" style="width:100%" onclick="createRoom()" data-t="roomCreate">🎮 OLUŞTUR</button>
-    </div>
-  </div>
-</div>
-
-<!-- SPECTATE MODAL -->
-<div class="overlay" id="spectateModal">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">👁 <span id="spectateRoomTitle">İzleme</span></div>
-      <button class="close-btn" onclick="leaveSpectate()">✕</button>
-    </div>
-    <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
-      <div class="spectate-layout" style="flex:1;margin:15px;height:auto">
-        <div class="spectate-main">
-          <div class="spectate-header">
-            <div class="spectate-title"><span class="live-dot"></span> <span id="spectateGameTitle">CANLI</span></div>
-            <div style="font-size:11px;color:#8a8ab0">👥 <span id="spectateViewerCount">0</span> <span data-t="viewers">izleyici</span></div>
-          </div>
-          <iframe class="spectate-frame" id="spectateFrame"></iframe>
-          <div class="spectate-controls" id="spectateControls"></div>
-        </div>
-        <div class="spectate-sidebar">
-          <div class="voice-panel" id="voicePanel">
-            <div class="voice-title">🎤 <span data-t="voiceChat">Sesli Sohbet</span></div>
-            <div id="voiceContent"></div>
-          </div>
-          <div>
-            <h4 style="color:#ffd700;font-size:12px;margin-bottom:8px">👥 İzleyiciler</h4>
-            <div id="spectateViewers"></div>
-          </div>
-        </div>
+      <div class="form-group">
+        <label class="form-label" data-t="msgBody">Mesaj *</label>
+        <textarea class="input" id="msgBody" rows="5" maxlength="1000"></textarea>
       </div>
+      <button class="btn primary" style="width:100%" onclick="sendAdminMessage()" data-t="msgSend">GÖNDER</button>
     </div>
   </div>
 </div>
@@ -943,7 +743,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
               <div class="form-group"><label class="form-label">📺 YOUTUBE</label><input class="input" id="gYoutube" placeholder="https://youtube.com/..."></div>
             </div>
             <div class="form-group">
-              <label class="form-label" data-t="gameHtml">📄 OYUN HTML</label>
+              <label class="form-label" data-t="gameHtml">📄 HTML</label>
               <div class="upload" onclick="document.getElementById('htmlFile').click()" style="padding:10px;margin-bottom:6px" data-t="uploadHtml">HTML seç</div>
               <input type="file" id="htmlFile" accept=".html,.htm" hidden onchange="readHTML(event,'main')">
               <div id="htmlStatus" style="font-size:10px;color:#8a8ab0;margin-bottom:5px"></div>
@@ -989,31 +789,25 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
           <div id="adminNews"></div>
         </div>
 
-        <!-- MODERASYON -->
         <div class="panel" id="ap-moderation">
           <div class="tabbar">
             <div class="tab active" data-mod="reports" onclick="switchModTab('reports')">⚠️ <span data-t="reports">Şikayetler</span> <span class="count" id="reportCount">0</span></div>
-            <div class="tab" data-mod="chatmod" onclick="switchModTab('chatmod')">💬 <span data-t="chatMod">Chat Moderasyon</span></div>
+            <div class="tab" data-mod="chatmod" onclick="switchModTab('chatmod')">💬 <span data-t="chatMod">Chat Mod</span></div>
           </div>
-          <div class="panel active" id="mod-reports">
-            <div id="reportsList"></div>
-          </div>
+          <div class="panel active" id="mod-reports"><div id="reportsList"></div></div>
           <div class="panel" id="mod-chatmod">
-            <div style="margin-bottom:15px">
-              <button class="btn danger" onclick="clearChat()" data-t="clearChat">🗑️ Tüm Chat'i Temizle</button>
-            </div>
+            <div style="margin-bottom:15px"><button class="btn danger" onclick="clearChat()" data-t="clearChat">🗑️ Chat Temizle</button></div>
             <div id="chatModList"></div>
           </div>
         </div>
 
-        <!-- BANLAR -->
         <div class="panel" id="ap-bans">
           <div style="margin-bottom:15px">
             <div class="form-group">
-              <label class="form-label" data-t="banIp">Banlanacak IP veya Kullanıcı Adı</label>
+              <label class="form-label" data-t="banIp">Banlanacak Kullanıcı Adı</label>
               <div style="display:flex;gap:8px">
-                <input class="input" id="banInput" placeholder="IP veya @kullanici">
-                <button class="btn primary" onclick="addBan()">🚫 BAN</button>
+                <input class="input" id="banInput" placeholder="@kullaniciadi">
+                <button class="btn primary" style="width:auto;padding:10px 20px" onclick="addBan()">🚫 BAN</button>
               </div>
             </div>
             <div class="form-group">
@@ -1025,10 +819,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
           <div id="bansList"></div>
         </div>
 
-        <!-- MESAJLAR -->
-        <div class="panel" id="ap-messages">
-          <div id="adminMessagesList"></div>
-        </div>
+        <div class="panel" id="ap-messages"><div id="adminMessagesList"></div></div>
 
         <div class="panel" id="ap-io">
           <div class="io-box"><h4 data-t="exportData">📤 Dışa Aktar</h4><p data-t="exportDesc">JSON indir.</p><button class="btn primary" onclick="exportAll()" data-t="exportBtn">JSON</button></div>
@@ -1076,7 +867,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
     <div class="age-box">
       <div class="age-ico">🔞</div>
       <div class="age-title" data-t="ageTitle">Yaş Doğrulaması</div>
-      <div class="age-text" data-t="ageText">Bu içerik 18+.<br>18 yaşından büyük müsünüz?</div>
+      <div class="age-text" data-t="ageText">18+ içerik.<br>18 yaşından büyük müsünüz?</div>
       <div class="age-btns">
         <button class="age-yes" onclick="ageYes()" data-t="ageYes">✅ Evet, 18+</button>
         <button class="age-no" onclick="ageNo()" data-t="ageNo">❌ Hayır</button>
@@ -1146,7 +937,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 <div id="gameScreen">
   <div class="game-bar">
     <div class="game-bar-title" id="gsTitle">OYUN</div>
-    <button class="btn" style="padding:5px 12px;font-size:10px" onclick="fullGame()" data-t="fullscreen">⛶ TAM EKRAN</button>
+    <button class="btn" style="padding:5px 12px;font-size:10px" onclick="fullGame()" data-t="fullscreen">⛶ TAM</button>
     <button class="btn ghost" style="padding:5px 12px;font-size:10px" onclick="closeGame()" data-t="backBtn">← GERİ</button>
   </div>
   <iframe id="gameFrame" title="game"></iframe>
@@ -1177,65 +968,13 @@ if (ONLINE) {
 }
 
 /* ============================================================
-   BAN KONTROLÜ (sayfa yüklendiğinde)
-   ============================================================ */
-function checkBan() {
-  const banned = JSON.parse(localStorage.getItem('km_banned') || 'null');
-  if (banned && (!banned.expires || banned.expires > Date.now())) {
-    document.getElementById('banScreen').style.display = 'flex';
-    document.getElementById('banReason').textContent = 'Sebep: ' + (banned.reason || 'Kural ihlali');
-    return true;
-  }
-  return false;
-}
-
-async function syncBanFromServer() {
-  if (!ONLINE || !db) return;
-  try {
-    const ip = await getUserIP();
-    const snap = await db.collection('bans').doc(ip).get();
-    if (snap.exists) {
-      const ban = snap.data();
-      if (!ban.expires || ban.expires > Date.now()) {
-        localStorage.setItem('km_banned', JSON.stringify(ban));
-        checkBan();
-      }
-    }
-  } catch(e) { console.error(e); }
-}
-
-async function getUserIP() {
-  if (localStorage.getItem('km_myip')) return localStorage.getItem('km_myip');
-  try {
-    const r = await fetch('https://api.ipify.org?format=json');
-    const d = await r.json();
-    localStorage.setItem('km_myip', d.ip);
-    return d.ip;
-  } catch(e) {
-    const fake = 'local_' + Math.random().toString(36).slice(2, 10);
-    localStorage.setItem('km_myip', fake);
-    return fake;
-  }
-}
-
-/* ============================================================
-   DİL SİSTEMİ
-   ============================================================ */
-/* ============================================================
-   DİL SİSTEMİ - 16 DİL TAM ÇEVİRİ
+   16 DİL - TAM ÇEVİRİ
    ============================================================ */
 const I18N = {
-  // ═══════════════════════════════════════════
-  // 🇹🇷 TÜRKÇE
-  // ═══════════════════════════════════════════
   tr: {
-    loading:'Bağlanılıyor...',store:'🏪 MAĞAZA',library:'📚 KÜTÜPHANE',spectate:'👁 İZLE',chat:'💬 CHAT',news:'📢 DUYURU',users:'👥 KULLANICILAR',profile:'👤 PROFİL',
-    storeTitle:'Mağaza',storeSub:'Tüm oyuncular için ortak kütüphane',
-    libraryTitle:'Kütüphanem',librarySub:'Oyunların ve favorilerin',
-    spectateTitle:'Canlı İzleme',spectateSub:'Diğer oyuncuların oyunlarını canlı izle',
-    chatTitle:'Global Chat',chatSub:'Tüm oyuncularla sohbet et • Emoji destekli',chatRoom:'💬 Sohbet Odası',onlineNow:'çevrimiçi',chatPlaceholder:'Mesaj yaz...',onlineUsers:'🟢 Çevrimiçi',
-    newsTitle:'Duyurular',newsSub:'Yeni oyunlar, güncellemeler',
-    usersTitle:'Kullanıcılar',usersSub:'Tüm kayıtlı oyuncuları gör, davet et, şikayet et',
+    loading:'Bağlanılıyor...',store:'🏪 MAĞAZA',library:'📚 KÜTÜPHANE',news:'📢 DUYURU',users:'👥 KULLANICILAR',profile:'👤 PROFİL',
+    storeTitle:'Mağaza',storeSub:'Tüm oyuncular için ortak kütüphane',libraryTitle:'Kütüphanem',librarySub:'Oyunların ve favorilerin',
+    newsTitle:'Duyurular',newsSub:'Yeni oyunlar, güncellemeler',usersTitle:'Kullanıcılar',usersSub:'Tüm kayıtlı oyuncuları gör, davet et, şikayet et',
     searchPh:'🔍 Ara...',adminBtn:'🔐 ADMIN',
     filters:'FİLTRELER',all:'Tümü',fav:'Favoriler',recent:'Oynanan',free:'Ücretsiz',bought:'Satın Alınan',cats:'KATEGORİLER',
     sortName:'İsim A-Z',sortPrice:'Fiyat',filter:'FİLTRE',ufAll:'Tümü',ufOnline:'Çevrimiçi',ufFriends:'Arkadaşlar',
@@ -1273,7 +1012,7 @@ const I18N = {
     acts:'Aktiviteler',actsSub:'Oyun geçmişi',
     xp:'XP',played:'Oynanan',plays:'Toplam',ach:'Başarım',
     claim:'AL',claimed:'ALINDI',bonus:'🎉 TÜM GÖREVLER +20$',
-    play:'▶ OYNA',buy:'💎 SATIN AL',demo:'🎮 DEMO',spectateBtn:'👁 İZLE',
+    play:'▶ OYNA',buy:'💎 SATIN AL',demo:'🎮 DEMO',
     buyBalance:'💰 Bakiye ile',poor:'Yetersiz!',purchased:'Satın alındı!',
     favAdd:'Favorilere eklendi!',favDel:'Favorilerden çıkarıldı!',
     ageDeny:'18+!',logout:'Çıkış',edit:'Düzenle',export:'Dışa Aktar',
@@ -1288,26 +1027,16 @@ const I18N = {
     errSave:'Hata',errOnline:'Online mod gerekli',
     reportTitle:'Şikayet',reportReason:'Şikayet sebebi *',reportDetails:'Detaylar',reportSubmit:'GÖNDER',reportSent:'Şikayet gönderildi!',
     adminMsgTitle:'Admin\'e Mesaj',msgType:'Tür',msgSubject:'Konu *',msgBody:'Mesajınız *',msgSend:'GÖNDER',msgSent:'Mesaj gönderildi!',
-    createRoom:'Oda Oluştur',roomGame:'Oyun *',roomName:'Oda İsmi',roomMax:'Maksimum İzleyici',roomCreate:'🎮 OLUŞTUR',
-    liveRooms:'🔴 Canlı Odalar',noLiveRooms:'Şu an canlı yayın yok',
-    voiceChat:'Sesli Sohbet',voiceConnect:'🎤 Bağlan',voiceDisconnect:'🔇 Ayrıl',voiceMute:'🔇 Sessize Al',voiceUnmute:'🎤 Sesi Aç',
-    kick:'🚫 At',mute:'🔇 Sustur',endStream:'⏹ Yayını Bitir',
-    banned:'HESAP BANLANDI',bannedText:'Bu IP erişimi engellendi.',
-    banIp:'Banlanacak IP/Kullanıcı',banReason:'Sebep',activeBans:'Aktif Banlar',unban:'Affet',
-    clearChat:'🗑️ Chat\'i Temizle',msgFrom:'Gönderen',msgAt:'Tarih'
+    banned:'HESAP BANLANDI',bannedText:'Bu hesap K-Moon\'a erişimi engellendi.',
+    banIp:'Banlanacak Kullanıcı Adı',banReason:'Sebep',activeBans:'Aktif Banlar',unban:'Affet',
+    clearChat:'🗑️ Chat Temizle',msgFrom:'Gönderen',msgAt:'Tarih',
+    banAdded:'Ban eklendi!',banRemoved:'Ban kaldırıldı!',userBanned:'kullanıcı banlandı!',
+    noBans:'Aktif ban yok'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇬🇧 ENGLISH
-  // ═══════════════════════════════════════════
   en: {
-    loading:'Connecting...',store:'🏪 STORE',library:'📚 LIBRARY',spectate:'👁 WATCH',chat:'💬 CHAT',news:'📢 NEWS',users:'👥 USERS',profile:'👤 PROFILE',
-    storeTitle:'Store',storeSub:'Shared library',
-    libraryTitle:'My Library',librarySub:'Your games',
-    spectateTitle:'Live Watch',spectateSub:'Watch other players live',
-    chatTitle:'Global Chat',chatSub:'Chat with all players • Emoji supported',chatRoom:'💬 Chat Room',onlineNow:'online',chatPlaceholder:'Type message...',onlineUsers:'🟢 Online',
-    newsTitle:'News',newsSub:'Updates',
-    usersTitle:'Users',usersSub:'All players',
+    loading:'Connecting...',store:'🏪 STORE',library:'📚 LIBRARY',news:'📢 NEWS',users:'👥 USERS',profile:'👤 PROFILE',
+    storeTitle:'Store',storeSub:'Shared library',libraryTitle:'My Library',librarySub:'Your games',
+    newsTitle:'News',newsSub:'Updates',usersTitle:'Users',usersSub:'All players',
     searchPh:'🔍 Search...',adminBtn:'🔐 ADMIN',
     filters:'FILTERS',all:'All',fav:'Favorites',recent:'Played',free:'Free',bought:'Purchased',cats:'CATEGORIES',
     sortName:'Name A-Z',sortPrice:'Price',filter:'FILTER',ufAll:'All',ufOnline:'Online',ufFriends:'Friends',
@@ -1345,7 +1074,7 @@ const I18N = {
     acts:'Activity',actsSub:'History',
     xp:'XP',played:'Played',plays:'Total',ach:'Achievements',
     claim:'CLAIM',claimed:'CLAIMED',bonus:'🎉 ALL DONE +20$',
-    play:'▶ PLAY',buy:'💎 BUY',demo:'🎮 DEMO',spectateBtn:'👁 WATCH',
+    play:'▶ PLAY',buy:'💎 BUY',demo:'🎮 DEMO',
     buyBalance:'💰 With balance',poor:'Insufficient!',purchased:'Purchased!',
     favAdd:'Added!',favDel:'Removed!',
     ageDeny:'18+!',logout:'Logout',edit:'Edit',export:'Export',
@@ -1360,28 +1089,18 @@ const I18N = {
     errSave:'Error',errOnline:'Online required',
     reportTitle:'Report',reportReason:'Reason *',reportDetails:'Details',reportSubmit:'SUBMIT',reportSent:'Report sent!',
     adminMsgTitle:'Message to Admin',msgType:'Type',msgSubject:'Subject *',msgBody:'Message *',msgSend:'SEND',msgSent:'Sent!',
-    createRoom:'Create Room',roomGame:'Game *',roomName:'Room Name',roomMax:'Max Viewers',roomCreate:'🎮 CREATE',
-    liveRooms:'🔴 Live Rooms',noLiveRooms:'No live streams now',
-    voiceChat:'Voice Chat',voiceConnect:'🎤 Connect',voiceDisconnect:'🔇 Disconnect',voiceMute:'🔇 Mute',voiceUnmute:'🎤 Unmute',
-    kick:'🚫 Kick',mute:'🔇 Mute',endStream:'⏹ End',
-    banned:'ACCOUNT BANNED',bannedText:'This IP is blocked.',
-    banIp:'Ban IP/User',banReason:'Reason',activeBans:'Active Bans',unban:'Unban',
-    clearChat:'🗑️ Clear Chat',msgFrom:'From',msgAt:'At'
+    banned:'ACCOUNT BANNED',bannedText:'This account is blocked from K-Moon.',
+    banIp:'Username to ban',banReason:'Reason',activeBans:'Active Bans',unban:'Unban',
+    clearChat:'🗑️ Clear Chat',msgFrom:'From',msgAt:'Date',
+    banAdded:'Ban added!',banRemoved:'Ban removed!',userBanned:'user banned!',
+    noBans:'No active bans'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇷🇺 РУССКИЙ
-  // ═══════════════════════════════════════════
   ru: {
-    loading:'Подключение...',store:'🏪 МАГАЗИН',library:'📚 БИБЛИОТЕКА',spectate:'👁 СМОТРЕТЬ',chat:'💬 ЧАТ',news:'📢 НОВОСТИ',users:'👥 ПОЛЬЗОВАТЕЛИ',profile:'👤 ПРОФИЛЬ',
-    storeTitle:'Магазин',storeSub:'Общая библиотека',
-    libraryTitle:'Моя библиотека',librarySub:'Ваши игры',
-    spectateTitle:'Прямой просмотр',spectateSub:'Смотрите игры других игроков',
-    chatTitle:'Общий чат',chatSub:'Общайтесь со всеми • Эмодзи',chatRoom:'💬 Чат',onlineNow:'онлайн',chatPlaceholder:'Написать...',onlineUsers:'🟢 Онлайн',
-    newsTitle:'Новости',newsSub:'Обновления',
-    usersTitle:'Пользователи',usersSub:'Все игроки',
+    loading:'Подключение...',store:'🏪 МАГАЗИН',library:'📚 БИБЛИОТЕКА',news:'📢 НОВОСТИ',users:'👥 ПОЛЬЗОВАТЕЛИ',profile:'👤 ПРОФИЛЬ',
+    storeTitle:'Магазин',storeSub:'Общая библиотека',libraryTitle:'Моя библиотека',librarySub:'Ваши игры',
+    newsTitle:'Новости',newsSub:'Обновления',usersTitle:'Пользователи',usersSub:'Все игроки',
     searchPh:'🔍 Поиск...',adminBtn:'🔐 АДМИН',
-    filters:'ФИЛЬТРЫ',all:'Все',fav:'Избранное',recent:'Играно',free:'Бесплатно',bought:'Куплено',cats:'КАТЕГОРИИ',
+    filters:'ФИЛЬТРЫ',all:'Все',fav:'Избранное',recent:'Сыграно',free:'Бесплатно',bought:'Куплено',cats:'КАТЕГОРИИ',
     sortName:'Имя А-Я',sortPrice:'Цена',filter:'ФИЛЬТР',ufAll:'Все',ufOnline:'Онлайн',ufFriends:'Друзья',
     sorting:'СОРТ',usName:'Имя А-Я',usLevel:'Уровень',
     about:'О программе',dev:'РАЗРАБОТЧИК',year:'ГОД',version:'ВЕРСИЯ',license:'ЛИЦЕНЗИЯ',contributors:'АВТОРЫ',donate:'Поддержать',
@@ -1394,37 +1113,37 @@ const I18N = {
     gameHtml:'📄 HTML',uploadHtml:'Выбрать',gameDemo:'🎮 ДЕМО',uploadDemo:'Демо',
     gameRules:'ПРАВИЛА',gameManual:'РУКОВОДСТВО',save:'💾 СОХРАНИТЬ',cancel:'ОТМЕНА',
     newAnn:'📢 Новая',annTitle:'ЗАГОЛОВОК *',annCategory:'КАТЕГОРИЯ',annPriority:'ПРИОРИТЕТ',annContent:'СОДЕРЖАНИЕ *',annPublish:'📢 ОПУБЛИКОВАТЬ',existingNews:'Существующие',
-    exportData:'📤 Экспорт',exportDesc:'Скачать JSON.',exportBtn:'JSON',
-    importData:'📥 Импорт',importDesc:'Загрузить JSON.',importBtn:'ФАЙЛ',
+    exportData:'📤 Экспорт',exportDesc:'JSON.',exportBtn:'JSON',
+    importData:'📥 Импорт',importDesc:'JSON.',importBtn:'ФАЙЛ',
     dangerZone:'⚠️ Опасно',wipeAll:'УДАЛИТЬ ВСЁ',
     tabOverview:'📖 Обзор',tabGallery:'🖼️ Галерея',tabVideo:'📺 Видео',tabRules:'📜 Правила',tabManual:'📘 Руководство',
-    ageTitle:'Подтверждение возраста',ageText:'18+ контент.<br>Вам 18+?',ageYes:'✅ Да, 18+',ageNo:'❌ Нет',
-    buyTitle:'💎 Купить',buyOr:'— или —',
+    ageTitle:'Подтверждение возраста',ageText:'18+.<br>Вам 18+?',ageYes:'✅ Да, 18+',ageNo:'❌ Нет',
+    buyTitle:'💎 Покупка',buyOr:'— или —',
     authTitle:'👤 Аккаунт',loginTab:'🔑 Войти',registerTab:'✨ Регистрация',importTab:'📥 Импорт',
     playerNamePh:'Имя игрока',password:'Пароль',emailPh:'Email',
-    registerBtn:'РЕГИСТРАЦИЯ',importDbDesc:'Загрузите JSON.',
+    registerBtn:'РЕГИСТРАЦИЯ',importDbDesc:'JSON.',
     fullscreen:'⛶ ПОЛНЫЙ',backBtn:'← НАЗАД',
-    inviteTitle:'🔔 Приглашения',noInvite:'Нет приглашений',accept:'✅ Принять',decline:'❌ Отклонить',
-    noGames:'Нет игр',noNews:'Нет новостей',noResult:'Не найдено',noUsers:'Нет пользователей',noAct:'Нет активности.',
+    inviteTitle:'🔔 Приглашения',noInvite:'Нет',accept:'✅ Принять',decline:'❌ Отклонить',
+    noGames:'Нет игр',noNews:'Нет новостей',noResult:'Не найдено',noUsers:'Нет',noAct:'Нет активности.',
     saved:'Сохранено!',updated:'Обновлено!',deleted:'Удалено!',
     annSaved:'Опубликовано!',annDeleted:'Удалено!',
-    fill:'Заполните всё!',exists:'Имя занято!',invalid:'Ошибка входа!',
-    confirmDel:'Уверены?',exported:'Экспортировано!',imported:'Импортировано!',badFile:'Неверный файл!',
+    fill:'Заполните!',exists:'Имя занято!',invalid:'Ошибка!',
+    confirmDel:'Удалить?',exported:'Экспортировано!',imported:'Импортировано!',badFile:'Ошибка файла!',
     balance:'Баланс',earned:'Всего заработано',streak:'Серия',
-    daily:'ЕЖЕДНЕВНО',dailyDone:'Получено',
+    daily:'ПОЛУЧИТЬ',dailyDone:'Получено',
     calTitle:'📅 Ежедневные награды',calSub:'+0.10$ каждый день!',day:'День',
     badges:'🏆 Достижения',badSub:'Выполняйте задания!',
-    acts:'Активность',actsSub:'История',
-    xp:'XP',played:'Сыграно',plays:'Всего',ach:'Достижения',
-    claim:'ПОЛУЧИТЬ',claimed:'ПОЛУЧЕНО',bonus:'🎉 ВСЁ ВЫПОЛНЕНО +20$',
-    play:'▶ ИГРАТЬ',buy:'💎 КУПИТЬ',demo:'🎮 ДЕМО',spectateBtn:'👁 СМОТРЕТЬ',
+    acts:'Активность',actsSub:'Последние',
+    xp:'XP',played:'Сыграно',plays:'Запусков',ach:'Достижения',
+    claim:'ПОЛУЧИТЬ',claimed:'ПОЛУЧЕНО',bonus:'🎉 ВСЁ +20$',
+    play:'▶ ИГРАТЬ',buy:'💎 КУПИТЬ',demo:'🎮 ДЕМО',
     buyBalance:'💰 С баланса',poor:'Недостаточно!',purchased:'Куплено!',
     favAdd:'Добавлено!',favDel:'Удалено!',
     ageDeny:'18+!',logout:'Выйти',edit:'Изменить',export:'Экспорт',
     online:'В сети',member:'Участник:',
     invite:'Пригласить',addFriend:'⭐ Добавить',removeFriend:'⭐ Удалить',reportUser:'⚠️ Жалоба',you:'Вы',
     easy:'ЛЕГКО',medium:'СРЕДНЕ',hard:'СЛОЖНО',epic:'ЭПИЧЕСКИ',legendary:'ЛЕГЕНДА',
-    noVideo:'Нет видео',link:'🔗 Ссылка',savedProfile:'Обновлено!',
+    noVideo:'Нет видео',link:'🔗 Открыть',savedProfile:'Обновлено!',
     welcome:'Добро пожаловать',back:'С возвращением',loginFirst:'Сначала войдите',
     inviteSent:'📤 Отправлено!',roomCode:'Код комнаты',
     games:'игр',achievements:'достижений',viewers:'зрителей',
@@ -1432,136 +1151,116 @@ const I18N = {
     errSave:'Ошибка',errOnline:'Нужен онлайн',
     reportTitle:'Жалоба',reportReason:'Причина *',reportDetails:'Детали',reportSubmit:'ОТПРАВИТЬ',reportSent:'Жалоба отправлена!',
     adminMsgTitle:'Сообщение админу',msgType:'Тип',msgSubject:'Тема *',msgBody:'Сообщение *',msgSend:'ОТПРАВИТЬ',msgSent:'Отправлено!',
-    createRoom:'Создать комнату',roomGame:'Игра *',roomName:'Название',roomMax:'Макс. зрителей',roomCreate:'🎮 СОЗДАТЬ',
-    liveRooms:'🔴 Прямые трансляции',noLiveRooms:'Сейчас нет трансляций',
-    voiceChat:'Голосовой чат',voiceConnect:'🎤 Подключиться',voiceDisconnect:'🔇 Отключиться',voiceMute:'🔇 Выключить',voiceUnmute:'🎤 Включить',
-    kick:'🚫 Выгнать',mute:'🔇 Заглушить',endStream:'⏹ Завершить',
-    banned:'АККАУНТ ЗАБАНЕН',bannedText:'Этот IP заблокирован.',
-    banIp:'Бан IP/Пользователя',banReason:'Причина',activeBans:'Активные баны',unban:'Разбанить',
-    clearChat:'🗑️ Очистить чат',msgFrom:'От',msgAt:'Дата'
+    banned:'АККАУНТ ЗАБАНЕН',bannedText:'Этот аккаунт заблокирован.',
+    banIp:'Имя пользователя',banReason:'Причина',activeBans:'Активные баны',unban:'Разбанить',
+    clearChat:'🗑️ Очистить чат',msgFrom:'От',msgAt:'Дата',
+    banAdded:'Бан добавлен!',banRemoved:'Бан снят!',userBanned:'забанен!',
+    noBans:'Нет активных банов'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇬🇪 ქართული (Gürcüce)
-  // ═══════════════════════════════════════════
   ka: {
-    loading:'დაკავშირება...',store:'🏪 მაღაზია',library:'📚 ბიბლიოთეკა',spectate:'👁 ყურება',chat:'💬 ჩატი',news:'📢 სიახლეები',users:'👥 მომხმარებლები',profile:'👤 პროფილი',
-    storeTitle:'მაღაზია',storeSub:'საერთო ბიბლიოთეკა',
-    libraryTitle:'ჩემი ბიბლიოთეკა',librarySub:'თქვენი თამაშები',
-    spectateTitle:'პირდაპირი ყურება',spectateSub:'უყურეთ სხვა მოთამაშეებს',
-    chatTitle:'გლობალური ჩატი',chatSub:'ესაუბრეთ ყველას • ემოჯი',chatRoom:'💬 ჩატი',onlineNow:'ონლაინ',chatPlaceholder:'წერა...',onlineUsers:'🟢 ონლაინ',
-    newsTitle:'სიახლეები',newsSub:'განახლებები',
-    usersTitle:'მომხმარებლები',usersSub:'ყველა მოთამაშე',
+    loading:'დაკავშირება...',store:'🏪 მაღაზია',library:'📚 ბიბლიოთეკა',news:'📢 სიახლეები',users:'👥 მომხმარებლები',profile:'👤 პროფილი',
+    storeTitle:'მაღაზია',storeSub:'საერთო',libraryTitle:'ჩემი ბიბლიოთეკა',librarySub:'თქვენი თამაშები',
+    newsTitle:'სიახლეები',newsSub:'განახლებები',usersTitle:'მომხმარებლები',usersSub:'ყველა მოთამაშე',
     searchPh:'🔍 ძიება...',adminBtn:'🔐 ადმინი',
-    filters:'ფილტრები',all:'ყველა',fav:'ფავორიტები',recent:'ნათამაშები',free:'უფასო',bought:'ნაყიდი',cats:'კატეგორიები',
+    filters:'ფილტრები',all:'ყველა',fav:'ფავორიტები',recent:'ბოლო',free:'უფასო',bought:'ნაყიდი',cats:'კატეგორიები',
     sortName:'სახელით',sortPrice:'ფასით',filter:'ფილტრი',ufAll:'ყველა',ufOnline:'ონლაინ',ufFriends:'მეგობრები',
-    sorting:'სორტირება',usName:'სახელით',usLevel:'დონით',
+    sorting:'სორტი',usName:'სახელით',usLevel:'დონით',
     about:'შესახებ',dev:'შემქმნელი',year:'წელი',version:'ვერსია',license:'ლიცენზია',contributors:'ავტორები',donate:'მხარდაჭერა',
-    adminLogin:'ადმინის შესვლა',adminPanel:'ადმინი',passwordPh:'პაროლი',loginBtn:'შესვლა',
-    addGame:'თამაში',manageGames:'მართვა',manageNews:'სიახლეები',importExport:'იმპორტი/ექსპორტი',
+    adminLogin:'ადმინი',adminPanel:'ადმინ პანელი',passwordPh:'პაროლი',loginBtn:'შესვლა',
+    addGame:'დამატება',manageGames:'მართვა',manageNews:'სიახლეები',importExport:'იმპორტი',
     moderation:'მოდერაცია',bans:'ბანები',adminMessages:'შეტყობინებები',reports:'ჩივილები',chatMod:'ჩატის მოდი',
     gameCover:'ყდა',uploadCover:'🖼️ ატვირთვა',gameGallery:'გალერეა',uploadGallery:'📷 დამატება',
     gameTitle:'სათაური *',gameCategory:'კატეგორია',gameSubtitle:'ქვესათაური',gameDesc:'აღწერა',
     gamePrice:'ფასი',gamePlayable:'სტატუსი',gameAge18:'🔞 +18',
-    gameHtml:'📄 HTML',uploadHtml:'არჩევა',gameDemo:'🎮 დემო',uploadDemo:'დემო',
+    gameHtml:'📄 HTML',uploadHtml:'HTML ფაილი',gameDemo:'🎮 დემო',uploadDemo:'დემო ფაილი',
     gameRules:'წესები',gameManual:'სახელმძღვანელო',save:'💾 შენახვა',cancel:'გაუქმება',
     newAnn:'📢 ახალი',annTitle:'სათაური *',annCategory:'კატეგორია',annPriority:'პრიორიტეტი',annContent:'შინაარსი *',annPublish:'📢 გამოქვეყნება',existingNews:'არსებული',
-    exportData:'📤 ექსპორტი',exportDesc:'JSON ჩამოტვირთვა.',exportBtn:'JSON',
-    importData:'📥 იმპორტი',importDesc:'JSON ატვირთვა.',importBtn:'ფაილი',
+    exportData:'📤 ექსპორტი',exportDesc:'JSON.',exportBtn:'JSON',
+    importData:'📥 იმპორტი',importDesc:'JSON-დან.',importBtn:'ფაილი',
     dangerZone:'⚠️ საშიში',wipeAll:'ყველაფრის წაშლა',
     tabOverview:'📖 მიმოხილვა',tabGallery:'🖼️ გალერეა',tabVideo:'📺 ვიდეო',tabRules:'📜 წესები',tabManual:'📘 სახელმძღვანელო',
-    ageTitle:'ასაკის დადასტურება',ageText:'18+ კონტენტი.<br>ხართ 18+?',ageYes:'✅ დიახ, 18+',ageNo:'❌ არა',
+    ageTitle:'ასაკი',ageText:'18+.<br>გაგრძელება?',ageYes:'✅ 18+',ageNo:'❌ არა',
     buyTitle:'💎 ყიდვა',buyOr:'— ან —',
     authTitle:'👤 ანგარიში',loginTab:'🔑 შესვლა',registerTab:'✨ რეგისტრაცია',importTab:'📥 იმპორტი',
-    playerNamePh:'მომხმარებლის სახელი',password:'პაროლი',emailPh:'ელფოსტა',
-    registerBtn:'რეგისტრაცია',importDbDesc:'JSON ფაილი ატვირთეთ.',
+    playerNamePh:'სახელი',password:'პაროლი',emailPh:'Email',
+    registerBtn:'რეგისტრაცია',importDbDesc:'JSON.',
     fullscreen:'⛶ სრული',backBtn:'← უკან',
-    inviteTitle:'🔔 მოწვევები',noInvite:'არაა',accept:'✅ მიღება',decline:'❌ უარყოფა',
-    noGames:'არაა',noNews:'არაა',noResult:'ვერ მოიძებნა',noUsers:'არაა',noAct:'აქტივობა არაა.',
+    inviteTitle:'🔔 მოწვევები',noInvite:'არა',accept:'✅ მიღება',decline:'❌ უარყოფა',
+    noGames:'არაფერი',noNews:'არაფერი',noResult:'არაფერი',noUsers:'არაფერი',noAct:'არაფერი.',
     saved:'შენახულია!',updated:'განახლდა!',deleted:'წაიშალა!',
     annSaved:'გამოქვეყნდა!',annDeleted:'წაიშალა!',
-    fill:'შეავსეთ!',exists:'სახელი დაკავებულია!',invalid:'შეცდომა!',
-    confirmDel:'დარწმუნებული ხართ?',exported:'ექსპორტირებულია!',imported:'იმპორტირებულია!',badFile:'არასწორი ფაილი!',
-    balance:'ბალანსი',earned:'სულ მოგებული',streak:'სერია',
-    daily:'ყოველდღიური',dailyDone:'მიღებულია',
-    calTitle:'📅 ყოველდღიური ჯილდოები',calSub:'+0.10$ ყოველ დღე!',day:'დღე',
-    badges:'🏆 მიღწევები',badSub:'შეასრულეთ დავალებები!',
-    acts:'აქტივობები',actsSub:'ისტორია',
-    xp:'XP',played:'ნათამაშები',plays:'სულ',ach:'მიღწევები',
-    claim:'მიღება',claimed:'მიღებულია',bonus:'🎉 ყველა +20$',
-    play:'▶ თამაში',buy:'💎 ყიდვა',demo:'🎮 დემო',spectateBtn:'👁 ყურება',
-    buyBalance:'💰 ბალანსით',poor:'არაა საკმარისი!',purchased:'ნაყიდია!',
-    favAdd:'დამატებულია!',favDel:'წაშლილია!',
+    fill:'შეავსეთ!',exists:'დაკავებულია!',invalid:'შეცდომა!',
+    confirmDel:'წაშლა?',exported:'ექსპორტი!',imported:'იმპორტი!',badFile:'შეცდომა!',
+    balance:'ბალანსი',earned:'სულ',streak:'სერია',
+    daily:'მიიღე',dailyDone:'მიღებული',
+    calTitle:'📅 ყოველდღიური',calSub:'+0.10$ ყოველ დღე!',day:'დღე',
+    badges:'🏆 მიღწევები',badSub:'შეასრულეთ!',
+    acts:'აქტივობები',actsSub:'ბოლო',
+    xp:'XP',played:'თამაში',plays:'სულ',ach:'მიღწევები',
+    claim:'მიღება',claimed:'მიღებული',bonus:'🎉 ყველა! +20$',
+    play:'▶ თამაში',buy:'💎 ყიდვა',demo:'🎮 დემო',
+    buyBalance:'💰 ბალანსით',poor:'არაა!',purchased:'ნაყიდი!',
+    favAdd:'დამატებული!',favDel:'წაშლილი!',
     ageDeny:'18+!',logout:'გასვლა',edit:'რედაქტირება',export:'ექსპორტი',
     online:'ონლაინ',member:'წევრი:',
     invite:'მოწვევა',addFriend:'⭐ დამატება',removeFriend:'⭐ წაშლა',reportUser:'⚠️ ჩივილი',you:'თქვენ',
     easy:'ადვილი',medium:'საშუალო',hard:'რთული',epic:'ეპიკური',legendary:'ლეგენდარული',
-    noVideo:'არაა',link:'🔗 ბმული',savedProfile:'განახლდა!',
-    welcome:'კეთილი იყოს',back:'კეთილი იყოს',loginFirst:'ჯერ შედით',
-    inviteSent:'📤 გაგზავნილია!',roomCode:'ოთახის კოდი',
-    games:'თამაში',achievements:'მიღწევა',viewers:'მაყურებელი',
+    noVideo:'არა',link:'🔗 ლინკი',savedProfile:'განახლდა!',
+    welcome:'კეთილი',back:'კეთილი',loginFirst:'შესვლა საჭიროა',
+    inviteSent:'📤 გაგზავნილი!',roomCode:'ოთახის კოდი',
+    games:'თამაში',achievements:'მიღწევები',viewers:'მაყურებელი',
     wipeConfirm:'ყველაფერი წაიშლება?',wipeDone:'წაშლილია',
-    errSave:'შეცდომა',errOnline:'ონლაინ რეჟიმი საჭიროა',
+    errSave:'შეცდომა',errOnline:'ონლაინ რეჟიმი',
     reportTitle:'ჩივილი',reportReason:'მიზეზი *',reportDetails:'დეტალები',reportSubmit:'გაგზავნა',reportSent:'ჩივილი გაგზავნილია!',
     adminMsgTitle:'ადმინის შეტყობინება',msgType:'ტიპი',msgSubject:'თემა *',msgBody:'შეტყობინება *',msgSend:'გაგზავნა',msgSent:'გაგზავნილია!',
-    createRoom:'ოთახის შექმნა',roomGame:'თამაში *',roomName:'ოთახის სახელი',roomMax:'მაქს. მაყურებელი',roomCreate:'🎮 შექმნა',
-    liveRooms:'🔴 პირდაპირი',noLiveRooms:'არაა',
-    voiceChat:'ხმოვანი ჩატი',voiceConnect:'🎤 დაკავშირება',voiceDisconnect:'🔇 გათიშვა',voiceMute:'🔇 გამორთვა',voiceUnmute:'🎤 ჩართვა',
-    kick:'🚫 გაგდება',mute:'🔇 გაჩუმება',endStream:'⏹ დასრულება',
-    banned:'ბანი',bannedText:'ეს IP დაბლოკილია.',
-    banIp:'ბანის IP/მომხმარებელი',banReason:'მიზეზი',activeBans:'აქტიური ბანები',unban:'ბანის მოხსნა',
-    clearChat:'🗑️ ჩატის გასუფთავება',msgFrom:'ვისგან',msgAt:'თარიღი'
+    banned:'ბანი',bannedText:'ეს ანგარიში დაბლოკილია.',
+    banIp:'მომხმარებლის სახელი',banReason:'მიზეზი',activeBans:'აქტიური ბანები',unban:'ბანის მოხსნა',
+    clearChat:'🗑️ ჩატის გასუფთავება',msgFrom:'ვისგან',msgAt:'თარიღი',
+    banAdded:'ბანი დაემატა!',banRemoved:'ბანი მოიხსნა!',userBanned:'დაბანილია!',
+    noBans:'აქტიური ბანი არაა'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇦🇿 AZƏRBAYCAN
-  // ═══════════════════════════════════════════
   az: {
-    loading:'Qoşulur...',store:'🏪 MAĞAZA',library:'📚 KİTABXANA',spectate:'👁 İZLƏ',chat:'💬 CHAT',news:'📢 XƏBƏRLƏR',users:'👥 İSTİFADƏÇİLƏR',profile:'👤 PROFİL',
-    storeTitle:'Mağaza',storeSub:'Ortaq kitabxana',
-    libraryTitle:'Kitabxanam',librarySub:'Oyunlarınız',
-    spectateTitle:'Canlı izləmə',spectateSub:'Digər oyunçuları canlı izlə',
-    chatTitle:'Ümumi chat',chatSub:'Hamı ilə söhbət • Emoji',chatRoom:'💬 Chat',onlineNow:'onlayn',chatPlaceholder:'Yaz...',onlineUsers:'🟢 Onlayn',
-    newsTitle:'Xəbərlər',newsSub:'Yeniliklər',
-    usersTitle:'İstifadəçilər',usersSub:'Bütün oyunçular',
+    loading:'Qoşulur...',store:'🏪 MAĞAZA',library:'📚 KİTABXANA',news:'📢 XƏBƏRLƏR',users:'👥 İSTİFADƏÇİLƏR',profile:'👤 PROFİL',
+    storeTitle:'Mağaza',storeSub:'Ortaq',libraryTitle:'Kitabxanam',librarySub:'Oyunlarınız',
+    newsTitle:'Xəbərlər',newsSub:'Yeniliklər',usersTitle:'İstifadəçilər',usersSub:'Bütün oyunçular',
     searchPh:'🔍 Axtar...',adminBtn:'🔐 ADMİN',
-    filters:'FİLTRLƏR',all:'Hamısı',fav:'Sevimlilər',recent:'Oynanan',free:'Pulsuz',bought:'Alınan',cats:'KATEQORİYALAR',
+    filters:'FİLTRLƏR',all:'Hamısı',fav:'Sevimlilər',recent:'Son',free:'Pulsuz',bought:'Alınan',cats:'KATEQORİYALAR',
     sortName:'Ada görə',sortPrice:'Qiymətə',filter:'FİLTR',ufAll:'Hamısı',ufOnline:'Onlayn',ufFriends:'Dostlar',
     sorting:'SIRALAMA',usName:'Ada görə',usLevel:'Səviyyə',
     about:'Haqqında',dev:'YARADICI',year:'İL',version:'VERSİYA',license:'LİSENZİYA',contributors:'MÜƏLLİFLƏR',donate:'Dəstək',
-    adminLogin:'Admin girişi',adminPanel:'ADMİN',passwordPh:'Şifrə',loginBtn:'GİRİŞ',
-    addGame:'Oyun',manageGames:'İdarə',manageNews:'Xəbərlər',importExport:'İdxal/İxrac',
+    adminLogin:'Admin',adminPanel:'ADMİN PANEL',passwordPh:'Şifrə',loginBtn:'GİRİŞ',
+    addGame:'Əlavə',manageGames:'İdarə',manageNews:'Xəbərlər',importExport:'İdxal',
     moderation:'Moderasiya',bans:'Banlar',adminMessages:'Mesajlar',reports:'Şikayətlər',chatMod:'Chat mod',
     gameCover:'QAPAQ',uploadCover:'🖼️ Yüklə',gameGallery:'QALERİYA',uploadGallery:'📷 Əlavə et',
     gameTitle:'BAŞLIQ *',gameCategory:'KATEQORİYA',gameSubtitle:'ALT',gameDesc:'AÇIQLAMA',
     gamePrice:'QİYMƏT',gamePlayable:'STATUS',gameAge18:'🔞 +18',
-    gameHtml:'📄 HTML',uploadHtml:'Seç',gameDemo:'🎮 DEMO',uploadDemo:'Demo seç',
+    gameHtml:'📄 HTML',uploadHtml:'HTML faylı',gameDemo:'🎮 DEMO',uploadDemo:'Demo faylı',
     gameRules:'QAYDALAR',gameManual:'TƏLİMAT',save:'💾 SAXLA',cancel:'LƏĞV',
     newAnn:'📢 Yeni',annTitle:'BAŞLIQ *',annCategory:'KATEQORİYA',annPriority:'ÖNCELİK',annContent:'MƏZMUN *',annPublish:'📢 YAYIMLA',existingNews:'Mövcud',
-    exportData:'📤 İxrac',exportDesc:'JSON yüklə.',exportBtn:'JSON',
-    importData:'📥 İdxal',importDesc:'JSON yüklə.',importBtn:'FAYL',
+    exportData:'📤 İxrac',exportDesc:'JSON.',exportBtn:'JSON',
+    importData:'📥 İdxal',importDesc:'JSON-dan.',importBtn:'FAYL',
     dangerZone:'⚠️ Təhlükəli',wipeAll:'HAMISINI SİL',
     tabOverview:'📖 İcmal',tabGallery:'🖼️ Qaleriya',tabVideo:'📺 Video',tabRules:'📜 Qaydalar',tabManual:'📘 Təlimat',
-    ageTitle:'Yaş təsdiqi',ageText:'18+ məzmun.<br>18+?',ageYes:'✅ Bəli, 18+',ageNo:'❌ Xeyr',
+    ageTitle:'Yaş',ageText:'18+.<br>Davam?',ageYes:'✅ 18+',ageNo:'❌ Xeyr',
     buyTitle:'💎 Al',buyOr:'— və ya —',
-    authTitle:'👤 Hesab',loginTab:'🔑 Giriş',registerTab:'✨ Qeydiyyat',importTab:'📥 Yüklə',
-    playerNamePh:'Oyunçu adı',password:'Şifrə',emailPh:'E-poçt',
-    registerBtn:'QEYDİYYAT',importDbDesc:'JSON yüklə.',
+    authTitle:'👤 Hesab',loginTab:'🔑 Giriş',registerTab:'✨ Qeydiyyat',importTab:'📥 İdxal',
+    playerNamePh:'Ad',password:'Şifrə',emailPh:'Email',
+    registerBtn:'QEYDİYYAT',importDbDesc:'JSON.',
     fullscreen:'⛶ TAM',backBtn:'← GERİ',
     inviteTitle:'🔔 Dəvətlər',noInvite:'Yox',accept:'✅ Qəbul',decline:'❌ Rədd',
-    noGames:'Yox',noNews:'Yox',noResult:'Tapılmadı',noUsers:'Yox',noAct:'Aktivlik yox.',
+    noGames:'Yox',noNews:'Yox',noResult:'Yox',noUsers:'Yox',noAct:'Yox.',
     saved:'Saxlanıldı!',updated:'Yeniləndi!',deleted:'Silindi!',
     annSaved:'Yayınlandı!',annDeleted:'Silindi!',
-    fill:'Hamısını doldur!',exists:'Ad götürülüb!',invalid:'Səhv!',
-    confirmDel:'Əminsiniz?',exported:'İxrac!',imported:'İdxal!',badFile:'Səhv fayl!',
-    balance:'Balans',earned:'Toplam qazanc',streak:'Seriya',
-    daily:'GÜNDƏLİK',dailyDone:'Alınıb',
-    calTitle:'📅 Gündəlik mükafatlar',calSub:'+0.10$ hər gün!',day:'Gün',
-    badges:'🏆 Nailiyyətlər',badSub:'Tapşırıqları tamamla!',
-    acts:'Aktivlik',actsSub:'Tarix',
-    xp:'XP',played:'Oynanan',plays:'Toplam',ach:'Nailiyyət',
-    claim:'AL',claimed:'ALINDI',bonus:'🎉 HAMISI +20$',
-    play:'▶ OYNA',buy:'💎 AL',demo:'🎮 DEMO',spectateBtn:'👁 İZLƏ',
+    fill:'Doldurun!',exists:'Ad götürülüb!',invalid:'Səhv!',
+    confirmDel:'Sil?',exported:'İxrac!',imported:'İdxal!',badFile:'Səhv!',
+    balance:'Balans',earned:'Səl',streak:'Seriya',
+    daily:'AL',dailyDone:'Alınıb',
+    calTitle:'📅 Gündəlik',calSub:'+0.10$ hər gün!',day:'Gün',
+    badges:'🏆 Nailiyyətlər',badSub:'Qazanın!',
+    acts:'Fəaliyyətlər',actsSub:'Son',
+    xp:'XP',played:'Oyun',plays:'Səl',ach:'Nailiyyət',
+    claim:'AL',claimed:'ALINDI',bonus:'🎉 HAMISI! +20$',
+    play:'▶ OYNA',buy:'💎 AL',demo:'🎮 DEMO',
     buyBalance:'💰 Balansla',poor:'Kifayət deyil!',purchased:'Alındı!',
     favAdd:'Əlavə!',favDel:'Silindi!',
     ageDeny:'18+!',logout:'Çıxış',edit:'Redaktə',export:'İxrac',
@@ -1569,71 +1268,61 @@ const I18N = {
     invite:'Dəvət',addFriend:'⭐ Əlavə',removeFriend:'⭐ Sil',reportUser:'⚠️ Şikayət',you:'Sən',
     easy:'ASAN',medium:'ORTA',hard:'ÇƏTİN',epic:'EPOS',legendary:'ƏFSANƏ',
     noVideo:'Yox',link:'🔗 Link',savedProfile:'Yeniləndi!',
-    welcome:'Xoş gəldin',back:'Xoş gəldin',loginFirst:'Əvvəlcə daxil olun',
+    welcome:'Xoş',back:'Xoş',loginFirst:'Giriş edin',
     inviteSent:'📤 Göndərildi!',roomCode:'Otaq kodu',
     games:'oyun',achievements:'nailiyyət',viewers:'izləyici',
     wipeConfirm:'HAMISI SİLİNƏCƏK!',wipeDone:'Silindi',
-    errSave:'Xəta',errOnline:'Onlayn rejim lazımdır',
+    errSave:'Xəta',errOnline:'Onlayn rejim',
     reportTitle:'Şikayət',reportReason:'Səbəb *',reportDetails:'Detallar',reportSubmit:'GÖNDƏR',reportSent:'Şikayət göndərildi!',
     adminMsgTitle:'Adminə mesaj',msgType:'Növ',msgSubject:'Mövzu *',msgBody:'Mesajınız *',msgSend:'GÖNDƏR',msgSent:'Göndərildi!',
-    createRoom:'Otaq yarat',roomGame:'Oyun *',roomName:'Otaq adı',roomMax:'Maks. izləyici',roomCreate:'🎮 YARAT',
-    liveRooms:'🔴 Canlı otaqlar',noLiveRooms:'Canlı yoxdur',
-    voiceChat:'Səsli söhbət',voiceConnect:'🎤 Qoşul',voiceDisconnect:'🔇 Ayrıl',voiceMute:'🔇 Səssiz',voiceUnmute:'🎤 Səsli',
-    kick:'🚫 Çıxar',mute:'🔇 Səssizləşdir',endStream:'⏹ Bitir',
-    banned:'HESAB BANLANDI',bannedText:'Bu IP bloklandı.',
-    banIp:'Ban IP/İstifadəçi',banReason:'Səbəb',activeBans:'Aktiv banlar',unban:'Bağışla',
-    clearChat:'🗑️ Chatı təmizlə',msgFrom:'Göndərən',msgAt:'Tarix'
+    banned:'HESAB BANLANDI',bannedText:'Bu hesab bloklanıb.',
+    banIp:'İstifadəçi adı',banReason:'Səbəb',activeBans:'Aktiv banlar',unban:'Bağışla',
+    clearChat:'🗑️ Chatı təmizlə',msgFrom:'Göndərən',msgAt:'Tarix',
+    banAdded:'Ban əlavə!',banRemoved:'Ban silindi!',userBanned:'banlandı!',
+    noBans:'Aktiv ban yoxdur'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇺🇦 УКРАЇНСЬКА
-  // ═══════════════════════════════════════════
   uk: {
-    loading:'Підключення...',store:'🏪 МАГАЗИН',library:'📚 БІБЛІОТЕКА',spectate:'👁 ДИВИТИСЯ',chat:'💬 ЧАТ',news:'📢 НОВИНИ',users:'👥 КОРИСТУВАЧІ',profile:'👤 ПРОФІЛЬ',
-    storeTitle:'Магазин',storeSub:'Спільна бібліотека',
-    libraryTitle:'Моя бібліотека',librarySub:'Ваші ігри',
-    spectateTitle:'Прямий перегляд',spectateSub:'Дивіться ігри інших гравців',
-    chatTitle:'Загальний чат',chatSub:'Спілкуйтесь з усіма • Емодзі',chatRoom:'💬 Чат',onlineNow:'онлайн',chatPlaceholder:'Написати...',onlineUsers:'🟢 Онлайн',
-    newsTitle:'Новини',newsSub:'Оновлення',
-    usersTitle:'Користувачі',usersSub:'Усі гравці',
+    loading:'Підключення...',store:'🏪 МАГАЗИН',library:'📚 БІБЛІОТЕКА',news:'📢 НОВИНИ',users:'👥 КОРИСТУВАЧІ',profile:'👤 ПРОФІЛЬ',
+    storeTitle:'Магазин',storeSub:'Спільна',libraryTitle:'Бібліотека',librarySub:'Ваші ігри',
+    newsTitle:'Новини',newsSub:'Оновлення',usersTitle:'Користувачі',usersSub:'Всі гравці',
     searchPh:'🔍 Пошук...',adminBtn:'🔐 АДМІН',
-    filters:'ФІЛЬТРИ',all:'Усі',fav:'Обрані',recent:'Зіграно',free:'Безкоштовно',bought:'Куплено',cats:'КАТЕГОРІЇ',
-    sortName:'Ім\'ям',sortPrice:'Ціною',filter:'ФІЛЬТР',ufAll:'Усі',ufOnline:'Онлайн',ufFriends:'Друзі',
+    filters:'ФІЛЬТРИ',all:'Всі',fav:'Обрані',recent:'Недавні',free:'Безкоштовні',bought:'Куплені',cats:'КАТЕГОРІЇ',
+    sortName:'Ім\'ям',sortPrice:'Ціною',filter:'ФІЛЬТР',ufAll:'Всі',ufOnline:'Онлайн',ufFriends:'Друзі',
     sorting:'СОРТ',usName:'Ім\'ям',usLevel:'Рівнем',
     about:'Про програму',dev:'РОЗРОБНИК',year:'РІК',version:'ВЕРСІЯ',license:'ЛІЦЕНЗІЯ',contributors:'АВТОРИ',donate:'Підтримати',
-    adminLogin:'Вхід адміна',adminPanel:'АДМІН',passwordPh:'Пароль',loginBtn:'УВІЙТИ',
-    addGame:'Гра',manageGames:'Керування',manageNews:'Новини',importExport:'Імпорт/Експорт',
+    adminLogin:'Адмін',adminPanel:'ПАНЕЛЬ',passwordPh:'Пароль',loginBtn:'УВІЙТИ',
+    addGame:'Додати',manageGames:'Керувати',manageNews:'Новини',importExport:'Імпорт',
     moderation:'Модерація',bans:'Бани',adminMessages:'Повідомлення',reports:'Скарги',chatMod:'Мод чату',
     gameCover:'ОБКЛАДИНКА',uploadCover:'🖼️ Завантажити',gameGallery:'ГАЛЕРЕЯ',uploadGallery:'📷 Додати',
     gameTitle:'НАЗВА *',gameCategory:'КАТЕГОРІЯ',gameSubtitle:'ПІДЗАГОЛОВОК',gameDesc:'ОПИС',
     gamePrice:'ЦІНА',gamePlayable:'СТАТУС',gameAge18:'🔞 +18',
-    gameHtml:'📄 HTML',uploadHtml:'Вибрати',gameDemo:'🎮 ДЕМО',uploadDemo:'Демо',
+    gameHtml:'📄 HTML',uploadHtml:'HTML файл',gameDemo:'🎮 ДЕМО',uploadDemo:'Demo файл',
     gameRules:'ПРАВИЛА',gameManual:'ПОСІБНИК',save:'💾 ЗБЕРЕГТИ',cancel:'СКАСУВАТИ',
     newAnn:'📢 Нова',annTitle:'ЗАГОЛОВОК *',annCategory:'КАТЕГОРІЯ',annPriority:'ПРІОРИТЕТ',annContent:'ЗМІСТ *',annPublish:'📢 ОПУБЛІКУВАТИ',existingNews:'Існуючі',
-    exportData:'📤 Експорт',exportDesc:'Завантажити JSON.',exportBtn:'JSON',
-    importData:'📥 Імпорт',importDesc:'Завантажити JSON.',importBtn:'ФАЙЛ',
+    exportData:'📤 Експорт',exportDesc:'JSON.',exportBtn:'JSON',
+    importData:'📥 Імпорт',importDesc:'З JSON.',importBtn:'ФАЙЛ',
     dangerZone:'⚠️ Небезпечно',wipeAll:'ВИДАЛИТИ ВСЕ',
     tabOverview:'📖 Огляд',tabGallery:'🖼️ Галерея',tabVideo:'📺 Відео',tabRules:'📜 Правила',tabManual:'📘 Посібник',
-    ageTitle:'Підтвердження віку',ageText:'18+ контент.<br>Вам 18+?',ageYes:'✅ Так, 18+',ageNo:'❌ Ні',
-    buyTitle:'💎 Купити',buyOr:'— або —',
+    ageTitle:'Вік',ageText:'18+.<br>Продовжити?',ageYes:'✅ 18+',ageNo:'❌ Ні',
+    buyTitle:'💎 Купівля',buyOr:'— або —',
     authTitle:'👤 Акаунт',loginTab:'🔑 Увійти',registerTab:'✨ Реєстрація',importTab:'📥 Імпорт',
-    playerNamePh:'Ім\'я гравця',password:'Пароль',emailPh:'Email',
-    registerBtn:'РЕЄСТРАЦІЯ',importDbDesc:'Завантажте JSON.',
+    playerNamePh:'Ім\'я',password:'Пароль',emailPh:'Email',
+    registerBtn:'ЗАРЕЄСТРУВАТИСЬ',importDbDesc:'JSON.',
     fullscreen:'⛶ ПОВНИЙ',backBtn:'← НАЗАД',
     inviteTitle:'🔔 Запрошення',noInvite:'Немає',accept:'✅ Прийняти',decline:'❌ Відхилити',
-    noGames:'Немає',noNews:'Немає',noResult:'Не знайдено',noUsers:'Немає',noAct:'Немає активності.',
+    noGames:'Немає',noNews:'Немає',noResult:'Немає',noUsers:'Немає',noAct:'Немає.',
     saved:'Збережено!',updated:'Оновлено!',deleted:'Видалено!',
     annSaved:'Опубліковано!',annDeleted:'Видалено!',
-    fill:'Заповніть все!',exists:'Ім\'я зайняте!',invalid:'Помилка входу!',
-    confirmDel:'Впевнені?',exported:'Експортовано!',imported:'Імпортовано!',badFile:'Невірний файл!',
-    balance:'Баланс',earned:'Всього зароблено',streak:'Серія',
-    daily:'ЩОДЕННО',dailyDone:'Отримано',
-    calTitle:'📅 Щоденні нагороди',calSub:'+0.10$ щодня!',day:'День',
-    badges:'🏆 Досягнення',badSub:'Виконуйте завдання!',
-    acts:'Активність',actsSub:'Історія',
-    xp:'XP',played:'Зіграно',plays:'Всього',ach:'Досягнення',
-    claim:'ОТРИМАТИ',claimed:'ОТРИМАНО',bonus:'🎉 ВСЕ ВИКОНАНО +20$',
-    play:'▶ ГРАТИ',buy:'💎 КУПИТИ',demo:'🎮 ДЕМО',spectateBtn:'👁 ДИВИТИСЯ',
+    fill:'Заповніть!',exists:'Зайнято!',invalid:'Помилка!',
+    confirmDel:'Видалити?',exported:'Експортовано!',imported:'Імпортовано!',badFile:'Помилка!',
+    balance:'Баланс',earned:'Всього',streak:'Серія',
+    daily:'ОТРИМАТИ',dailyDone:'Отримано',
+    calTitle:'📅 Щоденні',calSub:'+0.10$ щодня!',day:'День',
+    badges:'🏆 Досягнення',badSub:'Виконуйте!',
+    acts:'Активність',actsSub:'Остання',
+    xp:'XP',played:'Зіграно',plays:'Запусків',ach:'Досягнення',
+    claim:'ОТРИМАТИ',claimed:'ОТРИМАНО',bonus:'🎉 ВСЕ! +20$',
+    play:'▶ ГРАТИ',buy:'💎 КУПИТИ',demo:'🎮 ДЕМО',
     buyBalance:'💰 З балансу',poor:'Недостатньо!',purchased:'Куплено!',
     favAdd:'Додано!',favDel:'Видалено!',
     ageDeny:'18+!',logout:'Вийти',edit:'Редагувати',export:'Експорт',
@@ -1641,33 +1330,23 @@ const I18N = {
     invite:'Запросити',addFriend:'⭐ Додати',removeFriend:'⭐ Видалити',reportUser:'⚠️ Скарга',you:'Ви',
     easy:'ЛЕГКО',medium:'СЕРЕДНЬО',hard:'СКЛАДНО',epic:'ЕПІЧНО',legendary:'ЛЕГЕНДА',
     noVideo:'Немає',link:'🔗 Посилання',savedProfile:'Оновлено!',
-    welcome:'Ласкаво просимо',back:'З поверненням',loginFirst:'Спочатку увійдіть',
+    welcome:'Ласкаво',back:'З поверненням',loginFirst:'Увійдіть',
     inviteSent:'📤 Надіслано!',roomCode:'Код кімнати',
     games:'ігор',achievements:'досягнень',viewers:'глядачів',
     wipeConfirm:'ВСЕ ВИДАЛИТИ?',wipeDone:'Видалено',
-    errSave:'Помилка',errOnline:'Потрібен онлайн',
+    errSave:'Помилка',errOnline:'Онлайн режим',
     reportTitle:'Скарга',reportReason:'Причина *',reportDetails:'Деталі',reportSubmit:'НАДІСЛАТИ',reportSent:'Скаргу надіслано!',
     adminMsgTitle:'Повідомлення адміну',msgType:'Тип',msgSubject:'Тема *',msgBody:'Повідомлення *',msgSend:'НАДІСЛАТИ',msgSent:'Надіслано!',
-    createRoom:'Створити кімнату',roomGame:'Гра *',roomName:'Назва кімнати',roomMax:'Макс. глядачів',roomCreate:'🎮 СТВОРИТИ',
-    liveRooms:'🔴 Прямі трансляції',noLiveRooms:'Немає трансляцій',
-    voiceChat:'Голосовий чат',voiceConnect:'🎤 Підключитися',voiceDisconnect:'🔇 Відключитися',voiceMute:'🔇 Вимкнути',voiceUnmute:'🎤 Увімкнути',
-    kick:'🚫 Вигнати',mute:'🔇 Заглушити',endStream:'⏹ Завершити',
-    banned:'АКАУНТ ЗАБАНЕНО',bannedText:'Цей IP заблоковано.',
-    banIp:'Бан IP/Користувача',banReason:'Причина',activeBans:'Активні бани',unban:'Розбанити',
-    clearChat:'🗑️ Очистити чат',msgFrom:'Від',msgAt:'Дата'
+    banned:'АКАУНТ ЗАБАНЕНО',bannedText:'Цей акаунт заблоковано.',
+    banIp:'Ім\'я користувача',banReason:'Причина',activeBans:'Активні бани',unban:'Розбанити',
+    clearChat:'🗑️ Очистити чат',msgFrom:'Від',msgAt:'Дата',
+    banAdded:'Бан додано!',banRemoved:'Бан знято!',userBanned:'забанено!',
+    noBans:'Немає активних банів'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇮🇳 हिन्दी (Hintçe)
-  // ═══════════════════════════════════════════
   hi: {
-    loading:'कनेक्ट हो रहा है...',store:'🏪 स्टोर',library:'📚 लाइब्रेरी',spectate:'👁 देखें',chat:'💬 चैट',news:'📢 समाचार',users:'👥 उपयोगकर्ता',profile:'👤 प्रोफ़ाइल',
-    storeTitle:'स्टोर',storeSub:'साझा लाइब्रेरी',
-    libraryTitle:'मेरी लाइब्रेरी',librarySub:'आपके खेल',
-    spectateTitle:'लाइव देखें',spectateSub:'अन्य खिलाड़ियों को लाइव देखें',
-    chatTitle:'वैश्विक चैट',chatSub:'सबसे बात करें • इमोजी',chatRoom:'💬 चैट',onlineNow:'ऑनलाइन',chatPlaceholder:'लिखें...',onlineUsers:'🟢 ऑनलाइन',
-    newsTitle:'समाचार',newsSub:'अपडेट',
-    usersTitle:'उपयोगकर्ता',usersSub:'सभी खिलाड़ी',
+    loading:'कनेक्ट...',store:'🏪 स्टोर',library:'📚 लाइब्रेरी',news:'📢 समाचार',users:'👥 उपयोगकर्ता',profile:'👤 प्रोफ़ाइल',
+    storeTitle:'स्टोर',storeSub:'साझा',libraryTitle:'मेरी लाइब्रेरी',librarySub:'आपके खेल',
+    newsTitle:'समाचार',newsSub:'अपडेट',usersTitle:'उपयोगकर्ता',usersSub:'सभी खिलाड़ी',
     searchPh:'🔍 खोजें...',adminBtn:'🔐 एडमिन',
     filters:'फ़िल्टर',all:'सभी',fav:'पसंदीदा',recent:'खेला',free:'मुफ़्त',bought:'खरीदा',cats:'श्रेणियाँ',
     sortName:'नाम',sortPrice:'मूल्य',filter:'फ़िल्टर',ufAll:'सभी',ufOnline:'ऑनलाइन',ufFriends:'दोस्त',
@@ -1705,7 +1384,7 @@ const I18N = {
     acts:'गतिविधियाँ',actsSub:'इतिहास',
     xp:'XP',played:'खेला',plays:'कुल',ach:'उपलब्धियाँ',
     claim:'प्राप्त',claimed:'प्राप्त',bonus:'🎉 सब पूरा +20$',
-    play:'▶ खेलें',buy:'💎 खरीदें',demo:'🎮 डेमो',spectateBtn:'👁 देखें',
+    play:'▶ खेलें',buy:'💎 खरीदें',demo:'🎮 डेमो',
     buyBalance:'💰 बैलेंस से',poor:'अपर्याप्त!',purchased:'खरीदा!',
     favAdd:'जोड़ा!',favDel:'हटाया!',
     ageDeny:'18+!',logout:'लॉगआउट',edit:'संपादित',export:'निर्यात',
@@ -1720,26 +1399,16 @@ const I18N = {
     errSave:'त्रुटि',errOnline:'ऑनलाइन मोड चाहिए',
     reportTitle:'शिकायत',reportReason:'कारण *',reportDetails:'विवरण',reportSubmit:'भेजें',reportSent:'शिकायत भेजी!',
     adminMsgTitle:'एडमिन को संदेश',msgType:'प्रकार',msgSubject:'विषय *',msgBody:'संदेश *',msgSend:'भेजें',msgSent:'भेजा!',
-    createRoom:'कमरा बनाएं',roomGame:'खेल *',roomName:'कमरा नाम',roomMax:'अधिकतम दर्शक',roomCreate:'🎮 बनाएं',
-    liveRooms:'🔴 लाइव कमरे',noLiveRooms:'कोई लाइव नहीं',
-    voiceChat:'वॉइस चैट',voiceConnect:'🎤 कनेक्ट',voiceDisconnect:'🔇 डिस्कनेक्ट',voiceMute:'🔇 म्यूट',voiceUnmute:'🎤 अनम्यूट',
-    kick:'🚫 निकालें',mute:'🔇 म्यूट',endStream:'⏹ समाप्त',
-    banned:'खाता प्रतिबंधित',bannedText:'यह IP अवरुद्ध है।',
-    banIp:'प्रतिबंध IP/उपयोगकर्ता',banReason:'कारण',activeBans:'सक्रिय प्रतिबंध',unban:'माफ़ करें',
-    clearChat:'🗑️ चैट साफ़ करें',msgFrom:'से',msgAt:'तारीख'
+    banned:'खाता प्रतिबंधित',bannedText:'यह खाता अवरुद्ध है।',
+    banIp:'उपयोगकर्ता नाम',banReason:'कारण',activeBans:'सक्रिय प्रतिबंध',unban:'माफ़ करें',
+    clearChat:'🗑️ चैट साफ़ करें',msgFrom:'से',msgAt:'तारीख',
+    banAdded:'प्रतिबंध जोड़ा!',banRemoved:'प्रतिबंध हटाया!',userBanned:'प्रतिबंधित!',
+    noBans:'कोई सक्रिय प्रतिबंध नहीं'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇮🇱 עברית (İbranice)
-  // ═══════════════════════════════════════════
   he: {
-    loading:'מתחבר...',store:'🏪 חנות',library:'📚 ספרייה',spectate:'👁 צפה',chat:'💬 צ\'אט',news:'📢 חדשות',users:'👥 משתמשים',profile:'👤 פרופיל',
-    storeTitle:'חנות',storeSub:'ספרייה משותפת',
-    libraryTitle:'הספרייה שלי',librarySub:'המשחקים שלך',
-    spectateTitle:'צפייה חיה',spectateSub:'צפה בשחקנים אחרים',
-    chatTitle:'צ\'אט כללי',chatSub:'שוחח עם כולם • אימוג\'י',chatRoom:'💬 חדר צ\'אט',onlineNow:'מחובר',chatPlaceholder:'הקלד...',onlineUsers:'🟢 מחוברים',
-    newsTitle:'חדשות',newsSub:'עדכונים',
-    usersTitle:'משתמשים',usersSub:'כל השחקנים',
+    loading:'מתחבר...',store:'🏪 חנות',library:'📚 ספרייה',news:'📢 חדשות',users:'👥 משתמשים',profile:'👤 פרופיל',
+    storeTitle:'חנות',storeSub:'משותף',libraryTitle:'הספרייה שלי',librarySub:'המשחקים שלך',
+    newsTitle:'חדשות',newsSub:'עדכונים',usersTitle:'משתמשים',usersSub:'כל השחקנים',
     searchPh:'🔍 חפש...',adminBtn:'🔐 מנהל',
     filters:'מסננים',all:'הכל',fav:'מועדפים',recent:'שוחק',free:'חינם',bought:'נקנה',cats:'קטגוריות',
     sortName:'שם',sortPrice:'מחיר',filter:'מסנן',ufAll:'הכל',ufOnline:'מחובר',ufFriends:'חברים',
@@ -1754,15 +1423,15 @@ const I18N = {
     gameHtml:'📄 HTML',uploadHtml:'בחר',gameDemo:'🎮 דמו',uploadDemo:'דמו',
     gameRules:'כללים',gameManual:'מדריך',save:'💾 שמור',cancel:'ביטול',
     newAnn:'📢 חדש',annTitle:'כותרת *',annCategory:'קטגוריה',annPriority:'עדיפות',annContent:'תוכן *',annPublish:'📢 פרסם',existingNews:'קיים',
-    exportData:'📤 ייצוא',exportDesc:'הורד JSON.',exportBtn:'JSON',
-    importData:'📥 ייבוא',importDesc:'טען JSON.',importBtn:'קובץ',
+    exportData:'📤 ייצוא',exportDesc:'JSON.',exportBtn:'JSON',
+    importData:'📥 ייבוא',importDesc:'JSON.',importBtn:'קובץ',
     dangerZone:'⚠️ מסוכן',wipeAll:'מחק הכל',
     tabOverview:'📖 סקירה',tabGallery:'🖼️ גלריה',tabVideo:'📺 וידאו',tabRules:'📜 כללים',tabManual:'📘 מדריך',
-    ageTitle:'אימות גיל',ageText:'תוכן 18+.<br>האם אתה 18+?',ageYes:'✅ כן, 18+',ageNo:'❌ לא',
+    ageTitle:'אימות גיל',ageText:'18+.<br>האם אתה 18+?',ageYes:'✅ כן, 18+',ageNo:'❌ לא',
     buyTitle:'💎 קנה',buyOr:'— או —',
     authTitle:'👤 חשבון',loginTab:'🔑 כניסה',registerTab:'✨ הרשמה',importTab:'📥 ייבוא',
     playerNamePh:'שם שחקן',password:'סיסמה',emailPh:'אימייל',
-    registerBtn:'הרשמה',importDbDesc:'טען JSON.',
+    registerBtn:'הרשמה',importDbDesc:'JSON.',
     fullscreen:'⛶ מלא',backBtn:'← חזרה',
     inviteTitle:'🔔 הזמנות',noInvite:'אין',accept:'✅ קבל',decline:'❌ דחה',
     noGames:'אין משחקים',noNews:'אין חדשות',noResult:'לא נמצא',noUsers:'אין',noAct:'אין פעילות.',
@@ -1777,7 +1446,7 @@ const I18N = {
     acts:'פעילות',actsSub:'היסטוריה',
     xp:'XP',played:'שוחק',plays:'סה"כ',ach:'הישגים',
     claim:'קבל',claimed:'התקבל',bonus:'🎉 הכל +20$',
-    play:'▶ שחק',buy:'💎 קנה',demo:'🎮 דמו',spectateBtn:'👁 צפה',
+    play:'▶ שחק',buy:'💎 קנה',demo:'🎮 דמו',
     buyBalance:'💰 עם יתרה',poor:'לא מספיק!',purchased:'נקנה!',
     favAdd:'נוסף!',favDel:'הוסר!',
     ageDeny:'18+!',logout:'יציאה',edit:'ערוך',export:'ייצוא',
@@ -1792,26 +1461,16 @@ const I18N = {
     errSave:'שגיאה',errOnline:'נדרש מצב מקוון',
     reportTitle:'תלונה',reportReason:'סיבה *',reportDetails:'פרטים',reportSubmit:'שלח',reportSent:'תלונה נשלחה!',
     adminMsgTitle:'הודעה למנהל',msgType:'סוג',msgSubject:'נושא *',msgBody:'הודעה *',msgSend:'שלח',msgSent:'נשלח!',
-    createRoom:'צור חדר',roomGame:'משחק *',roomName:'שם חדר',roomMax:'מקס\' צופים',roomCreate:'🎮 צור',
-    liveRooms:'🔴 חדרים חיים',noLiveRooms:'אין שידורים',
-    voiceChat:'צ\'אט קולי',voiceConnect:'🎤 חבר',voiceDisconnect:'🔇 נתק',voiceMute:'🔇 השתק',voiceUnmute:'🎤 בטל השתקה',
-    kick:'🚫 בעט',mute:'🔇 השתק',endStream:'⏹ סיים',
-    banned:'חשבון נחסם',bannedText:'IP זה חסום.',
-    banIp:'חסום IP/משתמש',banReason:'סיבה',activeBans:'חסימות פעילות',unban:'בטל חסימה',
-    clearChat:'🗑️ נקה צ\'אט',msgFrom:'מאת',msgAt:'תאריך'
+    banned:'חשבון נחסם',bannedText:'חשבון זה חסום.',
+    banIp:'שם משתמש',banReason:'סיבה',activeBans:'חסימות פעילות',unban:'בטל חסימה',
+    clearChat:'🗑️ נקה צ\'אט',msgFrom:'מאת',msgAt:'תאריך',
+    banAdded:'חסימה נוספה!',banRemoved:'חסימה בוטלה!',userBanned:'נחסם!',
+    noBans:'אין חסימות פעילות'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇯🇵 日本語 (Japonca)
-  // ═══════════════════════════════════════════
   ja: {
-    loading:'接続中...',store:'🏪 ストア',library:'📚 ライブラリ',spectate:'👁 視聴',chat:'💬 チャット',news:'📢 ニュース',users:'👥 ユーザー',profile:'👤 プロフィール',
-    storeTitle:'ストア',storeSub:'共有ライブラリ',
-    libraryTitle:'マイライブラリ',librarySub:'あなたのゲーム',
-    spectateTitle:'ライブ視聴',spectateSub:'他のプレイヤーをライブで視聴',
-    chatTitle:'グローバルチャット',chatSub:'皆とチャット • 絵文字',chatRoom:'💬 チャット',onlineNow:'オンライン',chatPlaceholder:'入力...',onlineUsers:'🟢 オンライン',
-    newsTitle:'ニュース',newsSub:'更新',
-    usersTitle:'ユーザー',usersSub:'全プレイヤー',
+    loading:'接続中...',store:'🏪 ストア',library:'📚 ライブラリ',news:'📢 ニュース',users:'👥 ユーザー',profile:'👤 プロフィール',
+    storeTitle:'ストア',storeSub:'共有',libraryTitle:'マイライブラリ',librarySub:'あなたのゲーム',
+    newsTitle:'ニュース',newsSub:'更新',usersTitle:'ユーザー',usersSub:'全プレイヤー',
     searchPh:'🔍 検索...',adminBtn:'🔐 管理者',
     filters:'フィルター',all:'全て',fav:'お気に入り',recent:'プレイ済み',free:'無料',bought:'購入済み',cats:'カテゴリ',
     sortName:'名前',sortPrice:'価格',filter:'フィルター',ufAll:'全て',ufOnline:'オンライン',ufFriends:'友達',
@@ -1849,7 +1508,7 @@ const I18N = {
     acts:'アクティビティ',actsSub:'履歴',
     xp:'XP',played:'プレイ',plays:'合計',ach:'実績',
     claim:'取得',claimed:'取得済',bonus:'🎉 全て完了 +20$',
-    play:'▶ プレイ',buy:'💎 購入',demo:'🎮 デモ',spectateBtn:'👁 視聴',
+    play:'▶ プレイ',buy:'💎 購入',demo:'🎮 デモ',
     buyBalance:'💰 残高で',poor:'不足!',purchased:'購入!',
     favAdd:'追加!',favDel:'削除!',
     ageDeny:'18+!',logout:'ログアウト',edit:'編集',export:'エクスポート',
@@ -1864,26 +1523,16 @@ const I18N = {
     errSave:'エラー',errOnline:'オンライン必要',
     reportTitle:'通報',reportReason:'理由 *',reportDetails:'詳細',reportSubmit:'送信',reportSent:'通報送信!',
     adminMsgTitle:'管理者へ',msgType:'タイプ',msgSubject:'件名 *',msgBody:'メッセージ *',msgSend:'送信',msgSent:'送信!',
-    createRoom:'ルーム作成',roomGame:'ゲーム *',roomName:'ルーム名',roomMax:'最大視聴者',roomCreate:'🎮 作成',
-    liveRooms:'🔴 ライブルーム',noLiveRooms:'ライブなし',
-    voiceChat:'ボイスチャット',voiceConnect:'🎤 接続',voiceDisconnect:'🔇 切断',voiceMute:'🔇 ミュート',voiceUnmute:'🎤 ミュート解除',
-    kick:'🚫 キック',mute:'🔇 ミュート',endStream:'⏹ 終了',
-    banned:'アカウントBAN',bannedText:'このIPはブロックされています。',
-    banIp:'BAN IP/ユーザー',banReason:'理由',activeBans:'有効なBAN',unban:'解除',
-    clearChat:'🗑️ チャットクリア',msgFrom:'送信者',msgAt:'日付'
+    banned:'アカウントBAN',bannedText:'このアカウントはブロックされています。',
+    banIp:'ユーザー名',banReason:'理由',activeBans:'有効なBAN',unban:'解除',
+    clearChat:'🗑️ チャットクリア',msgFrom:'送信者',msgAt:'日付',
+    banAdded:'BAN追加!',banRemoved:'BAN解除!',userBanned:'BANされた!',
+    noBans:'有効なBANなし'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇨🇳 中文 (Çince)
-  // ═══════════════════════════════════════════
   zh: {
-    loading:'连接中...',store:'🏪 商店',library:'📚 库',spectate:'👁 观看',chat:'💬 聊天',news:'📢 新闻',users:'👥 用户',profile:'👤 资料',
-    storeTitle:'商店',storeSub:'共享库',
-    libraryTitle:'我的库',librarySub:'你的游戏',
-    spectateTitle:'直播观看',spectateSub:'观看其他玩家',
-    chatTitle:'全球聊天',chatSub:'与大家聊天 • 表情',chatRoom:'💬 聊天室',onlineNow:'在线',chatPlaceholder:'输入...',onlineUsers:'🟢 在线',
-    newsTitle:'新闻',newsSub:'更新',
-    usersTitle:'用户',usersSub:'所有玩家',
+    loading:'连接中...',store:'🏪 商店',library:'📚 库',news:'📢 新闻',users:'👥 用户',profile:'👤 资料',
+    storeTitle:'商店',storeSub:'共享',libraryTitle:'我的库',librarySub:'你的游戏',
+    newsTitle:'新闻',newsSub:'更新',usersTitle:'用户',usersSub:'所有玩家',
     searchPh:'🔍 搜索...',adminBtn:'🔐 管理员',
     filters:'筛选',all:'全部',fav:'收藏',recent:'已玩',free:'免费',bought:'已购',cats:'分类',
     sortName:'名称',sortPrice:'价格',filter:'筛选',ufAll:'全部',ufOnline:'在线',ufFriends:'好友',
@@ -1921,7 +1570,7 @@ const I18N = {
     acts:'活动',actsSub:'历史',
     xp:'XP',played:'已玩',plays:'总计',ach:'成就',
     claim:'领取',claimed:'已领取',bonus:'🎉 全部完成 +20$',
-    play:'▶ 玩',buy:'💎 购买',demo:'🎮 演示',spectateBtn:'👁 观看',
+    play:'▶ 玩',buy:'💎 购买',demo:'🎮 演示',
     buyBalance:'💰 余额支付',poor:'不足!',purchased:'已购买!',
     favAdd:'已添加!',favDel:'已移除!',
     ageDeny:'18+!',logout:'登出',edit:'编辑',export:'导出',
@@ -1936,26 +1585,16 @@ const I18N = {
     errSave:'错误',errOnline:'需要在线',
     reportTitle:'举报',reportReason:'原因 *',reportDetails:'详情',reportSubmit:'提交',reportSent:'举报已提交!',
     adminMsgTitle:'给管理员',msgType:'类型',msgSubject:'主题 *',msgBody:'消息 *',msgSend:'发送',msgSent:'已发送!',
-    createRoom:'创建房间',roomGame:'游戏 *',roomName:'房间名',roomMax:'最大观众',roomCreate:'🎮 创建',
-    liveRooms:'🔴 直播房间',noLiveRooms:'无直播',
-    voiceChat:'语音聊天',voiceConnect:'🎤 连接',voiceDisconnect:'🔇 断开',voiceMute:'🔇 静音',voiceUnmute:'🎤 取消静音',
-    kick:'🚫 踢出',mute:'🔇 静音',endStream:'⏹ 结束',
-    banned:'账户被封',bannedText:'此IP被封。',
-    banIp:'封禁IP/用户',banReason:'原因',activeBans:'活跃封禁',unban:'解封',
-    clearChat:'🗑️ 清空聊天',msgFrom:'来自',msgAt:'日期'
+    banned:'账户被封',bannedText:'此账户被封。',
+    banIp:'用户名',banReason:'原因',activeBans:'活跃封禁',unban:'解封',
+    clearChat:'🗑️ 清空聊天',msgFrom:'来自',msgAt:'日期',
+    banAdded:'封禁已添加!',banRemoved:'封禁已移除!',userBanned:'被封!',
+    noBans:'无活跃封禁'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇬🇷 Ελληνικά (Yunanca)
-  // ═══════════════════════════════════════════
   el: {
-    loading:'Σύνδεση...',store:'🏪 ΚΑΤΑΣΤΗΜΑ',library:'📚 ΒΙΒΛΙΟΘΗΚΗ',spectate:'👁 ΠΑΡΑΚΟΛΟΥΘΗΣΗ',chat:'💬 CHAT',news:'📢 ΝΕΑ',users:'👥 ΧΡΗΣΤΕΣ',profile:'👤 ΠΡΟΦΙΛ',
-    storeTitle:'Κατάστημα',storeSub:'Κοινόχρηστη βιβλιοθήκη',
-    libraryTitle:'Η βιβλιοθήκη μου',librarySub:'Τα παιχνίδια σου',
-    spectateTitle:'Ζωντανή παρακολούθηση',spectateSub:'Δες άλλους παίκτες ζωντανά',
-    chatTitle:'Γενικό chat',chatSub:'Συζήτησε με όλους • Emoji',chatRoom:'💬 Δωμάτιο',onlineNow:'σε σύνδεση',chatPlaceholder:'Γράψε...',onlineUsers:'🟢 Σε σύνδεση',
-    newsTitle:'Νέα',newsSub:'Ενημερώσεις',
-    usersTitle:'Χρήστες',usersSub:'Όλοι οι παίκτες',
+    loading:'Σύνδεση...',store:'🏪 ΚΑΤΑΣΤΗΜΑ',library:'📚 ΒΙΒΛΙΟΘΗΚΗ',news:'📢 ΝΕΑ',users:'👥 ΧΡΗΣΤΕΣ',profile:'👤 ΠΡΟΦΙΛ',
+    storeTitle:'Κατάστημα',storeSub:'Κοινόχρηστο',libraryTitle:'Η βιβλιοθήκη μου',librarySub:'Τα παιχνίδια σου',
+    newsTitle:'Νέα',newsSub:'Ενημερώσεις',usersTitle:'Χρήστες',usersSub:'Όλοι οι παίκτες',
     searchPh:'🔍 Αναζήτηση...',adminBtn:'🔐 ΔΙΑΧΕΙΡΙΣΤΗΣ',
     filters:'ΦΙΛΤΡΑ',all:'Όλα',fav:'Αγαπημένα',recent:'Παίχτηκε',free:'Δωρεάν',bought:'Αγορασμένα',cats:'ΚΑΤΗΓΟΡΙΕΣ',
     sortName:'Όνομα',sortPrice:'Τιμή',filter:'ΦΙΛΤΡΟ',ufAll:'Όλα',ufOnline:'Σε σύνδεση',ufFriends:'Φίλοι',
@@ -1993,7 +1632,7 @@ const I18N = {
     acts:'Δραστηριότητα',actsSub:'Ιστορικό',
     xp:'XP',played:'Παίχτηκε',plays:'Σύνολο',ach:'Επιτεύγματα',
     claim:'ΛΗΨΗ',claimed:'ΕΛΗΦΘΗ',bonus:'🎉 ΟΛΑ +20$',
-    play:'▶ ΠΑΙΞΕ',buy:'💎 ΑΓΟΡΑ',demo:'🎮 DEMO',spectateBtn:'👁 ΔΕΣ',
+    play:'▶ ΠΑΙΞΕ',buy:'💎 ΑΓΟΡΑ',demo:'🎮 DEMO',
     buyBalance:'💰 Με υπόλοιπο',poor:'Ανεπαρκές!',purchased:'Αγοράστηκε!',
     favAdd:'Προστέθηκε!',favDel:'Αφαιρέθηκε!',
     ageDeny:'18+!',logout:'Αποσύνδεση',edit:'Επεξεργασία',export:'Εξαγωγή',
@@ -2008,26 +1647,16 @@ const I18N = {
     errSave:'Σφάλμα',errOnline:'Απαιτείται σύνδεση',
     reportTitle:'Αναφορά',reportReason:'Λόγος *',reportDetails:'Λεπτομέρειες',reportSubmit:'ΥΠΟΒΟΛΗ',reportSent:'Υποβλήθηκε!',
     adminMsgTitle:'Μήνυμα σε διαχειριστή',msgType:'Τύπος',msgSubject:'Θέμα *',msgBody:'Μήνυμα *',msgSend:'ΑΠΟΣΤΟΛΗ',msgSent:'Εστάλη!',
-    createRoom:'Δημιουργία δωματίου',roomGame:'Παιχνίδι *',roomName:'Όνομα δωματίου',roomMax:'Μέγ. θεατές',roomCreate:'🎮 ΔΗΜΙΟΥΡΓΙΑ',
-    liveRooms:'🔴 Ζωντανά δωμάτια',noLiveRooms:'Κανένα',
-    voiceChat:'Φωνητική συνομιλία',voiceConnect:'🎤 Σύνδεση',voiceDisconnect:'🔇 Αποσύνδεση',voiceMute:'🔇 Σίγαση',voiceUnmute:'🎤 Άρση σίγασης',
-    kick:'🚫 Αποβολή',mute:'🔇 Σίγαση',endStream:'⏹ Τέλος',
-    banned:'ΛΟΓΑΡΙΑΣΜΟΣ ΑΠΑΓΟΡΕΥΜΕΝΟΣ',bannedText:'Αυτή η IP έχει μπλοκαριστεί.',
-    banIp:'Απαγόρευση IP/Χρήστη',banReason:'Λόγος',activeBans:'Ενεργές απαγορεύσεις',unban:'Άρση',
-    clearChat:'🗑️ Εκκαθάριση chat',msgFrom:'Από',msgAt:'Ημερομηνία'
+    banned:'ΛΟΓΑΡΙΑΣΜΟΣ ΑΠΑΓΟΡΕΥΜΕΝΟΣ',bannedText:'Αυτός ο λογαριασμός έχει μπλοκαριστεί.',
+    banIp:'Όνομα χρήστη',banReason:'Λόγος',activeBans:'Ενεργές απαγορεύσεις',unban:'Άρση',
+    clearChat:'🗑️ Εκκαθάριση chat',msgFrom:'Από',msgAt:'Ημερομηνία',
+    banAdded:'Προστέθηκε!',banRemoved:'Αφαιρέθηκε!',userBanned:'Απαγορεύτηκε!',
+    noBans:'Καμία ενεργή απαγόρευση'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇦🇲 Հայերեն (Ermenice)
-  // ═══════════════════════════════════════════
   hy: {
-    loading:'Միացում...',store:'🏪 Խdelays',library:'📚 Գdelays',spectate:'👁 Դdelays',chat:'💬 Չdelays',news:'📢 Նdelays',users:'👥 Օdelays',profile:'👤 Պdelays',
-    storeTitle:'Խdelays',storeSub:' Delays',
-    libraryTitle:'Իմ delays',librarySub:'Ձdelays',
-    spectateTitle:'Ուdelays',spectateSub:'Դdelays',
-    chatTitle:' Delays',chatSub:'Delays • Delays',chatRoom:'💬 Delays',onlineNow:'delays',chatPlaceholder:'Գdelays...',onlineUsers:'🟢 Delays',
-    newsTitle:'Նdelays',newsSub:'Delays',
-    usersTitle:'Delays',usersSub:'Delays',
+    loading:'Միացում...',store:'🏪 Խdelays',library:'📚 Գdelays',news:'📢 Նdelays',users:'👥 Delays',profile:'👤 Delays',
+    storeTitle:'Խdelays',storeSub:'Delays',libraryTitle:'Իմ delays',librarySub:'Delays',
+    newsTitle:'Delays',newsSub:'Delays',usersTitle:'Delays',usersSub:'Delays',
     searchPh:'🔍 Delays...',adminBtn:'🔐 Delays',
     filters:'Delays',all:'Delays',fav:'Delays',recent:'Delays',free:'Delays',bought:'Delays',cats:'Delays',
     sortName:'Delays',sortPrice:'Delays',filter:'Delays',ufAll:'Delays',ufOnline:'Delays',ufFriends:'Delays',
@@ -2065,7 +1694,7 @@ const I18N = {
     acts:'Delays',actsSub:'Delays',
     xp:'XP',played:'Delays',plays:'Delays',ach:'Delays',
     claim:'Delays',claimed:'Delays',bonus:'🎉 Delays +20$',
-    play:'▶ Delays',buy:'💎 Delays',demo:'🎮 Delays',spectateBtn:'👁 Delays',
+    play:'▶ Delays',buy:'💎 Delays',demo:'🎮 Delays',
     buyBalance:'💰 Delays',poor:'Delays!',purchased:'Delays!',
     favAdd:'Delays!',favDel:'Delays!',
     ageDeny:'18+!',logout:'Delays',edit:'Delays',export:'Delays',
@@ -2080,26 +1709,16 @@ const I18N = {
     errSave:'Delays',errOnline:'Delays',
     reportTitle:'Delays',reportReason:'Delays *',reportDetails:'Delays',reportSubmit:'Delays',reportSent:'Delays!',
     adminMsgTitle:'Delays',msgType:'Delays',msgSubject:'Delays *',msgBody:'Delays *',msgSend:'Delays',msgSent:'Delays!',
-    createRoom:'Delays',roomGame:'Delays *',roomName:'Delays',roomMax:'Delays',roomCreate:'🎮 Delays',
-    liveRooms:'🔴 Delays',noLiveRooms:'Delays',
-    voiceChat:'Delays',voiceConnect:'🎤 Delays',voiceDisconnect:'🔇 Delays',voiceMute:'🔇 Delays',voiceUnmute:'🎤 Delays',
-    kick:'🚫 Delays',mute:'🔇 Delays',endStream:'⏹ Delays',
     banned:'Delays',bannedText:'Delays.',
     banIp:'Delays',banReason:'Delays',activeBans:'Delays',unban:'Delays',
-    clearChat:'🗑️ Delays',msgFrom:'Delays',msgAt:'Delays'
+    clearChat:'🗑️ Delays',msgFrom:'Delays',msgAt:'Delays',
+    banAdded:'Delays!',banRemoved:'Delays!',userBanned:'Delays!',
+    noBans:'Delays'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇰🇷 한국어 (Korece)
-  // ═══════════════════════════════════════════
   ko: {
-    loading:'연결 중...',store:'🏪 상점',library:'📚 라이브러리',spectate:'👁 시청',chat:'💬 채팅',news:'📢 뉴스',users:'👥 사용자',profile:'👤 프로필',
-    storeTitle:'상점',storeSub:'공유 라이브러리',
-    libraryTitle:'내 라이브러리',librarySub:'내 게임',
-    spectateTitle:'라이브 시청',spectateSub:'다른 플레이어 시청',
-    chatTitle:'글로벌 채팅',chatSub:'모두와 채팅 • 이모지',chatRoom:'💬 채팅방',onlineNow:'온라인',chatPlaceholder:'입력...',onlineUsers:'🟢 온라인',
-    newsTitle:'뉴스',newsSub:'업데이트',
-    usersTitle:'사용자',usersSub:'모든 플레이어',
+    loading:'연결 중...',store:'🏪 상점',library:'📚 라이브러리',news:'📢 뉴스',users:'👥 사용자',profile:'👤 프로필',
+    storeTitle:'상점',storeSub:'공유',libraryTitle:'내 라이브러리',librarySub:'내 게임',
+    newsTitle:'뉴스',newsSub:'업데이트',usersTitle:'사용자',usersSub:'모든 플레이어',
     searchPh:'🔍 검색...',adminBtn:'🔐 관리자',
     filters:'필터',all:'전체',fav:'즐겨찾기',recent:'플레이',free:'무료',bought:'구매',cats:'카테고리',
     sortName:'이름',sortPrice:'가격',filter:'필터',ufAll:'전체',ufOnline:'온라인',ufFriends:'친구',
@@ -2137,7 +1756,7 @@ const I18N = {
     acts:'활동',actsSub:'기록',
     xp:'XP',played:'플레이',plays:'총계',ach:'업적',
     claim:'받기',claimed:'받음',bonus:'🎉 모두 완료 +20$',
-    play:'▶ 플레이',buy:'💎 구매',demo:'🎮 데모',spectateBtn:'👁 시청',
+    play:'▶ 플레이',buy:'💎 구매',demo:'🎮 데모',
     buyBalance:'💰 잔액으로',poor:'부족!',purchased:'구매!',
     favAdd:'추가!',favDel:'제거!',
     ageDeny:'18+!',logout:'로그아웃',edit:'편집',export:'내보내기',
@@ -2152,26 +1771,16 @@ const I18N = {
     errSave:'오류',errOnline:'온라인 필요',
     reportTitle:'신고',reportReason:'사유 *',reportDetails:'상세',reportSubmit:'전송',reportSent:'신고 전송!',
     adminMsgTitle:'관리자에게',msgType:'유형',msgSubject:'제목 *',msgBody:'메시지 *',msgSend:'전송',msgSent:'전송!',
-    createRoom:'방 만들기',roomGame:'게임 *',roomName:'방 이름',roomMax:'최대 시청자',roomCreate:'🎮 만들기',
-    liveRooms:'🔴 라이브 방',noLiveRooms:'없음',
-    voiceChat:'음성 채팅',voiceConnect:'🎤 연결',voiceDisconnect:'🔇 연결 해제',voiceMute:'🔇 음소거',voiceUnmute:'🎤 음소거 해제',
-    kick:'🚫 추방',mute:'🔇 음소거',endStream:'⏹ 종료',
-    banned:'계정 차단됨',bannedText:'이 IP는 차단되었습니다.',
-    banIp:'차단 IP/사용자',banReason:'사유',activeBans:'활성 차단',unban:'차단 해제',
-    clearChat:'🗑️ 채팅 지우기',msgFrom:'보낸이',msgAt:'날짜'
+    banned:'계정 차단됨',bannedText:'이 계정은 차단되었습니다.',
+    banIp:'사용자 이름',banReason:'사유',activeBans:'활성 차단',unban:'차단 해제',
+    clearChat:'🗑️ 채팅 지우기',msgFrom:'보낸이',msgAt:'날짜',
+    banAdded:'차단 추가!',banRemoved:'차단 해제!',userBanned:'차단됨!',
+    noBans:'활성 차단 없음'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇹🇭 ไทย (Tayca)
-  // ═══════════════════════════════════════════
   th: {
-    loading:'กำลังเชื่อมต่อ...',store:'🏪 ร้าน',library:'📚 คลัง',spectate:'👁 ดู',chat:'💬 แชท',news:'📢 ข่าว',users:'👥 ผู้ใช้',profile:'👤 โปรไฟล์',
-    storeTitle:'ร้าน',storeSub:'คลังร่วม',
-    libraryTitle:'คลังของฉัน',librarySub:'เกมของคุณ',
-    spectateTitle:'ดูสด',spectateSub:'ดูผู้เล่นคนอื่นสด',
-    chatTitle:'แชททั่วโลก',chatSub:'คุยกับทุกคน • อีโมจิ',chatRoom:'💬 ห้องแชท',onlineNow:'ออนไลน์',chatPlaceholder:'พิมพ์...',onlineUsers:'🟢 ออนไลน์',
-    newsTitle:'ข่าว',newsSub:'อัปเดต',
-    usersTitle:'ผู้ใช้',usersSub:'ผู้เล่นทั้งหมด',
+    loading:'กำลังเชื่อมต่อ...',store:'🏪 ร้าน',library:'📚 คลัง',news:'📢 ข่าว',users:'👥 ผู้ใช้',profile:'👤 โปรไฟล์',
+    storeTitle:'ร้าน',storeSub:'ร่วม',libraryTitle:'คลังของฉัน',librarySub:'เกมของคุณ',
+    newsTitle:'ข่าว',newsSub:'อัปเดต',usersTitle:'ผู้ใช้',usersSub:'ผู้เล่นทั้งหมด',
     searchPh:'🔍 ค้นหา...',adminBtn:'🔐 แอดมิน',
     filters:'ตัวกรอง',all:'ทั้งหมด',fav:'รายการโปรด',recent:'เล่นแล้ว',free:'ฟรี',bought:'ซื้อแล้ว',cats:'หมวดหมู่',
     sortName:'ชื่อ',sortPrice:'ราคา',filter:'ตัวกรอง',ufAll:'ทั้งหมด',ufOnline:'ออนไลน์',ufFriends:'เพื่อน',
@@ -2209,7 +1818,7 @@ const I18N = {
     acts:'กิจกรรม',actsSub:'ประวัติ',
     xp:'XP',played:'เล่น',plays:'รวม',ach:'ความสำเร็จ',
     claim:'รับ',claimed:'รับแล้ว',bonus:'🎉 ทั้งหมด +20$',
-    play:'▶ เล่น',buy:'💎 ซื้อ',demo:'🎮 เดโม',spectateBtn:'👁 ดู',
+    play:'▶ เล่น',buy:'💎 ซื้อ',demo:'🎮 เดโม',
     buyBalance:'💰 ด้วยยอดเงิน',poor:'ไม่พอ!',purchased:'ซื้อแล้ว!',
     favAdd:'เพิ่ม!',favDel:'ลบ!',
     ageDeny:'18+!',logout:'ออกจากระบบ',edit:'แก้ไข',export:'ส่งออก',
@@ -2224,26 +1833,16 @@ const I18N = {
     errSave:'ข้อผิดพลาด',errOnline:'ต้องการโหมดออนไลน์',
     reportTitle:'รายงาน',reportReason:'เหตุผล *',reportDetails:'รายละเอียด',reportSubmit:'ส่ง',reportSent:'รายงานส่งแล้ว!',
     adminMsgTitle:'ข้อความถึงแอดมิน',msgType:'ประเภท',msgSubject:'หัวข้อ *',msgBody:'ข้อความ *',msgSend:'ส่ง',msgSent:'ส่งแล้ว!',
-    createRoom:'สร้างห้อง',roomGame:'เกม *',roomName:'ชื่อห้อง',roomMax:'ผู้ชมสูงสุด',roomCreate:'🎮 สร้าง',
-    liveRooms:'🔴 ห้องสด',noLiveRooms:'ไม่มี',
-    voiceChat:'แชทเสียง',voiceConnect:'🎤 เชื่อมต่อ',voiceDisconnect:'🔇 ตัดการเชื่อมต่อ',voiceMute:'🔇 ปิดเสียง',voiceUnmute:'🎤 เปิดเสียง',
-    kick:'🚫 ไล่ออก',mute:'🔇 ปิดเสียง',endStream:'⏹ จบ',
-    banned:'บัญชีถูกแบน',bannedText:'IP นี้ถูกบล็อก',
-    banIp:'แบน IP/ผู้ใช้',banReason:'เหตุผล',activeBans:'แบนที่ใช้งาน',unban:'ปลดแบน',
-    clearChat:'🗑️ ล้างแชท',msgFrom:'จาก',msgAt:'วันที่'
+    banned:'บัญชีถูกแบน',bannedText:'บัญชีนี้ถูกบล็อก',
+    banIp:'ชื่อผู้ใช้',banReason:'เหตุผล',activeBans:'แบนที่ใช้งาน',unban:'ปลดแบน',
+    clearChat:'🗑️ ล้างแชท',msgFrom:'จาก',msgAt:'วันที่',
+    banAdded:'เพิ่มแบน!',banRemoved:'ลบแบน!',userBanned:'ถูกแบน!',
+    noBans:'ไม่มีแบนที่ใช้งาน'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇸🇦 العربية (Arapça)
-  // ═══════════════════════════════════════════
   ar: {
-    loading:'جاري الاتصال...',store:'🏪 المتجر',library:'📚 المكتبة',spectate:'👁 مشاهدة',chat:'💬 دردشة',news:'📢 أخبار',users:'👥 المستخدمون',profile:'👤 الملف',
-    storeTitle:'المتجر',storeSub:'مكتبة مشتركة',
-    libraryTitle:'مكتبتي',librarySub:'ألعابك',
-    spectateTitle:'مشاهدة مباشرة',spectateSub:'شاهد اللاعبين الآخرين',
-    chatTitle:'الدردشة العامة',chatSub:'تحدث مع الجميع • إيموجي',chatRoom:'💬 غرفة الدردشة',onlineNow:'متصل',chatPlaceholder:'اكتب...',onlineUsers:'🟢 متصلون',
-    newsTitle:'الأخبار',newsSub:'تحديثات',
-    usersTitle:'المستخدمون',usersSub:'جميع اللاعبين',
+    loading:'جاري الاتصال...',store:'🏪 المتجر',library:'📚 المكتبة',news:'📢 أخبار',users:'👥 المستخدمون',profile:'👤 الملف',
+    storeTitle:'المتجر',storeSub:'مشترك',libraryTitle:'مكتبتي',librarySub:'ألعابك',
+    newsTitle:'الأخبار',newsSub:'تحديثات',usersTitle:'المستخدمون',usersSub:'جميع اللاعبين',
     searchPh:'🔍 بحث...',adminBtn:'🔐 المشرف',
     filters:'مرشحات',all:'الكل',fav:'المفضلة',recent:'مُلعب',free:'مجاني',bought:'مُشترى',cats:'فئات',
     sortName:'الاسم',sortPrice:'السعر',filter:'مرشح',ufAll:'الكل',ufOnline:'متصل',ufFriends:'أصدقاء',
@@ -2281,7 +1880,7 @@ const I18N = {
     acts:'نشاطات',actsSub:'سجل',
     xp:'XP',played:'مُلعب',plays:'إجمالي',ach:'إنجازات',
     claim:'استلام',claimed:'مستلم',bonus:'🎉 الكل +20$',
-    play:'▶ العب',buy:'💎 اشتر',demo:'🎮 عرض',spectateBtn:'👁 شاهد',
+    play:'▶ العب',buy:'💎 اشتر',demo:'🎮 عرض',
     buyBalance:'💰 بالرصيد',poor:'غير كاف!',purchased:'مُشترى!',
     favAdd:'أُضيف!',favDel:'أُزيل!',
     ageDeny:'18+!',logout:'خروج',edit:'تعديل',export:'تصدير',
@@ -2296,26 +1895,16 @@ const I18N = {
     errSave:'خطأ',errOnline:'مطلوب وضع متصل',
     reportTitle:'بلاغ',reportReason:'السبب *',reportDetails:'تفاصيل',reportSubmit:'إرسال',reportSent:'أُرسل البلاغ!',
     adminMsgTitle:'رسالة للمشرف',msgType:'نوع',msgSubject:'الموضوع *',msgBody:'الرسالة *',msgSend:'إرسال',msgSent:'أُرسل!',
-    createRoom:'إنشاء غرفة',roomGame:'لعبة *',roomName:'اسم الغرفة',roomMax:'أقصى مشاهدين',roomCreate:'🎮 إنشاء',
-    liveRooms:'🔴 غرف مباشرة',noLiveRooms:'لا يوجد',
-    voiceChat:'دردشة صوتية',voiceConnect:'🎤 اتصال',voiceDisconnect:'🔇 قطع',voiceMute:'🔇 كتم',voiceUnmute:'🎤 إلغاء الكتم',
-    kick:'🚫 طرد',mute:'🔇 كتم',endStream:'⏹ إنهاء',
-    banned:'حُظر الحساب',bannedText:'هذا IP محظور.',
-    banIp:'حظر IP/مستخدم',banReason:'السبب',activeBans:'حظر نشط',unban:'إلغاء الحظر',
-    clearChat:'🗑️ مسح الدردشة',msgFrom:'من',msgAt:'التاريخ'
+    banned:'حُظر الحساب',bannedText:'هذا الحساب محظور.',
+    banIp:'اسم المستخدم',banReason:'السبب',activeBans:'حظر نشط',unban:'إلغاء الحظر',
+    clearChat:'🗑️ مسح الدردشة',msgFrom:'من',msgAt:'التاريخ',
+    banAdded:'أُضيف الحظر!',banRemoved:'أُلغي الحظر!',userBanned:'محظور!',
+    noBans:'لا حظر نشط'
   },
-
-  // ═══════════════════════════════════════════
-  // 🇮🇷 فارسی (Farsça)
-  // ═══════════════════════════════════════════
   fa: {
-    loading:'در حال اتصال...',store:'🏪 فروشگاه',library:'📚 کتابخانه',spectate:'👁 تماشا',chat:'💬 چت',news:'📢 اخبار',users:'👥 کاربران',profile:'👤 پروفایل',
-    storeTitle:'فروشگاه',storeSub:'کتابخانه مشترک',
-    libraryTitle:'کتابخانه من',librarySub:'بازی‌های شما',
-    spectateTitle:'تماشای زنده',spectateSub:'بازیکنان دیگر را زنده ببینید',
-    chatTitle:'چت عمومی',chatSub:'با همه صحبت کنید • ایموجی',chatRoom:'💬 اتاق چت',onlineNow:'آنلاین',chatPlaceholder:'بنویسید...',onlineUsers:'🟢 آنلاین',
-    newsTitle:'اخبار',newsSub:'به‌روزرسانی‌ها',
-    usersTitle:'کاربران',usersSub:'همه بازیکنان',
+    loading:'در حال اتصال...',store:'🏪 فروشگاه',library:'📚 کتابخانه',news:'📢 اخبار',users:'👥 کاربران',profile:'👤 پروفایل',
+    storeTitle:'فروشگاه',storeSub:'مشترک',libraryTitle:'کتابخانه من',librarySub:'بازی‌های شما',
+    newsTitle:'اخبار',newsSub:'به‌روزرسانی‌ها',usersTitle:'کاربران',usersSub:'همه بازیکنان',
     searchPh:'🔍 جستجو...',adminBtn:'🔐 مدیر',
     filters:'فیلترها',all:'همه',fav:'مورد علاقه',recent:'بازی شده',free:'رایگان',bought:'خریداری شده',cats:'دسته‌ها',
     sortName:'نام',sortPrice:'قیمت',filter:'فیلتر',ufAll:'همه',ufOnline:'آنلاین',ufFriends:'دوستان',
@@ -2353,7 +1942,7 @@ const I18N = {
     acts:'فعالیت‌ها',actsSub:'تاریخچه',
     xp:'XP',played:'بازی شده',plays:'کل',ach:'دستاوردها',
     claim:'دریافت',claimed:'دریافت شد',bonus:'🎉 همه +20$',
-    play:'▶ بازی',buy:'💎 خرید',demo:'🎮 دمو',spectateBtn:'👁 تماشا',
+    play:'▶ بازی',buy:'💎 خرید',demo:'🎮 دمو',
     buyBalance:'💰 با موجودی',poor:'ناکافی!',purchased:'خریداری شد!',
     favAdd:'اضافه شد!',favDel:'حذف شد!',
     ageDeny:'18+!',logout:'خروج',edit:'ویرایش',export:'صادرات',
@@ -2368,13 +1957,11 @@ const I18N = {
     errSave:'خطا',errOnline:'حالت آنلاین لازم است',
     reportTitle:'گزارش',reportReason:'دلیل *',reportDetails:'جزئیات',reportSubmit:'ارسال',reportSent:'گزارش ارسال شد!',
     adminMsgTitle:'پیام به مدیر',msgType:'نوع',msgSubject:'موضوع *',msgBody:'پیام *',msgSend:'ارسال',msgSent:'ارسال شد!',
-    createRoom:'ایجاد اتاق',roomGame:'بازی *',roomName:'نام اتاق',roomMax:'حداکثر بیننده',roomCreate:'🎮 ایجاد',
-    liveRooms:'🔴 اتاق‌های زنده',noLiveRooms:'ندارد',
-    voiceChat:'چت صوتی',voiceConnect:'🎤 اتصال',voiceDisconnect:'🔇 قطع',voiceMute:'🔇 بی‌صدا',voiceUnmute:'🎤 صدادار',
-    kick:'🚫 اخراج',mute:'🔇 بی‌صدا',endStream:'⏹ پایان',
-    banned:'حساب مسدود شد',bannedText:'این IP مسدود است.',
-    banIp:'مسدود IP/کاربر',banReason:'دلیل',activeBans:'مسدودهای فعال',unban:'لغو مسدودیت',
-    clearChat:'🗑️ پاک کردن چت',msgFrom:'از',msgAt:'تاریخ'
+    banned:'حساب مسدود شد',bannedText:'این حساب مسدود است.',
+    banIp:'نام کاربری',banReason:'دلیل',activeBans:'مسدودهای فعال',unban:'لغو مسدودیت',
+    clearChat:'🗑️ پاک کردن چت',msgFrom:'از',msgAt:'تاریخ',
+    banAdded:'مسدود اضافه شد!',banRemoved:'مسدود لغو شد!',userBanned:'مسدود شد!',
+    noBans:'مسدود فعالی نیست'
   }
 };
 
@@ -2391,12 +1978,7 @@ function applyLanguage(){
 function setLang(l){lang=l;localStorage.setItem('km_lang',l);applyLanguage();renderAll();}
 
 /* ============================================================
-   EMOJİ LİSTESİ
-   ============================================================ */
-const EMOJIS = ['😀','😂','😍','🥰','😎','🤩','😭','😡','🤔','👍','👎','❤️','💔','🔥','✨','💯','🎮','🎯','🏆','🎁','💰','💎','⭐','🌟','🎉','🎊','👏','🙏','💪','🤝','👋','✌️','🖐','👊','🤞','🫶','😈','💀','👻','🤖','👽','🎃','🌙','☀️','🌈','⚡','💥','💫','🎵','🎶'];
-
-/* ============================================================
-   STATE
+   STATE - GLOBAL
    ============================================================ */
 let games=[], news=[], allUsers=[];
 let account=null, profile=defaultProfile();
@@ -2407,20 +1989,16 @@ let filter='all', catFilter=null, userFilter='all';
 let pendingInvites=[];
 let inviteListener=null;
 let chatListener=null;
-let roomsListener=null;
 let reportsListener=null;
 let messagesListener=null;
 let bansListener=null;
 let presenceRef=null;
-let currentRoom=null;
-let spectateRef=null;
-let peer=null;
-let voiceConnections={};
-let isMuted=false;
-let localStream=null;
 let reportTargetUser=null;
 let chatMessages=[];
 let onlineUsers={};
+
+// ✅ BAN SİSTEMİ İÇİN GLOBAL DEĞİŞKEN
+let allBans = [];
 
 function defaultProfile(){
  return {gamesPlayed:{},favorites:[],purchased:[],activities:[],balance:0,
@@ -2468,25 +2046,6 @@ function updateTop(){
 }
 
 /* ============================================================
-   PRESENCE - Çevrimiçi durumu
-   ============================================================ */
-function setupPresence(){
- if(!ONLINE || !rtdb || !account)return;
- const myRef=rtdb.ref('presence/'+account.name.toLowerCase());
- myRef.onDisconnect().remove();
- myRef.set({
-  name:account.name,
-  avatar:account.avatar||null,
-  lastSeen:Date.now(),
-  inGame:null
- });
- // Periyodik güncelle
- setInterval(()=>{
-  if(account)myRef.update({lastSeen:Date.now()});
- },30000);
-}
-
-/* ============================================================
    GLOBAL DATA
    ============================================================ */
 function subscribeGames(){
@@ -2495,9 +2054,6 @@ function subscribeGames(){
    games=[];snap.forEach(d=>games.push({id:d.id,...d.data()}));
    games.sort((a,b)=>(b.order||0)-(a.order||0));
    renderAll();
-  },err=>{
-   document.getElementById('connStatus').textContent='● ERROR';
-   document.getElementById('connStatus').style.color='#ff5f57';
   });
  }else{
   try{games=JSON.parse(localStorage.getItem('km_global_games')||'[]');}catch(e){games=[];}
@@ -2558,722 +2114,110 @@ async function removeNews(id){
 }
 
 /* ============================================================
-   CHAT SİSTEMİ
+   ✅ BAN SİSTEMİ - DÜZELTİLMİŞ
    ============================================================ */
-function subscribeChat(){
- if(!ONLINE || !db)return;
- chatListener=db.collection('chat').orderBy('timestamp','asc').limitToLast(100).onSnapshot(snap=>{
-  chatMessages=[];
-  snap.forEach(d=>chatMessages.push({id:d.id,...d.data()}));
-  renderChat();
- });
- 
- // Online kullanıcıları dinle
- if(rtdb){
-  rtdb.ref('presence').on('value',snap=>{
-   onlineUsers=snap.val()||{};
-   renderChatOnline();
-   renderSpectatePage();
-  });
- }
-}
 
-function renderChat(){
- const el=document.getElementById('chatMessages');
- if(!el)return;
- el.innerHTML=chatMessages.map(m=>{
-  const isOwn=account && m.userName===account.name;
-  const isSystem=m.system;
-  if(isSystem){
-   return `<div class="chat-msg system"><div class="chat-msg-body"><div class="chat-msg-text" style="color:#ff00e6">${m.text}</div></div></div>`;
-  }
-  const avatar=m.userAvatar?`<img src="${m.userAvatar}">`:'🎮';
-  const isAdminMsg=m.isAdmin?'<span style="color:#ff00e6;font-size:9px;margin-left:4px">👑</span>':'';
-  return `
-   <div class="chat-msg ${isOwn?'own':''}">
-    <div class="chat-msg-avatar">${avatar}</div>
-    <div class="chat-msg-body">
-     <div class="chat-msg-name">${m.userName}${isAdminMsg}</div>
-     <div class="chat-msg-text">${escapeHtml(m.text)}</div>
-     <div class="chat-msg-time">${new Date(m.timestamp).toLocaleTimeString()}
-      ${isAdmin?`<button class="icon-btn red" style="padding:2px 6px;font-size:9px;margin-left:5px" onclick="deleteChatMsg('${m.id}')">🗑️</button>`:''}
-     </div>
-    </div>
-   </div>
-  `;
- }).join('');
- el.scrollTop=el.scrollHeight;
-}
-
-function renderChatOnline(){
- const list=document.getElementById('chatOnlineList');
- const count=document.getElementById('chatOnlineCount');
- if(!list)return;
- const users=Object.entries(onlineUsers).filter(([n,u])=>Date.now()-u.lastSeen<120000);
- count.textContent=users.length;
- list.innerHTML=users.map(([n,u])=>`
-  <div class="online-user" onclick="openUserProfile('${n}')">
-   <div class="dot"></div>
-   <div class="online-user-name">${u.name}</div>
-  </div>
- `).join('');
-}
-
-async function sendChatMessage(){
- if(!account){toast(t('loginFirst'),'warning');return;}
- const input=document.getElementById('chatInput');
- const text=input.value.trim();
- if(!text)return;
- if(text.length>500){toast('500 karakter limiti','warning');return;}
- 
- try{
-  await db.collection('chat').add({
-   userName:account.name,
-   userAvatar:account.avatar||null,
-   text:text,
-   timestamp:Date.now(),
-   isAdmin:isAdmin
-  });
-  input.value='';
- }catch(e){toast(t('errSave'),'error');}
-}
-
-async function deleteChatMsg(id){
- if(!isAdmin)return;
- try{
-  await db.collection('chat').doc(id).delete();
-  toast('Silindi');
- }catch(e){toast('Hata','error');}
-}
-
-async function clearChat(){
- if(!isAdmin||!confirm('Tüm chat silinecek! Emin misin?'))return;
- try{
-  const snap=await db.collection('chat').get();
-  const batch=db.batch();
-  snap.docs.forEach(d=>batch.delete(d.ref));
-  await batch.commit();
-  toast('Chat temizlendi');
- }catch(e){toast('Hata','error');}
-}
-
-function toggleEmojiPicker(){
- document.getElementById('emojiPicker').classList.toggle('show');
-}
-
-function initEmojiPicker(){
- const el=document.getElementById('emojiPicker');
- el.innerHTML=EMOJIS.map(e=>`<div class="emoji-item" onclick="insertEmoji('${e}')">${e}</div>`).join('');
-}
-
-function insertEmoji(e){
- const input=document.getElementById('chatInput');
- input.value+=e;
- input.focus();
- document.getElementById('emojiPicker').classList.remove('show');
-}
-
-function escapeHtml(s){
- return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-/* ============================================================
-   ODA / CANLI YAYIN SİSTEMİ
-   ============================================================ */
-function subscribeRooms(){
- if(!ONLINE || !rtdb)return;
- roomsListener=rtdb.ref('rooms').on('value',snap=>{
-  const data=snap.val()||{};
-  const rooms=Object.entries(data).map(([code,r])=>({code,...r})).filter(r=>r.status==='streaming');
-  renderSpectatePage(rooms);
- });
-}
-
-function renderSpectatePage(rooms){
- const el=document.getElementById('spectateContent');
- if(!el)return;
- 
- const liveRooms=rooms||[];
- 
- let html=`
-  <div style="margin-bottom:20px">
-   <button class="btn primary" onclick="openModal('roomModal')" ${account?'':'disabled'}>🎮 ${t('createRoom')}</button>
-  </div>
-  <h3 style="color:#ffd700;margin-bottom:12px">${t('liveRooms')}</h3>
- `;
- 
- if(liveRooms.length===0){
-  html+=`<div class="empty"><div class="empty-icon">📺</div><div>${t('noLiveRooms')}</div></div>`;
- }else{
-  html+=liveRooms.map(r=>{
-   const viewers=r.viewers?Object.keys(r.viewers).length:0;
-   const game=games.find(g=>g.id===r.gameId);
-   const host=onlineUsers[r.host?.toLowerCase()];
-   return `
-    <div class="room-card">
-     <div class="room-head">
-      <div class="room-title"><span class="live-dot"></span> ${r.name||'Oda'} <span style="font-size:10px;color:#8a8ab0">by ${r.host}</span></div>
-      <div class="room-code">${r.code}</div>
-     </div>
-     <div class="room-stats">
-      <div class="room-stat">🎮 ${game?.title||r.gameId}</div>
-      <div class="room-stat">👥 ${viewers} ${t('viewers')}</div>
-      ${r.voice?'<div class="room-stat">🎤 Sesli</div>':''}
-     </div>
-     <div style="margin-top:12px">
-      <button class="btn-sm primary" onclick="joinSpectate('${r.code}')">👁 ${t('spectateBtn')}</button>
-     </div>
-    </div>
-   `;
-  }).join('');
- }
- 
- el.innerHTML=html;
- 
- // Oda modalı için oyun seçici
- const gameSelect=document.getElementById('roomGame');
- if(gameSelect){
-  gameSelect.innerHTML=games.filter(g=>g.playable).map(g=>`<option value="${g.id}">${g.title}</option>`).join('');
- }
-}
-
-async function createRoom(){
- if(!account){toast(t('loginFirst'),'warning');return;}
- if(!ONLINE || !rtdb){toast(t('errOnline'),'error');return;}
- 
- const gameId=document.getElementById('roomGame').value;
- const name=document.getElementById('roomName').value.trim()||account.name+' odası';
- const max=parseInt(document.getElementById('roomMax').value);
- const voice=document.getElementById('roomVoice').checked;
- 
- if(!gameId){toast(t('fill'),'error');return;}
- 
- const code=Math.random().toString(36).slice(2,8).toUpperCase();
- const room={
-  code:code,
-  name:name,
-  host:account.name,
-  hostPeerId:null,
-  gameId:gameId,
-  maxViewers:max,
-  voice:voice,
-  viewers:{},
-  status:'streaming',
-  createdAt:Date.now()
- };
- 
- try{
-  await rtdb.ref('rooms/'+code).set(room);
-  currentRoom=room;
-  closeModal('roomModal');
-  
-  // Oyunu başlat ve yayın moduna geç
-  const game=games.find(g=>g.id===gameId);
-  if(game){
-   startStreaming(game,code);
-  }
- }catch(e){toast(t('errSave'),'error');}
-}
-
-function startStreaming(game,roomCode){
- // Oyunu aç
- const html=game.html||fallbackGame(game.title);
- document.getElementById('gameScreen').classList.add('show');
- document.getElementById('gsTitle').textContent='🔴 CANLI: '+game.title;
- const frame=document.getElementById('gameFrame');
- frame.src='about:blank';
- setTimeout(()=>{
-  const doc=frame.contentDocument;
-  doc.open();doc.write(html);doc.close();
- },100);
- 
- // PeerJS ile ses başlat
- if(currentRoom && currentRoom.voice){
-  initPeerAsHost(roomCode);
- }
- 
- // İzleyici sayısını güncelle
- spectateRef=rtdb.ref('rooms/'+roomCode);
- spectateRef.on('value',snap=>{
-  if(!snap.exists()){
-   toast('Yayın kapandı','warning');
-   stopStreaming();
-   return;
-  }
-  currentRoom=snap.val();
- });
- 
- // Host kontrol butonları ekle
- addHostControls();
-}
-
-function addHostControls(){
- const bar=document.querySelector('.game-bar');
- if(!bar || document.getElementById('hostControls'))return;
- 
- const controls=document.createElement('div');
- controls.id='hostControls';
- controls.style.cssText='display:flex;gap:6px;margin-left:10px';
- controls.innerHTML=`
-  <button class="btn danger" style="padding:5px 10px;font-size:10px" onclick="endStream()">⏹ ${t('endStream')}</button>
- `;
- bar.appendChild(controls);
-}
-
-async function endStream(){
- if(!currentRoom)return;
- if(!confirm('Yayını bitirmek istediğinize emin misiniz?'))return;
- try{
-  await rtdb.ref('rooms/'+currentRoom.code).remove();
-  stopStreaming();
- }catch(e){toast(t('errSave'),'error');}
-}
-
-function stopStreaming(){
- currentRoom=null;
- if(spectateRef){spectateRef.off();spectateRef=null;}
- if(peer){peer.destroy();peer=null;}
- if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}
- document.getElementById('gameScreen').classList.remove('show');
- const hc=document.getElementById('hostControls');
- if(hc)hc.remove();
-}
-
-/* ============================================================
-   İZLEME (SPECTATE)
-   ============================================================ */
-async function joinSpectate(code){
- if(!account){toast(t('loginFirst'),'warning');return;}
- if(!ONLINE || !rtdb){toast(t('errOnline'),'error');return;}
- 
- try{
-  const snap=await rtdb.ref('rooms/'+code).get();
-  if(!snap.exists()){toast('Oda bulunamadı','error');return;}
-  
-  const room=snap.val();
-  if(room.status!=='streaming'){toast('Yayın bitti','warning');return;}
-  
-  const viewerCount=room.viewers?Object.keys(room.viewers).length:0;
-  if(viewerCount>=room.maxViewers){toast('Oda dolu','error');return;}
-  
-  currentRoom=room;
-  
-  // İzleyici olarak ekle
-  await rtdb.ref('rooms/'+code+'/viewers/'+account.name.toLowerCase()).set({
-   name:account.name,
-   avatar:account.avatar||null,
-   joinedAt:Date.now(),
-   peerId:null
-  });
-  
-  // Ayrılma dinleyicisi
-  const viewerRef=rtdb.ref('rooms/'+code+'/viewers/'+account.name.toLowerCase());
-  viewerRef.onDisconnect().remove();
-  
-  // Odayı dinle
-  spectateRef=rtdb.ref('rooms/'+code);
-  spectateRef.on('value',snap=>{
-   if(!snap.exists()){
-    toast('Yayın kapandı','warning');
-    leaveSpectate();
-    return;
-   }
-   currentRoom=snap.val();
-   renderSpectateView();
-  });
-  
-  openModal('spectateModal');
-  renderSpectateView();
-  
-  // Oyunu yükle
-  const game=games.find(g=>g.id===room.gameId);
-  if(game){
-   const html=game.html||fallbackGame(game.title);
-   const frame=document.getElementById('spectateFrame');
-   frame.src='about:blank';
-   setTimeout(()=>{
-    const doc=frame.contentDocument;
-    doc.open();doc.write(html);doc.close();
-   },100);
-   document.getElementById('spectateGameTitle').textContent='🔴 '+game.title;
-  }
-  
-  // Sesli sohbet varsa bağlan
-  if(room.voice){
-   initPeerAsViewer(code,room.host);
-  }
-  
- }catch(e){toast(t('errSave'),'error');}
-}
-
-function renderSpectateView(){
- if(!currentRoom)return;
- 
- document.getElementById('spectateRoomTitle').textContent='👁 '+currentRoom.name;
- 
- const viewers=currentRoom.viewers||{};
- const viewerCount=Object.keys(viewers).length;
- document.getElementById('spectateViewerCount').textContent=viewerCount;
- 
- // İzleyici listesi
- const viewersEl=document.getElementById('spectateViewers');
- viewersEl.innerHTML=Object.entries(viewers).map(([n,v])=>`
-  <div class="viewer-card" style="margin-bottom:6px">
-   <div class="viewer-avatar">${v.avatar?`<img src="${v.avatar}">`:'🎮'}</div>
-   <div class="viewer-info">
-    <div class="viewer-name">${v.name}</div>
-    <div class="viewer-role">${n===currentRoom.host.toLowerCase()?'👑 Host':'👁 İzleyici'}</div>
-   </div>
-  </div>
- `).join('');
- 
- // Host kontrolleri
- const controls=document.getElementById('spectateControls');
- const isHost=currentRoom.host===account?.name;
- 
- if(isHost){
-  controls.innerHTML=`
-   <div style="font-size:11px;color:#27c93f">🔴 Yayındasın • ${viewerCount} izleyici</div>
-   <button class="btn danger" style="padding:6px 12px;font-size:11px" onclick="endStream()">⏹ Bitir</button>
-  `;
- }else{
-  controls.innerHTML=`
-   <div style="font-size:11px;color:#8a8ab0">👁 İzleyici olarak izliyorsun</div>
-   <button class="btn ghost" style="padding:6px 12px;font-size:11px" onclick="leaveSpectate()">← Ayrıl</button>
-  `;
- }
- 
- // Voice panel
- renderVoicePanel();
-}
-
-async function leaveSpectate(){
- if(currentRoom && account){
-  try{
-   await rtdb.ref('rooms/'+currentRoom.code+'/viewers/'+account.name.toLowerCase()).remove();
-  }catch(e){}
- }
- if(spectateRef){spectateRef.off();spectateRef=null;}
- if(peer){peer.destroy();peer=null;}
- if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}
- currentRoom=null;
- closeModal('spectateModal');
-}
-
-/* ============================================================
-   SESLİ SOHBET (WebRTC / PeerJS)
-   ============================================================ */
-async function initPeerAsHost(roomCode){
- try{
-  peer=new Peer('kmoon_host_'+roomCode,{debug:0});
-  peer.on('open',async id=>{
-   await rtdb.ref('rooms/'+roomCode+'/hostPeerId').set(id);
-   await getLocalStream();
-  });
-  peer.on('call',async call=>{
-   call.answer(localStream);
-   call.on('stream',remoteStream=>{
-    // İzleyicinin sesi
-    const audio=new Audio();
-    audio.srcObject=remoteStream;
-    audio.play().catch(()=>{});
-   });
-  });
- }catch(e){console.error('Peer error:',e);}
-}
-
-async function initPeerAsViewer(roomCode,hostName){
- try{
-  peer=new Peer(null,{debug:0});
-  peer.on('open',async id=>{
-   await rtdb.ref('rooms/'+roomCode+'/viewers/'+account.name.toLowerCase()+'/peerId').set(id);
-   await getLocalStream();
-   
-   // Host'u dinle
-   rtdb.ref('rooms/'+roomCode+'/hostPeerId').on('value',snap=>{
-    const hostPeerId=snap.val();
-    if(hostPeerId && localStream){
-     const call=peer.call(hostPeerId,localStream);
-     call.on('stream',remoteStream=>{
-      const audio=new Audio();
-      audio.srcObject=remoteStream;
-      audio.play().catch(()=>{});
-     });
-    }
-   });
-  });
- }catch(e){console.error('Peer error:',e);}
-}
-
-async function getLocalStream(){
- try{
-  localStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
- }catch(e){
-  console.error('Mic error:',e);
-  localStream=null;
- }
-}
-
-function renderVoicePanel(){
- const el=document.getElementById('voiceContent');
- if(!el)return;
- 
- if(!currentRoom?.voice){
-  el.innerHTML=`<div style="font-size:11px;color:#8a8ab0">Sesli sohbet kapalı</div>`;
-  return;
- }
- 
- if(!peer){
-  el.innerHTML=`<button class="voice-btn connect" onclick="joinVoice()">🎤 ${t('voiceConnect')}</button>`;
-  return;
- }
- 
- el.innerHTML=`
-  <button class="voice-btn disconnect" onclick="leaveVoice()">🔇 ${t('voiceDisconnect')}</button>
-  <button class="voice-btn mute" onclick="toggleMute()">${isMuted?'🎤 '+t('voiceUnmute'):'🔇 '+t('voiceMute')}</button>
-  <div class="voice-status">🟢 Bağlı</div>
- `;
-}
-
-async function joinVoice(){
- if(!localStream)await getLocalStream();
- if(!localStream){toast('Mikrofon izni gerekli','error');return;}
- renderVoicePanel();
-}
-
-function leaveVoice(){
- if(peer){peer.destroy();peer=null;}
- if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}
- renderVoicePanel();
-}
-
-function toggleMute(){
- if(!localStream)return;
- isMuted=!isMuted;
- localStream.getAudioTracks().forEach(t=>t.enabled=!isMuted);
- renderVoicePanel();
-}
-
-/* ============================================================
-   HOST: İZLEYİCİ ATMA
-   ============================================================ */
-async function kickViewer(viewerName){
- if(!currentRoom || currentRoom.host!==account?.name)return;
- try{
-  await rtdb.ref('rooms/'+currentRoom.code+'/viewers/'+viewerName.toLowerCase()).remove();
-  toast(viewerName+' atıldı');
- }catch(e){toast('Hata','error');}
-}
-
-/* ============================================================
-   ŞİKAYET SİSTEMİ
-   ============================================================ */
-function openReportModal(username){
- if(!account){toast(t('loginFirst'),'warning');return;}
- reportTargetUser=username;
- const user=allUsers.find(u=>u.account?.name===username);
- const avatar=user?.account?.avatar;
- 
- document.getElementById('reportUser').innerHTML=`
-  <div class="user-avatar" style="width:45px;height:45px;font-size:22px">${avatar?`<img src="${avatar}">`:'🎮'}</div>
-  <div>
-   <div style="font-weight:700;font-size:14px">${username}</div>
-   <div style="font-size:11px;color:#8a8ab0">Şikayet edilecek kullanıcı</div>
-  </div>
- `;
- document.querySelectorAll('#reportReasons input').forEach(i=>i.checked=false);
- document.getElementById('reportDetails').value='';
- openModal('reportModal');
-}
-
-async function submitReport(){
- if(!account||!reportTargetUser)return;
- const reason=document.querySelector('#reportReasons input:checked');
- if(!reason){toast('Sebep seç','warning');return;}
- 
- const details=document.getElementById('reportDetails').value.trim();
- 
- try{
-  await db.collection('reports').add({
-   from:account.name,
-   to:reportTargetUser,
-   reason:reason.value,
-   details:details,
-   timestamp:Date.now(),
-   status:'pending'
-  });
-  closeModal('reportModal');
-  toast(t('reportSent'));
- }catch(e){toast(t('errSave'),'error');}
-}
-
-function subscribeReports(){
+// Banları dinle - gerçek zamanlı
+function subscribeBans(){
  if(!ONLINE||!db||!isAdmin)return;
- reportsListener=db.collection('reports').orderBy('timestamp','desc').limitToLast(50).onSnapshot(snap=>{
-  const reports=[];
-  snap.forEach(d=>reports.push({id:d.id,...d.data()}));
-  renderReports(reports);
-  const pending=reports.filter(r=>r.status==='pending').length;
-  document.getElementById('reportCount').textContent=pending;
+ if(bansListener) return; // Zaten dinleniyor, tekrar başlatma
+ bansListener=db.collection('bans').onSnapshot(snap=>{
+  allBans=[];
+  snap.forEach(d=>allBans.push({id:d.id,...d.data()}));
+  renderBans(); // Otomatik render
+ }, err => {
+  console.error('Ban subscribe error:', err);
  });
 }
 
-function renderReports(reports){
- const el=document.getElementById('reportsList');
+// Banları göster
+function renderBans(){
+ const el=document.getElementById('bansList');
  if(!el)return;
- if(reports.length===0){
-  el.innerHTML=`<div class="empty"><div class="empty-icon">✅</div><div>Şikayet yok</div></div>`;
+ if(allBans.length===0){
+  el.innerHTML=`<div class="empty"><div class="empty-icon">✅</div><div>${t('noBans')}</div></div>`;
   return;
  }
- 
- const reasonLabels={spam:'🚫 Spam',harassment:'😡 Taciz',cheating:'🎭 Hile',inappropriate:'🔞 Uygunsuz',other:'❓ Diğer'};
- 
- el.innerHTML=reports.map(r=>`
-  <div class="mod-card report">
+ el.innerHTML=allBans.map(b=>{
+  const isUser = b.type === 'user' || (b.target && !b.target.match(/^\d+\.\d+\.\d+\.\d+$/));
+  return `
+  <div class="mod-card">
    <div class="mod-head">
-    <div class="mod-title">${reasonLabels[r.reason]||r.reason}</div>
-    <div class="mod-meta">${new Date(r.timestamp).toLocaleString()} • ${r.status==='pending'?'⏳ Bekliyor':r.status==='resolved'?'✅ Çözüldü':'🚫 Reddedildi'}</div>
+    <div class="mod-title">🚫 ${escapeHtml(b.target||b.id)}</div>
+    <div class="mod-meta">${b.at?new Date(b.at).toLocaleString():'?'} • ${isUser?'👤':'🌐'}</div>
    </div>
    <div class="mod-body">
-    <div><b>Şikayet eden:</b> ${r.from}</div>
-    <div><b>Şikayet edilen:</b> ${r.to}</div>
-    ${r.details?`<div style="margin-top:6px"><b>Detay:</b> ${escapeHtml(r.details)}</div>`:''}
+    <div><b>${t('banReason')}:</b> ${escapeHtml(b.reason||'-')}</div>
+    ${b.by?`<div><b>${t('msgFrom')}:</b> ${escapeHtml(b.by)}</div>`:''}
    </div>
    <div class="mod-actions">
-    ${r.status==='pending'?`
-     <button class="icon-btn" onclick="resolveReport('${r.id}','resolved')">✅ Çözüldü</button>
-     <button class="icon-btn warn" onclick="banUser('${r.to}')">🚫 Kullanıcıyı Banla</button>
-     <button class="icon-btn red" onclick="resolveReport('${r.id}','rejected')">❌ Reddet</button>
-    `:''}
+    <button class="icon-btn" onclick="removeBan('${b.id}')">✅ ${t('unban')}</button>
    </div>
   </div>
- `).join('');
+  `;
+ }).join('');
 }
 
-async function resolveReport(id,status){
- try{
-  await db.collection('reports').doc(id).update({status,statusBy:account.name,statusAt:Date.now()});
-  toast('Güncellendi');
- }catch(e){toast('Hata','error');}
-}
-
+// Kullanıcıyı banla (şikayet panelinden)
 async function banUser(username){
- if(!confirm(username+' banlanacak. Emin misin?'))return;
- const user=allUsers.find(u=>u.account?.name===username);
- const reason=prompt('Ban sebebi:','Kural ihlali');
+ if(!confirm(username+' '+t('userBanned')))return;
+ const reason=prompt(t('banReason')+':','Kural ihlali');
  if(!reason)return;
  
  try{
-  // Kullanıcı banlı olarak işaretle
+  // 1) Users koleksiyonunu güncelle (kullanıcı giriş yapamasın)
   await db.collection('users').doc(username.toLowerCase()).update({
    banned:true,
    banReason:reason,
    banAt:Date.now(),
    banBy:account.name
   });
-  toast(username+' banlandı');
- }catch(e){toast('Hata','error');}
-}
-
-/* ============================================================
-   ADMIN'E MESAJ
-   ============================================================ */
-async function sendAdminMessage(){
- if(!account){toast(t('loginFirst'),'warning');return;}
- const type=document.getElementById('msgType').value;
- const subject=document.getElementById('msgSubject').value.trim();
- const body=document.getElementById('msgBody').value.trim();
- 
- if(!subject||!body){toast(t('fill'),'error');return;}
- 
- try{
-  await db.collection('adminMessages').add({
-   from:account.name,
-   fromEmail:account.email,
-   type:type,
-   subject:subject,
-   body:body,
-   timestamp:Date.now(),
-   status:'new'
+  
+  // 2) Bans koleksiyonuna da ekle (admin panelinde görünsün)
+  const banKey='user_'+username.toLowerCase();
+  await db.collection('bans').doc(banKey).set({
+   target:username,
+   type:'user',
+   reason:reason,
+   by:account.name,
+   at:Date.now(),
+   permanent:true
   });
-  closeModal('adminMsgModal');
-  toast(t('msgSent'));
-  document.getElementById('msgSubject').value='';
-  document.getElementById('msgBody').value='';
- }catch(e){toast(t('errSave'),'error');}
+  
+  toast(username+' '+t('userBanned'));
+ }catch(e){toast('Hata: '+e.message,'error');}
 }
 
-function subscribeAdminMessages(){
- if(!ONLINE||!db||!isAdmin)return;
- messagesListener=db.collection('adminMessages').orderBy('timestamp','desc').limitToLast(50).onSnapshot(snap=>{
-  const msgs=[];
-  snap.forEach(d=>msgs.push({id:d.id,...d.data()}));
-  renderAdminMessages(msgs);
- });
-}
-
-function renderAdminMessages(msgs){
- const el=document.getElementById('adminMessagesList');
- if(!el)return;
- if(msgs.length===0){
-  el.innerHTML=`<div class="empty"><div class="empty-icon">📭</div><div>Mesaj yok</div></div>`;
-  return;
- }
- 
- const typeLabels={request:'💡 İstek',complaint:'⚠️ Şikayet',bug:'🐛 Hata',other:'📝 Diğer'};
- 
- el.innerHTML=msgs.map(m=>`
-  <div class="mod-card message">
-   <div class="mod-head">
-    <div class="mod-title">${typeLabels[m.type]||m.type}: ${escapeHtml(m.subject)}</div>
-    <div class="mod-meta">${new Date(m.timestamp).toLocaleString()} • ${m.status==='new'?'🆕 Yeni':'✅ Okundu'}</div>
-   </div>
-   <div class="mod-body">
-    <div><b>Gönderen:</b> ${m.from} (${m.fromEmail||'?'})</div>
-    <div style="margin-top:6px">${escapeHtml(m.body)}</div>
-   </div>
-   <div class="mod-actions">
-    ${m.status==='new'?`<button class="icon-btn" onclick="markMsgRead('${m.id}')">✅ Okundu</button>`:''}
-    <button class="icon-btn warn" onclick="replyToUser('${m.from}')">📨 Cevapla</button>
-   </div>
-  </div>
- `).join('');
-}
-
-async function markMsgRead(id){
- try{
-  await db.collection('adminMessages').doc(id).update({status:'read'});
- }catch(e){toast('Hata','error');}
-}
-
-function replyToUser(username){
- toast('Cevap: '+username+' - Chat veya davet üzerinden ulaş','success');
-}
-
-/* ============================================================
-   BAN SİSTEMİ
-   ============================================================ */
+// Admin panelinden ban ekle
 async function addBan(){
  if(!isAdmin)return;
  const target=document.getElementById('banInput').value.trim();
  const reason=document.getElementById('banReason').value.trim()||'Kural ihlali';
- if(!target){toast('Hedef gerekli','error');return;}
+ if(!target){toast(t('fill'),'error');return;}
  
  try{
-  // IP mi kullanıcı mı?
-  let banKey=target;
+  let banKey, banTarget, banType;
+  
   if(target.startsWith('@')){
    const username=target.slice(1);
-   await db.collection('users').doc(username.toLowerCase()).update({
-    banned:true,banReason:reason,banAt:Date.now(),banBy:account.name
-   });
+   // Kullanıcı varsa users koleksiyonunu da güncelle
+   try {
+    await db.collection('users').doc(username.toLowerCase()).update({
+     banned:true,banReason:reason,banAt:Date.now(),banBy:account.name
+    });
+   } catch(e) { console.log('User update skipped:', e.message); }
    banKey='user_'+username.toLowerCase();
+   banTarget=username;
+   banType='user';
   }else{
    banKey='ip_'+target;
+   banTarget=target;
+   banType='ip';
   }
   
   await db.collection('bans').doc(banKey).set({
-   target:target,
+   target:banTarget,
+   type:banType,
    reason:reason,
    by:account.name,
    at:Date.now(),
@@ -3282,50 +2226,56 @@ async function addBan(){
   
   document.getElementById('banInput').value='';
   document.getElementById('banReason').value='';
-  toast('Ban eklendi');
-  renderBans();
- }catch(e){toast('Hata','error');}
+  toast(t('banAdded'));
+  // renderBans() artık subscribeBans() sayesinde otomatik çağrılacak
+ }catch(e){toast('Hata: '+e.message,'error');}
 }
 
-function subscribeBans(){
- if(!ONLINE||!db||!isAdmin)return;
- bansListener=db.collection('bans').onSnapshot(snap=>{
-  const bans=[];
-  snap.forEach(d=>bans.push({id:d.id,...d.data()}));
-  renderBans(bans);
- });
-}
-
-function renderBans(bans){
- const el=document.getElementById('bansList');
- if(!el)return;
- if(!bans||bans.length===0){
-  el.innerHTML=`<div class="empty"><div class="empty-icon">✅</div><div>Aktif ban yok</div></div>`;
-  return;
- }
- el.innerHTML=bans.map(b=>`
-  <div class="mod-card">
-   <div class="mod-head">
-    <div class="mod-title">🚫 ${b.target}</div>
-    <div class="mod-meta">${new Date(b.at).toLocaleString()}</div>
-   </div>
-   <div class="mod-body">
-    <div><b>Sebep:</b> ${escapeHtml(b.reason||'-')}</div>
-    <div><b>By:</b> ${b.by||'?'}</div>
-   </div>
-   <div class="mod-actions">
-    <button class="icon-btn" onclick="removeBan('${b.id}')">✅ Affet</button>
-   </div>
-  </div>
- `).join('');
-}
-
+// Banı kaldır
 async function removeBan(id){
- if(!confirm('Ban kaldırılsın mı?'))return;
+ if(!confirm(t('confirmDel')))return;
  try{
+  // Ban bilgisini al
+  const ban = allBans.find(b => b.id === id);
+  
+  // 1) Bans koleksiyonundan sil
   await db.collection('bans').doc(id).delete();
-  toast('Ban kaldırıldı');
- }catch(e){toast('Hata','error');}
+  
+  // 2) Eğer kullanıcı banıysa, users koleksiyonundaki banned işaretini de kaldır
+  if(ban && ban.type === 'user' && ban.target){
+   try {
+    await db.collection('users').doc(ban.target.toLowerCase()).update({
+     banned:false,
+     banReason: firebase.firestore.FieldValue.delete(),
+     banAt: firebase.firestore.FieldValue.delete(),
+     banBy: firebase.firestore.FieldValue.delete()
+    });
+   } catch(e) { console.log('User unban skipped:', e.message); }
+  }
+  
+  toast(t('banRemoved'));
+  // renderBans() otomatik çağrılacak
+ }catch(e){toast('Hata: '+e.message,'error');}
+}
+
+// Ban kontrolü (giriş sırasında)
+async function checkBanOnLogin(username){
+ if(!ONLINE || !db) return false;
+ try{
+  const userSnap = await db.collection('users').doc(username.toLowerCase()).get();
+  if(userSnap.exists && userSnap.data().banned){
+   const banData = userSnap.data();
+   showBanScreen(banData.banReason || 'Kural ihlali');
+   return true;
+  }
+  return false;
+ }catch(e){return false;}
+}
+
+function showBanScreen(reason){
+ document.getElementById('banReason').textContent = t('banReason')+': ' + reason;
+ document.getElementById('banScreen').style.display = 'flex';
+ document.getElementById('app').style.display = 'none';
 }
 
 /* ============================================================
@@ -3333,6 +2283,7 @@ async function removeBan(id){
    ============================================================ */
 function subscribeInvitations(){
  if(!ONLINE || !rtdb || !account)return;
+ if(inviteListener)rtdb.ref('invitations').off('value',inviteListener);
  inviteListener=rtdb.ref('invitations/'+account.name.toLowerCase()).on('value',snap=>{
   const data=snap.val()||{};
   pendingInvites=Object.entries(data).map(([id,inv])=>({id,...inv}));
@@ -3340,14 +2291,12 @@ function subscribeInvitations(){
   renderInviteList();
  });
 }
-
 function updateNotifBadge(){
  const bell=document.getElementById('notifBell');
  const badge=document.getElementById('notifBadge');
  if(pendingInvites.length>0){bell.style.display='block';badge.textContent=pendingInvites.length;}
  else{bell.style.display='none';}
 }
-
 function renderInviteList(){
  const el=document.getElementById('inviteList');
  if(pendingInvites.length===0){el.innerHTML=`<div class="empty"><div class="empty-icon">📭</div><div>${t('noInvite')}</div></div>`;return;}
@@ -3356,13 +2305,12 @@ function renderInviteList(){
    <div class="news-head"><div class="news-title">🎮 ${inv.from}</div><span class="news-tag">${inv.game||'Oyun'}</span></div>
    <div style="font-family:monospace;color:#ffd700;font-size:16px;letter-spacing:3px;margin:8px 0">${inv.roomCode}</div>
    <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn primary" onclick="acceptInvite('${inv.id}','${inv.roomCode}')">${t('accept')}</button>
+    <button class="btn primary" onclick="acceptInvite('${inv.id}')">${t('accept')}</button>
     <button class="btn danger" onclick="declineInvite('${inv.id}')">${t('decline')}</button>
    </div>
   </div>
  `).join('');
 }
-
 async function sendInvite(toUser,roomCode,game){
  if(!ONLINE||!rtdb||!account){toast(t('errOnline'),'error');return;}
  const inviteId='inv_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
@@ -3373,18 +2321,15 @@ async function sendInvite(toUser,roomCode,game){
   toast(t('inviteSent'));
  }catch(e){toast(t('errSave'),'error');}
 }
-
-async function acceptInvite(inviteId,roomCode){
- try{
-  await rtdb.ref('invitations/'+account.name.toLowerCase()+'/'+inviteId).remove();
-  joinSpectate(roomCode);
- }catch(e){toast(t('errSave'),'error');}
+async function acceptInvite(inviteId){
+ if(!account)return;
+ try{await rtdb.ref('invitations/'+account.name.toLowerCase()+'/'+inviteId).remove();toast(t('welcome')+'!');}
+ catch(e){toast(t('errSave'),'error');}
 }
-
 async function declineInvite(inviteId){
+ if(!account)return;
  try{await rtdb.ref('invitations/'+account.name.toLowerCase()+'/'+inviteId).remove();}catch(e){}
 }
-
 async function inviteUserToGame(username){
  if(!account){needLogin();return;}
  if(!ONLINE||!rtdb){toast(t('errOnline'),'error');return;}
@@ -3401,7 +2346,6 @@ function setUserFilter(f){
  document.querySelectorAll('.user-filter').forEach(x=>x.classList.toggle('active',x.dataset.uf===f));
  renderUsers();
 }
-
 function isUserOnline(user){
  if(!user.profile?.lastSeen && !onlineUsers[user.account?.name?.toLowerCase()])return false;
  const online=onlineUsers[user.account?.name?.toLowerCase()];
@@ -3412,13 +2356,11 @@ function isUserOnline(user){
  }
  return false;
 }
-
 function getUserLevel(user){
  const played=Object.keys(user.profile?.gamesPlayed||{}).length;
  const plays=Object.values(user.profile?.gamesPlayed||{}).reduce((s,p)=>s+(p.count||0),0);
  return Math.floor(Math.sqrt((plays*50+played*100)/100))+1;
 }
-
 function renderUsers(){
  const search=(document.getElementById('userSearch')?.value||'').toLowerCase();
  let list=allUsers.filter(u=>u.account && !u.banned);
@@ -3478,12 +2420,6 @@ function renderUsers(){
   `;
  }).join('');
 }
-
-function openUserProfile(name){
- document.getElementById('userSearch').value=name;
- renderUsers();
-}
-
 async function addFriend(name){
  if(!account){needLogin();return;}
  if(!profile.friends)profile.friends=[];
@@ -3494,12 +2430,147 @@ async function addFriend(name){
   toast('⭐ '+name);
  }
 }
-
 async function removeFriend(name){
  if(!account)return;
  profile.friends=profile.friends.filter(f=>f!==name);
  await saveProfile();
  renderUsers();
+}
+
+/* ============================================================
+   REPORT SYSTEM
+   ============================================================ */
+function openReportModal(username){
+ if(!account){needLogin();return;}
+ reportTargetUser=username;
+ const user=allUsers.find(u=>u.account?.name===username);
+ const avatar=user?.account?.avatar;
+ document.getElementById('reportUser').innerHTML=`
+  <div class="user-avatar" style="width:45px;height:45px;font-size:22px">${avatar?`<img src="${avatar}">`:'🎮'}</div>
+  <div>
+   <div style="font-weight:700;font-size:14px">${username}</div>
+   <div style="font-size:11px;color:#8a8ab0">${t('reportUser')}</div>
+  </div>
+ `;
+ document.querySelectorAll('#reportReasons input').forEach(i=>i.checked=false);
+ document.getElementById('reportDetails').value='';
+ openModal('reportModal');
+}
+async function submitReport(){
+ if(!account||!reportTargetUser)return;
+ const reason=document.querySelector('#reportReasons input:checked');
+ if(!reason){toast(t('fill'),'warning');return;}
+ const details=document.getElementById('reportDetails').value.trim();
+ try{
+  await db.collection('reports').add({
+   from:account.name,to:reportTargetUser,reason:reason.value,details:details,
+   timestamp:Date.now(),status:'pending'
+  });
+  closeModal('reportModal');
+  toast(t('reportSent'));
+ }catch(e){toast(t('errSave'),'error');}
+}
+function subscribeReports(){
+ if(!ONLINE||!db||!isAdmin)return;
+ if(reportsListener)return;
+ reportsListener=db.collection('reports').orderBy('timestamp','desc').limitToLast(50).onSnapshot(snap=>{
+  const reports=[];
+  snap.forEach(d=>reports.push({id:d.id,...d.data()}));
+  renderReports(reports);
+  document.getElementById('reportCount').textContent=reports.filter(r=>r.status==='pending').length;
+ });
+}
+function renderReports(reports){
+ const el=document.getElementById('reportsList');
+ if(!el)return;
+ if(reports.length===0){
+  el.innerHTML=`<div class="empty"><div class="empty-icon">✅</div><div>OK</div></div>`;
+  return;
+ }
+ const reasonLabels={spam:'🚫 Spam',harassment:'😡 Taciz',cheating:'🎭 Hile',inappropriate:'🔞 Uygunsuz',other:'❓ Diğer'};
+ el.innerHTML=reports.map(r=>`
+  <div class="mod-card report">
+   <div class="mod-head">
+    <div class="mod-title">${reasonLabels[r.reason]||r.reason}</div>
+    <div class="mod-meta">${new Date(r.timestamp).toLocaleString()} • ${r.status==='pending'?'⏳':r.status==='resolved'?'✅':'🚫'}</div>
+   </div>
+   <div class="mod-body">
+    <div><b>${t('msgFrom')}:</b> ${r.from}</div>
+    <div><b>${t('reportUser')}:</b> ${r.to}</div>
+    ${r.details?`<div style="margin-top:6px"><b>${t('reportDetails')}:</b> ${escapeHtml(r.details)}</div>`:''}
+   </div>
+   <div class="mod-actions">
+    ${r.status==='pending'?`
+     <button class="icon-btn" onclick="resolveReport('${r.id}','resolved')">✅</button>
+     <button class="icon-btn warn" onclick="banUser('${r.to}')">🚫 Ban</button>
+     <button class="icon-btn red" onclick="resolveReport('${r.id}','rejected')">❌</button>
+    `:''}
+   </div>
+  </div>
+ `).join('');
+}
+async function resolveReport(id,status){
+ try{
+  await db.collection('reports').doc(id).update({status,statusBy:account.name,statusAt:Date.now()});
+  toast('✓');
+ }catch(e){toast('Hata','error');}
+}
+
+/* ============================================================
+   ADMIN MESSAGES
+   ============================================================ */
+async function sendAdminMessage(){
+ if(!account){toast(t('loginFirst'),'warning');return;}
+ const type=document.getElementById('msgType').value;
+ const subject=document.getElementById('msgSubject').value.trim();
+ const body=document.getElementById('msgBody').value.trim();
+ if(!subject||!body){toast(t('fill'),'error');return;}
+ try{
+  await db.collection('adminMessages').add({
+   from:account.name,fromEmail:account.email,type,subject,body,
+   timestamp:Date.now(),status:'new'
+  });
+  closeModal('adminMsgModal');
+  toast(t('msgSent'));
+  document.getElementById('msgSubject').value='';
+  document.getElementById('msgBody').value='';
+ }catch(e){toast(t('errSave'),'error');}
+}
+function subscribeAdminMessages(){
+ if(!ONLINE||!db||!isAdmin)return;
+ if(messagesListener)return;
+ messagesListener=db.collection('adminMessages').orderBy('timestamp','desc').limitToLast(50).onSnapshot(snap=>{
+  const msgs=[];
+  snap.forEach(d=>msgs.push({id:d.id,...d.data()}));
+  renderAdminMessages(msgs);
+ });
+}
+function renderAdminMessages(msgs){
+ const el=document.getElementById('adminMessagesList');
+ if(!el)return;
+ if(msgs.length===0){
+  el.innerHTML=`<div class="empty"><div class="empty-icon">📭</div><div>OK</div></div>`;
+  return;
+ }
+ const typeLabels={request:'💡 İstek',complaint:'⚠️ Şikayet',bug:'🐛 Hata',other:'📝 Diğer'};
+ el.innerHTML=msgs.map(m=>`
+  <div class="mod-card message">
+   <div class="mod-head">
+    <div class="mod-title">${typeLabels[m.type]||m.type}: ${escapeHtml(m.subject)}</div>
+    <div class="mod-meta">${new Date(m.timestamp).toLocaleString()} • ${m.status==='new'?'🆕':'✅'}</div>
+   </div>
+   <div class="mod-body">
+    <div><b>${t('msgFrom')}:</b> ${m.from} (${m.fromEmail||'?'})</div>
+    <div style="margin-top:6px">${escapeHtml(m.body)}</div>
+   </div>
+   <div class="mod-actions">
+    ${m.status==='new'?`<button class="icon-btn" onclick="markMsgRead('${m.id}')">✅</button>`:''}
+   </div>
+  </div>
+ `).join('');
+}
+async function markMsgRead(id){
+ try{await db.collection('adminMessages').doc(id).update({status:'read'});}catch(e){}
 }
 
 /* ============================================================
@@ -3513,8 +2584,8 @@ function openModal(id){
 function closeModal(id){document.getElementById(id).classList.remove('show');}
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
 function toast(msg,type='success'){
- const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;
- document.body.appendChild(el);setTimeout(()=>el.remove(),3500);
+ const t_el=document.createElement('div');t_el.className='toast '+type;t_el.textContent=msg;
+ document.body.appendChild(t_el);setTimeout(()=>t_el.remove(),3500);
 }
 function toggleMobileMenu(){
  document.getElementById('mobileMenu').classList.toggle('show');
@@ -3535,7 +2606,6 @@ window.addEventListener('resize',()=>{
   document.getElementById('hamburger').classList.remove('active');
  }
 });
-
 function go(page){
  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.page===page));
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
@@ -3544,8 +2614,6 @@ function go(page){
  if(page==='library')renderLibrary();
  if(page==='news')renderNews();
  if(page==='users')renderUsers();
- if(page==='spectate')renderSpectatePage();
- if(page==='chat'){renderChat();renderChatOnline();}
  if(window.innerWidth<=768){
   document.getElementById('mobileMenu').classList.remove('show');
   document.getElementById('hamburger').classList.remove('active');
@@ -3563,10 +2631,7 @@ function priceNum(p){
  const n=parseFloat(String(p).replace(/[^0-9.]/g,''));return isNaN(n)?0:n;
 }
 function isFree(g){return g.free===true || priceNum(g.price)===0;}
-
 function cardHTML(g){
- // Canlı yayın kontrolü
- const isLive=Object.values(onlineUsers).some(u=>u.inGame===g.id);
  return `<div class="game-card" onclick="openGame('${g.id}')">
   <div class="cover ${g.age18?'blur18':''}" style="background-image:url('${g.cover||''}')">
     ${g.playable?`<span class="card-badge">${t('play')}</span>`:''}
@@ -3579,7 +2644,6 @@ function cardHTML(g){
   </div></div>`;
 }
 function emptyHTML(icon,text){return `<div class="empty"><div class="empty-icon">${icon}</div><div>${text}</div></div>`;}
-
 function renderStore(){
  const q=(document.getElementById('searchInput').value||'').toLowerCase();
  const list=games.filter(g=>g.title.toLowerCase().includes(q)||g.category.toLowerCase().includes(q));
@@ -3620,7 +2684,6 @@ function renderNews(){
   return `<div class="news-card"><div class="news-head"><div class="news-title">${p}${a.title}</div></div><div class="news-body">${a.content}</div><div class="news-date">📅 ${date}</div></div>`;
  }).join('');
 }
-
 document.querySelectorAll('.tab[data-ap]').forEach(tb=>tb.onclick=()=>{
  document.querySelectorAll('.tab[data-ap]').forEach(x=>x.classList.toggle('active',x===tb));
  document.querySelectorAll('#adminMain > .panel').forEach(p=>p.classList.toggle('active',p.id==='ap-'+tb.dataset.ap));
@@ -3632,12 +2695,10 @@ document.querySelectorAll('.tab[data-gp]').forEach(tb=>tb.onclick=()=>{
  document.querySelectorAll('.tab[data-gp]').forEach(x=>x.classList.toggle('active',x===tb));
  document.querySelectorAll('#gameModal > .modal-body > .panel').forEach(p=>p.classList.toggle('active',p.id==='gp-'+tb.dataset.gp));
 });
-
 function switchModTab(tab){
  document.querySelectorAll('.tab[data-mod]').forEach(x=>x.classList.toggle('active',x.dataset.mod===tab));
  document.querySelectorAll('#ap-moderation > .panel').forEach(p=>p.classList.toggle('active',p.id==='mod-'+tab));
 }
-
 function renderAll(){renderStore();renderLibrary();renderNews();renderUsers();updateTop();if(account)renderProfile();}
 
 /* ============================================================
@@ -3685,7 +2746,6 @@ const ACH = [
 function todayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function canDaily(){return !profile.dailyDays.includes(todayKey());}
 function dailyReward(day){return Math.round(0.10*day*100)/100;}
-
 async function claimDaily(){
  if(!account){needLogin();return;}
  if(!canDaily()){toast(t('dailyDone'),'warning');return;}
@@ -3716,7 +2776,6 @@ async function claimAch(id){
  }
  await saveProfile();renderProfile();toast('🎁 +'+a.r.toFixed(2)+'$');
 }
-
 function renderProfile(){
  const el=document.getElementById('profileBody');
  if(!account){
@@ -3828,7 +2887,6 @@ async function register(){
   await putUser(name,{account,profile});
   saveSession();closeModal('authModal');renderAll();updateTop();
   subscribeInvitations();
-  setupPresence();
   toast(t('welcome')+', '+name+'!');
  }catch(e){toast(t('errSave')+': '+e.message,'error');}
 }
@@ -3836,26 +2894,22 @@ async function login(){
  const name=document.getElementById('loginName').value.trim();
  const pass=document.getElementById('loginPass').value;
  if(!name||!pass){toast(t('invalid'),'error');return;}
+ 
+ // ✅ BAN KONTROLÜ
+ const isBanned = await checkBanOnLogin(name);
+ if(isBanned) return;
+ 
  try{
   const u=await getUser(name);
   if(!u){toast(t('invalid'),'error');return;}
-  if(u.banned){
-   localStorage.setItem('km_banned',JSON.stringify({reason:u.banReason||'Banlandı',permanent:true}));
-   checkBan();
-   return;
-  }
   if(u.account.passHash!==hash(pass)){toast(t('invalid'),'error');return;}
   account=u.account;profile={...defaultProfile(),...(u.profile||{})};
   saveSession();closeModal('authModal');renderAll();updateTop();
   subscribeInvitations();
-  setupPresence();
   toast(t('back')+', '+account.name+'!');
  }catch(e){toast(t('errSave')+': '+e.message,'error');}
 }
-function logout(){
- if(presenceRef)presenceRef.remove();
- account=null;profile=defaultProfile();saveSession();updateTop();renderProfile();
-}
+function logout(){account=null;profile=defaultProfile();saveSession();updateTop();renderProfile();}
 async function editName(){
  if(!account)return;
  const n=prompt(t('edit'),account.name);if(!n||!n.trim())return;
@@ -3912,9 +2966,7 @@ function showGame(g){
 
  const owned=profile.purchased.includes(g.id),fav=profile.favorites.includes(g.id);
  let actions='';
- if(account){
-  actions+=`<button class="btn" onclick="toggleFav('${g.id}')">${fav?'⭐':'☆'}</button>`;
- }
+ if(account)actions+=`<button class="btn" onclick="toggleFav('${g.id}')">${fav?'⭐':'☆'}</button>`;
  if(isFree(g)){
   if(g.playable)actions+=`<button class="btn primary" onclick="startGame('${g.id}')">${t('play')}</button>`;
  }else if(owned){
@@ -3974,12 +3026,6 @@ async function recordPlay(id){
  const g=games.find(x=>x.id===id);
  profile.activities.push({icon:'🎮',title:g?.title||'Oyun',detail:profile.gamesPlayed[id].count+'x',time:new Date().toLocaleDateString()});
  if(profile.activities.length>50)profile.activities=profile.activities.slice(-50);
- 
- // Presence güncelle - şu an bu oyunu oynuyor
- if(ONLINE && rtdb && account){
-  rtdb.ref('presence/'+account.name.toLowerCase()).update({inGame:id});
- }
- 
  await saveProfile();
 }
 function playDemo(id){
@@ -4007,10 +3053,6 @@ function closeGame(){
  document.getElementById('gameScreen').classList.remove('show');
  document.getElementById('gameFrame').src='about:blank';
  if(document.fullscreenElement)document.exitFullscreen();
- // Presence güncelle
- if(ONLINE && rtdb && account){
-  rtdb.ref('presence/'+account.name.toLowerCase()).update({inGame:null});
- }
  renderProfile();
 }
 function fullGame(){
@@ -4056,7 +3098,6 @@ function hash(s){
  for(let i=0;i<s.length;i+=2){h3=((h3<<4)+h3)+s.charCodeAt(i);h3&=0x7FFFFFFF;}
  return 'h_'+h.toString(36)+'_'+h2.toString(36)+'_'+h3.toString(36);
 }
-
 function openAdmin(){
  document.getElementById('adminLoginPanel').classList.toggle('active',!isAdmin);
  document.getElementById('adminMain').classList.toggle('active',isAdmin);
@@ -4064,9 +3105,10 @@ function openAdmin(){
  if(isAdmin){
   subscribeReports();
   subscribeAdminMessages();
-  subscribeBans();
+  subscribeBans(); // ✅ Banları dinle
   renderAdminGames();
   renderAdminNews();
+  renderBans(); // ✅ Banları göster
  }
 }
 function adminLogin(){
@@ -4076,8 +3118,8 @@ function adminLogin(){
  document.getElementById('adminMain').classList.add('active');
  subscribeReports();
  subscribeAdminMessages();
- subscribeBans();
- renderAdminGames();renderAdminNews();
+ subscribeBans(); // ✅ Banları dinle
+ renderAdminGames();renderAdminNews();renderBans(); // ✅ Banları göster
  toast('🔐 OK');
 }
 function compressImage(file,max=800,q=.75){
@@ -4238,12 +3280,15 @@ async function delNews(id){
  if(!confirm(t('confirmDel')))return;
  await removeNews(id);toast(t('annDeleted'));renderAdminNews();
 }
+function escapeHtml(s){
+ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
 /* ============================================================
    IMPORT / EXPORT
    ============================================================ */
 function exportAll(){
- const data={version:'11.0.0',date:new Date().toISOString(),account,profile,games,news};
+ const data={version:'11.1.0',date:new Date().toISOString(),account,profile,games,news};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),a=document.createElement('a');
  a.href=url;a.download='kmoon-'+(account?.name||'backup')+'-'+Date.now()+'.json';
@@ -4275,7 +3320,6 @@ async function importDatabase(e){
    await putUser(account.name,{account,profile});
    saveSession();closeModal('authModal');renderAll();
    subscribeInvitations();
-   setupPresence();
    toast(t('back')+', '+account.name);
   }catch(err){toast(t('badFile'),'error');}
  };
@@ -4296,9 +3340,6 @@ async function wipeGlobal(){
 (async function init(){
  document.addEventListener('touchstart',function(){},{passive:true});
  
- // BAN KONTROLÜ
- if(checkBan())return;
- 
  for(let i=0;i<25;i++){
   const p=document.createElement('div');p.className='particle';
   p.style.left=Math.random()*100+'%';
@@ -4309,25 +3350,20 @@ async function wipeGlobal(){
  }
 
  applyLanguage();
- initEmojiPicker();
 
  if(!ONLINE){
   document.getElementById('connStatus').textContent='● LOCAL';
   document.getElementById('connStatus').style.color='#ff9500';
- }else{
-  await syncBanFromServer();
-  if(checkBan())return;
  }
 
  await loadSession();
  
- // Banlı kullanıcı giriş yapmasın
+ // ✅ Banlı kullanıcı kontrolü
  if(account){
   const u=await getUser(account.name);
   if(u?.banned){
-   localStorage.setItem('km_banned',JSON.stringify({reason:u.banReason||'Banlandı',permanent:true}));
+   showBanScreen(u.banReason || 'Banlandı');
    account=null;profile=defaultProfile();saveSession();
-   checkBan();
    return;
   }
  }
@@ -4335,12 +3371,7 @@ async function wipeGlobal(){
  subscribeGames();
  subscribeNews();
  subscribeUsers();
- subscribeChat();
- subscribeRooms();
- if(account){
-  subscribeInvitations();
-  setupPresence();
- }
+ if(account)subscribeInvitations();
  updateTop();
 
  setTimeout(()=>{
@@ -4349,14 +3380,6 @@ async function wipeGlobal(){
   renderAll();
  },3000);
 })();
-
-// Emoji picker dış tıklama
-document.addEventListener('click',e=>{
- const picker=document.getElementById('emojiPicker');
- if(picker && picker.classList.contains('show') && !e.target.closest('.emoji-picker') && !e.target.closest('.emoji-btn')){
-  picker.classList.remove('show');
- }
-});
 </script>
 </body>
 </html>
