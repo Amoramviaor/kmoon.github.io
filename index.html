@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0a0a15">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>K-Moon Launcher v12.0.0</title>
+<title>K-Moon Launcher v11.1.0</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -18,7 +17,7 @@ button,input,select,textarea{font-family:inherit}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-thumb{background:rgba(255,215,0,.3);border-radius:3px}
 
-#splash{position:fixed;inset:0;z-index:2000;background:radial-gradient(circle,#1a1a3e,#0a0a15 75%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s,visibility:1s;padding:20px}
+#splash{position:fixed;inset:0;z-index:2000;background:radial-gradient(circle,#1a1a3e,#0a0a15 75%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s,visibility 1s;padding:20px}
 #splash.hide{opacity:0;visibility:hidden;pointer-events:none}
 .splash-moon{font-size:90px;filter:drop-shadow(0 0 30px #ffd700);animation:pulse 2s infinite}
 .logo{font-size:70px;font-weight:900;letter-spacing:6px;background:linear-gradient(90deg,#ffd700,#ff6b00,#ffd700);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shine 3s linear infinite}
@@ -96,32 +95,6 @@ button,input,select,textarea{font-family:inherit}
 .empty{text-align:center;padding:50px 20px;color:#8a8ab0}
 .empty-icon{font-size:60px;margin-bottom:12px}
 
-/* KUMBARA */
-.km-hero{background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,107,0,.1));border:2px solid rgba(255,215,0,.3);border-radius:20px;padding:30px;text-align:center;margin-bottom:25px;position:relative;overflow:hidden}
-.km-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(255,215,0,.2),transparent 60%)}
-.km-hero-icon{font-size:80px;margin-bottom:15px;animation:pulse 2s infinite;position:relative}
-.km-hero h1{font-size:32px;background:linear-gradient(90deg,#ffd700,#ff6b00,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;position:relative}
-.km-hero p{color:#c0c0e0;font-size:13px;position:relative}
-
-.km-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-bottom:25px}
-.km-card{background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.2);border-radius:16px;padding:25px;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
-.km-card:hover{transform:translateY(-5px);border-color:#ffd700;box-shadow:0 10px 30px rgba(255,215,0,.2)}
-.km-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ffd700,#ff6b00)}
-.km-card-icon{font-size:50px;margin-bottom:12px}
-.km-card-title{font-size:17px;font-weight:700;color:#ffd700;margin-bottom:6px}
-.km-card-desc{font-size:11px;color:#8a8ab0;line-height:1.5}
-
-.live-rooms{background:rgba(0,0,0,.4);border:1px solid rgba(255,215,0,.2);border-radius:16px;padding:20px}
-.live-rooms h3{color:#ffd700;margin-bottom:15px;display:flex;align-items:center;gap:8px}
-.live-dot{width:10px;height:10px;border-radius:50%;background:#ff0000;animation:livePulse 1.5s infinite}
-@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.6}}
-.room-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:15px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;transition:.3s}
-.room-item:hover{border-color:rgba(255,215,0,.3);background:rgba(255,215,0,.05)}
-.room-info{flex:1;min-width:200px}
-.room-name{font-size:15px;font-weight:700;color:#ffd700;margin-bottom:4px}
-.room-meta{font-size:11px;color:#8a8ab0;display:flex;gap:12px;flex-wrap:wrap}
-
-/* USERS */
 .users-layout{display:grid;grid-template-columns:220px 1fr;gap:20px}
 .users-sidebar{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:15px;height:fit-content;position:sticky;top:0}
 .user-search{width:100%;padding:9px 12px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#fff;outline:none;font-size:11px;margin-bottom:12px}
@@ -144,10 +117,9 @@ button,input,select,textarea{font-family:inherit}
 .btn-sm:hover{background:#ffd700;color:#000}
 .btn-sm.primary{background:linear-gradient(90deg,#ffd700,#ff6b00);color:#fff;border:none}
 .btn-sm.danger{border-color:#ff5f57;color:#ff5f57;background:rgba(255,95,87,.1)}
+.btn-sm.danger:hover{background:#ff5f57;color:#fff}
 .btn-sm.warn{border-color:#ff9500;color:#ff9500;background:rgba(255,149,0,.1)}
-.btn-sm.success{border-color:#27c93f;color:#27c93f;background:rgba(39,201,63,.1)}
 
-/* LIBRARY */
 .lib-layout{display:grid;grid-template-columns:200px 1fr;gap:20px}
 .sidebar{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:15px;height:fit-content;position:sticky;top:0}
 .filter-title{font-size:9px;color:#8a8ab0;letter-spacing:2px;margin-bottom:8px}
@@ -156,7 +128,6 @@ button,input,select,textarea{font-family:inherit}
 .count{background:rgba(255,255,255,.1);border-radius:10px;padding:1px 6px;font-size:9px}
 .sort{margin-top:12px;width:100%;background:#15152a;color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:7px;font-size:10px}
 
-/* PROFILE */
 .profile-head{display:grid;grid-template-columns:auto 1fr auto;gap:20px;padding:22px;border-radius:16px;border:1px solid rgba(255,215,0,.2);background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,107,0,.05));margin-bottom:18px}
 .big-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:50px;position:relative;overflow:visible;box-shadow:0 0 30px rgba(255,215,0,.3);flex-shrink:0}
 .big-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
@@ -229,6 +200,7 @@ button,input,select,textarea{font-family:inherit}
 .news-card:hover{border-color:#ffd700}
 .news-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-bottom:8px}
 .news-title{font-size:15px;font-weight:700;color:#ffd700;word-break:break-word}
+.news-tag{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;background:rgba(255,215,0,.15);color:#ffd700;white-space:nowrap}
 .news-body{color:#c0c0e0;font-size:12px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
 .news-date{font-size:9px;color:#8a8ab0;margin-top:8px}
 
@@ -253,6 +225,9 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 .upload{border:2px dashed rgba(255,215,0,.3);border-radius:8px;padding:18px;text-align:center;cursor:pointer;color:#8a8ab0;font-size:11px;background:rgba(255,215,0,.04);transition:.3s;word-break:break-word}
 .upload:hover{border-color:#ffd700;background:rgba(255,215,0,.1)}
 .upload img{max-width:100%;max-height:160px;border-radius:6px;margin-top:8px}
+.thumb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;margin-top:8px}
+.thumb{aspect-ratio:1;border-radius:6px;background-size:cover;background-position:center;position:relative}
+.thumb button{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#ff5f57;color:#fff;border:none;cursor:pointer;font-size:11px}
 .tabbar{display:flex;gap:3px;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,.1);flex-wrap:wrap;overflow-x:auto}
 .tab{padding:9px 15px;color:#8a8ab0;cursor:pointer;font-size:11px;font-weight:600;border-bottom:2px solid transparent;white-space:nowrap}
 .tab:hover{color:#fff}
@@ -269,8 +244,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 .icon-btn.red{border-color:#ff5f57;background:rgba(255,95,87,.15);color:#ff5f57}
 .icon-btn.red:hover{background:#ff5f57;color:#fff}
 .icon-btn.warn{border-color:#ff9500;background:rgba(255,149,0,.15);color:#ff9500}
-.icon-btn.green{border-color:#27c93f;background:rgba(39,201,63,.15);color:#27c93f}
-.icon-btn.green:hover{background:#27c93f;color:#fff}
 .io-box{padding:15px;background:rgba(255,255,255,.03);border-radius:10px;margin-bottom:15px}
 .io-box h4{color:#ffd700;margin-bottom:8px;font-size:14px}
 .io-box p{color:#8a8ab0;font-size:11px;margin-bottom:10px;line-height:1.5;word-break:break-word}
@@ -280,6 +253,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 .rules li{list-style:none;padding:10px 13px;background:rgba(255,255,255,.03);border-left:3px solid #ffd700;border-radius:4px;margin-bottom:6px;color:#c0c0e0;font-size:12px;line-height:1.6;word-break:break-word}
 .manual-box{background:rgba(255,255,255,.03);padding:18px;border-radius:8px;color:#c0c0e0;line-height:1.7;font-size:12px;word-break:break-word;overflow-x:auto}
 .manual-box h3{color:#ff6b00;margin:10px 0 6px}
+.key{display:inline-block;padding:2px 7px;border:1px solid #ffd700;background:rgba(255,215,0,.15);border-radius:4px;color:#ffd700;font-family:monospace;font-size:10px}
 .game-side{margin-top:18px;padding:15px;background:rgba(0,0,0,.3);border-radius:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .big-price{font-size:26px;font-weight:900;color:#ffd700;word-break:break-all}
 .video-wrap{position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden}
@@ -341,7 +315,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 .mod-card{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px;margin-bottom:10px}
 .mod-card.report{border-left:3px solid #ff9500}
 .mod-card.message{border-left:3px solid #00f0ff}
-.mod-card.banned{border-left:3px solid #ff5f57;background:rgba(255,95,87,.05)}
 .mod-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .mod-title{font-size:13px;font-weight:700;color:#ffd700}
 .mod-meta{font-size:10px;color:#8a8ab0}
@@ -353,24 +326,13 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 .report-reasons{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
 .report-reason{display:flex;gap:8px;align-items:center;padding:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px;cursor:pointer;font-size:12px}
 .report-reason:hover{border-color:#ffd700}
+.report-reason.selected{background:rgba(255,215,0,.1);border-color:#ffd700}
 .report-reason input{accent-color:#ffd700}
 
 .ban-screen{position:fixed;inset:0;z-index:9999;background:#0a0a15;display:none;align-items:center;justify-content:center;flex-direction:column;padding:30px;text-align:center}
 .ban-icon{font-size:100px;margin-bottom:20px;animation:pulse 2s infinite}
 .ban-title{font-size:32px;font-weight:900;color:#ff5f57;margin-bottom:15px}
 .ban-text{color:#c0c0e0;font-size:14px;line-height:1.8;max-width:500px;margin-bottom:20px}
-
-.ban-user-item{display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:8px;transition:.3s}
-.ban-user-item:hover{border-color:rgba(255,215,0,.3)}
-.ban-user-item.is-banned{border-color:#ff5f57;background:rgba(255,95,87,.05)}
-.ban-user-avatar{width:45px;height:45px;border-radius:50%;background:linear-gradient(135deg,#ffd700,#ff6b00);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0}
-.ban-user-avatar img{width:100%;height:100%;object-fit:cover}
-.ban-user-info{min-width:0}
-.ban-user-name{font-size:13px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.ban-user-meta{font-size:10px;color:#8a8ab0;word-break:break-word}
-.ban-user-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
-.ban-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;background:rgba(255,95,87,.2);color:#ff5f57;border:1px solid #ff5f57}
-.ban-badge.temporary{background:rgba(255,149,0,.2);color:#ff9500;border-color:#ff9500}
 
 @media (max-width:1024px){
   .nav{padding:12px 15px}
@@ -461,12 +423,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   .avatar-btn{width:28px;height:28px;font-size:14px}
   .btn-admin{padding:5px 8px;font-size:10px}
   .notif-bell{font-size:15px;padding:4px 7px}
-  .ban-user-item{grid-template-columns:40px 1fr;gap:8px}
-  .ban-user-avatar{width:40px;height:40px;font-size:18px}
-  .ban-user-actions{grid-column:1/-1;justify-content:flex-start}
-  .km-hero{padding:20px}
-  .km-hero h1{font-size:24px}
-  .km-hero-icon{font-size:60px}
 }
 
 @media (max-width:400px){
@@ -483,7 +439,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 }
 
 @media (hover:none) and (pointer:coarse){
-  .btn,.btn-sm,.icon-btn,.nav-item,.filter,.user-filter,.game-card,.user-card,.badge,.tab,.auth-tab,.buy-opt,.km-card{min-height:40px}
+  .btn,.btn-sm,.icon-btn,.nav-item,.filter,.user-filter,.game-card,.user-card,.badge,.tab,.auth-tab,.buy-opt{min-height:40px}
   .win{width:18px;height:18px}
   .close-btn{width:36px;height:36px}
   .info-btn{width:44px;height:44px}
@@ -491,7 +447,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 }
 
 @media (hover:none){
-  .game-card:hover,.btn:hover,.user-card:hover,.badge:hover,.stat:hover,.news-card:hover,.km-card:hover{transform:none}
+  .game-card:hover,.btn:hover,.user-card:hover,.badge:hover,.stat:hover,.news-card:hover{transform:none}
 }
 
 @supports (padding:max(0px)){
@@ -509,14 +465,13 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   <div class="ban-title" data-t="banned">HESAP BANLANDI</div>
   <div class="ban-text" data-t="bannedText">Bu hesap K-Moon'a erişimi engellendi.</div>
   <div id="banReason" style="color:#ff9500;font-size:13px;margin-bottom:20px"></div>
-  <div id="banExpiry" style="color:#8a8ab0;font-size:12px;margin-bottom:20px"></div>
 </div>
 
 <div id="splash">
   <div class="splash-moon">🌙</div>
   <div class="logo">K-MOON</div>
   <div class="splash-sub">GAME LAUNCHER</div>
-  <div class="splash-ver">VERSION 12.0.0 • ONLINE</div>
+  <div class="splash-ver">VERSION 11.1.0 • ONLINE</div>
   <div class="loader"><div></div></div>
   <div id="loadText" data-t="loading">Bağlanılıyor...</div>
 </div>
@@ -527,7 +482,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   <div class="titlebar">
     <div class="tb-left">
       <div class="tb-logo">🌙</div>
-      <div class="tb-title">K-Moon Launcher v12.0.0</div>
+      <div class="tb-title">K-Moon Launcher v11.1.0</div>
       <span id="connStatus">● ONLINE</span>
     </div>
     <div class="win-controls">
@@ -544,7 +499,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
     <div class="nav-logo">🌙 K-MOON</div>
     <div class="nav-item desktop-only active" data-page="store" data-t="store">🏪 MAĞAZA</div>
     <div class="nav-item desktop-only" data-page="library" data-t="library">📚 KÜTÜPHANE</div>
-    <div class="nav-item desktop-only" data-page="kumbara" data-t="kumbara">🏆 KUMBARA</div>
     <div class="nav-item desktop-only" data-page="news" data-t="news">📢 DUYURU</div>
     <div class="nav-item desktop-only" data-page="users" data-t="users">👥 KULLANICILAR</div>
     <div class="nav-item desktop-only" data-page="profile" data-t="profile">👤 PROFİL</div>
@@ -570,7 +524,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
   <div class="mobile-menu" id="mobileMenu">
     <div class="nav-item active" data-page="store" data-t="store" onclick="mobileNav('store')">🏪 MAĞAZA</div>
     <div class="nav-item" data-page="library" data-t="library" onclick="mobileNav('library')">📚 KÜTÜPHANE</div>
-    <div class="nav-item" data-page="kumbara" data-t="kumbara" onclick="mobileNav('kumbara')">🏆 KUMBARA</div>
     <div class="nav-item" data-page="news" data-t="news" onclick="mobileNav('news')">📢 DUYURU</div>
     <div class="nav-item" data-page="users" data-t="users" onclick="mobileNav('users')">👥 KULLANICILAR</div>
     <div class="nav-item" data-page="profile" data-t="profile" onclick="mobileNav('profile')">👤 PROFİL</div>
@@ -602,35 +555,6 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
           </select>
         </div>
         <div class="grid" id="libGrid"></div>
-      </div>
-    </div>
-
-    <div class="page" id="page-kumbara">
-      <div class="km-hero">
-        <div class="km-hero-icon">🏆</div>
-        <h1 data-t="kmTitle">🏆 KUMBARA YARIŞMASI</h1>
-        <p data-t="kmSub">2-8 oyuncu • Canlı izleme • Tur bazlı bilgi yarışması</p>
-      </div>
-      <div class="km-grid">
-        <div class="km-card" onclick="openKumbara()">
-          <div class="km-card-icon">🎮</div>
-          <div class="km-card-title" data-t="kmOpen">Oyunu Aç</div>
-          <div class="km-card-desc" data-t="kmOpenDesc">Kumbara yarışmasını yeni sekmede aç</div>
-        </div>
-        <div class="km-card" onclick="openKumbaraEmbed()">
-          <div class="km-card-icon">🖥️</div>
-          <div class="km-card-title" data-t="kmEmbed">Gömülü Oyna</div>
-          <div class="km-card-desc" data-t="kmEmbedDesc">Launcher içinde oyna</div>
-        </div>
-      </div>
-      <div id="kumbaraEmbed" style="display:none">
-        <iframe id="kumbaraFrame" style="width:100%;height:calc(100vh - 300px);border:1px solid rgba(255,215,0,0.3);border-radius:12px" src="about:blank"></iframe>
-      </div>
-      <div class="live-rooms" style="margin-top:20px">
-        <h3><span class="live-dot"></span> <span data-t="kmLiveRooms">Canlı Yarışmalar</span></h3>
-        <div id="kumbaraLiveRooms">
-          <div class="empty"><div class="empty-icon">📺</div><div data-t="kmNoLiveRooms">Şu an aktif yarışma yok</div></div>
-        </div>
       </div>
     </div>
 
@@ -672,11 +596,11 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
     <div class="modal-head"><div class="modal-title" data-t="about">ℹ️ Hakkında</div><button class="close-btn" onclick="closeModal('infoModal')">✕</button></div>
     <div class="modal-body">
       <div class="info-hero">
-        <div class="m">🌙</div><h2>K-Moon Launcher</h2><p>Version 12.0.0 • Online Edition</p>
+        <div class="m">🌙</div><h2>K-Moon Launcher</h2><p>Version 11.1.0 • Online Edition</p>
         <div class="info-grid">
           <div class="info-cell"><small data-t="dev">YAPIMCI</small><b>K-Moon Studio</b></div>
           <div class="info-cell"><small data-t="year">YIL</small><b>2026</b></div>
-          <div class="info-cell"><small data-t="version">VERSİYON</small><b>12.0.0</b></div>
+          <div class="info-cell"><small data-t="version">VERSİYON</small><b>11.1.0</b></div>
           <div class="info-cell"><small data-t="license">LİSANS</small><b>MIT</b></div>
         </div>
         <div class="contrib">
@@ -773,7 +697,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
           <div class="tab admin" data-ap="manage">📋 <span data-t="manageGames">Yönet</span></div>
           <div class="tab admin" data-ap="news">📢 <span data-t="manageNews">Duyuru</span></div>
           <div class="tab admin" data-ap="moderation">🛡️ <span data-t="moderation">Moderasyon</span></div>
-          <div class="tab admin" data-ap="bans">🚫 <span data-t="bans">Banlar</span> <span class="count" id="banCount">0</span></div>
+          <div class="tab admin" data-ap="bans">🚫 <span data-t="bans">Banlar</span></div>
           <div class="tab admin" data-ap="messages">📨 <span data-t="adminMessages">Mesajlar</span></div>
           <div class="tab admin" data-ap="io">💾 <span data-t="importExport">İçe/Dışa</span></div>
         </div>
@@ -790,7 +714,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
                 <label class="form-label" data-t="gameGallery">GALERİ</label>
                 <div class="upload" onclick="document.getElementById('galleryFile').click()" data-t="uploadGallery">📷 Ekle</div>
                 <input type="file" id="galleryFile" accept="image/*" multiple hidden onchange="uploadGallery(event)">
-                <div id="galleryThumbs" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;margin-top:8px"></div>
+                <div class="thumb-grid" id="galleryThumbs"></div>
               </div>
             </div>
             <div class="row">
@@ -868,40 +792,30 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
         <div class="panel" id="ap-moderation">
           <div class="tabbar">
             <div class="tab active" data-mod="reports" onclick="switchModTab('reports')">⚠️ <span data-t="reports">Şikayetler</span> <span class="count" id="reportCount">0</span></div>
+            <div class="tab" data-mod="chatmod" onclick="switchModTab('chatmod')">💬 <span data-t="chatMod">Chat Mod</span></div>
           </div>
           <div class="panel active" id="mod-reports"><div id="reportsList"></div></div>
+          <div class="panel" id="mod-chatmod">
+            <div style="margin-bottom:15px"><button class="btn danger" onclick="clearChat()" data-t="clearChat">🗑️ Chat Temizle</button></div>
+            <div id="chatModList"></div>
+          </div>
         </div>
 
         <div class="panel" id="ap-bans">
-          <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,95,87,.3);border-radius:12px;padding:18px;margin-bottom:20px">
-            <h4 style="color:#ff5f57;margin-bottom:12px" data-t="quickBan">🚫 Hızlı Ban</h4>
+          <div style="margin-bottom:15px">
             <div class="form-group">
-              <label class="form-label" data-t="selectUser">Kullanıcı Seç</label>
-              <select class="input" id="banUserSelect">
-                <option value="">-- Kullanıcı seç --</option>
-              </select>
-            </div>
-            <div class="row">
-              <div class="form-group">
-                <label class="form-label" data-t="banDuration">Ban Süresi</label>
-                <select class="input" id="banDuration">
-                  <option value="permanent" data-t="banPermanent">♾️ Kalıcı</option>
-                  <option value="3600000" data-t="ban1h">⏰ 1 Saat</option>
-                  <option value="86400000" data-t="ban1d">📅 1 Gün</option>
-                  <option value="604800000" data-t="ban7d">📅 7 Gün</option>
-                  <option value="2592000000" data-t="ban30d">📅 30 Gün</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" data-t="banReason">Sebep</label>
-                <input class="input" id="banReason" placeholder="Kural ihlali">
+              <label class="form-label" data-t="banIp">Banlanacak Kullanıcı Adı</label>
+              <div style="display:flex;gap:8px">
+                <input class="input" id="banInput" placeholder="@kullaniciadi">
+                <button class="btn primary" style="width:auto;padding:10px 20px" onclick="addBan()">🚫 BAN</button>
               </div>
             </div>
-            <button class="btn danger" style="width:100%" onclick="quickBanUser()">🚫 <span data-t="banThisUser">KULLANICIYI BANLA</span></button>
+            <div class="form-group">
+              <label class="form-label" data-t="banReason">Sebep</label>
+              <input class="input" id="banReason" placeholder="Kural ihlali">
+            </div>
           </div>
-          <h4 style="color:#ffd700;margin-bottom:12px">👥 <span data-t="allUsers">Tüm Kullanıcılar</span> (<span id="allUsersCount">0</span>)</h4>
-          <div id="allUsersBanList"></div>
-          <h4 style="color:#ff5f57;margin:20px 0 12px">🚫 <span data-t="activeBans">Aktif Banlar</span> (<span id="activeBansCount">0</span>)</h4>
+          <h4 style="color:#ffd700;margin-bottom:10px" data-t="activeBans">Aktif Banlar</h4>
           <div id="bansList"></div>
         </div>
 
@@ -1031,7 +945,7 @@ textarea.code{font-family:monospace;font-size:10px;min-height:120px}
 
 <script>
 /* ============================================================
-   FIREBASE CONFIG - KENDİ BİLGİLERİNİZİ YAZIN
+   FIREBASE CONFIG
    ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyBj5F26iRiXpoFj7B647pvM4wpCfc18Bh4",
@@ -1058,12 +972,8 @@ if (ONLINE) {
    ============================================================ */
 const I18N = {
   tr: {
-    loading:'Bağlanılıyor...',store:'🏪 MAĞAZA',library:'📚 KÜTÜPHANE',kumbara:'🏆 KUMBARA',news:'📢 DUYURU',users:'👥 KULLANICILAR',profile:'👤 PROFİL',
+    loading:'Bağlanılıyor...',store:'🏪 MAĞAZA',library:'📚 KÜTÜPHANE',news:'📢 DUYURU',users:'👥 KULLANICILAR',profile:'👤 PROFİL',
     storeTitle:'Mağaza',storeSub:'Tüm oyuncular için ortak kütüphane',libraryTitle:'Kütüphanem',librarySub:'Oyunların ve favorilerin',
-    kmTitle:'🏆 KUMBARA YARIŞMASI',kmSub:'2-8 oyuncu • Canlı izleme • Tur bazlı bilgi yarışması',
-    kmOpen:'Oyunu Aç',kmOpenDesc:'Kumbara yarışmasını yeni sekmede aç',
-    kmEmbed:'Gömülü Oyna',kmEmbedDesc:'Launcher içinde oyna',
-    kmLiveRooms:'Canlı Yarışmalar',kmNoLiveRooms:'Şu an aktif yarışma yok',
     newsTitle:'Duyurular',newsSub:'Yeni oyunlar, güncellemeler',usersTitle:'Kullanıcılar',usersSub:'Tüm kayıtlı oyuncuları gör, davet et, şikayet et',
     searchPh:'🔍 Ara...',adminBtn:'🔐 ADMIN',
     filters:'FİLTRELER',all:'Tümü',fav:'Favoriler',recent:'Oynanan',free:'Ücretsiz',bought:'Satın Alınan',cats:'KATEGORİLER',
@@ -1072,7 +982,7 @@ const I18N = {
     about:'Hakkında',dev:'YAPIMCI',year:'YIL',version:'VERSİYON',license:'LİSANS',contributors:'KATKIDA BULUNANLAR',donate:'Destek',
     adminLogin:'Admin Girişi',adminPanel:'ADMIN',passwordPh:'Şifre',loginBtn:'GİRİŞ',
     addGame:'Oyun',manageGames:'Yönet',manageNews:'Duyuru',importExport:'İçe/Dışa',
-    moderation:'Moderasyon',bans:'Banlar',adminMessages:'Mesajlar',reports:'Şikayetler',
+    moderation:'Moderasyon',bans:'Banlar',adminMessages:'Mesajlar',reports:'Şikayetler',chatMod:'Chat Mod',
     gameCover:'KAPAK',uploadCover:'🖼️ Yükle',gameGallery:'GALERİ',uploadGallery:'📷 Ekle',
     gameTitle:'BAŞLIK *',gameCategory:'KATEGORİ',gameSubtitle:'ALT BAŞLIK',gameDesc:'AÇIKLAMA',
     gamePrice:'FİYAT',gamePlayable:'DURUM',gameAge18:'🔞 +18',
@@ -1118,26 +1028,14 @@ const I18N = {
     reportTitle:'Şikayet',reportReason:'Şikayet sebebi *',reportDetails:'Detaylar',reportSubmit:'GÖNDER',reportSent:'Şikayet gönderildi!',
     adminMsgTitle:'Admin\'e Mesaj',msgType:'Tür',msgSubject:'Konu *',msgBody:'Mesajınız *',msgSend:'GÖNDER',msgSent:'Mesaj gönderildi!',
     banned:'HESAP BANLANDI',bannedText:'Bu hesap K-Moon\'a erişimi engellendi.',
-    banReason:'Sebep',activeBans:'Aktif Banlar',unban:'Bandan Çıkar',
-    msgFrom:'Gönderen',msgAt:'Tarih',
-    quickBan:'Hızlı Ban',selectUser:'Kullanıcı Seç',banDuration:'Ban Süresi',
-    banPermanent:'♾️ Kalıcı',ban1h:'⏰ 1 Saat',ban1d:'📅 1 Gün',ban7d:'📅 7 Gün',ban30d:'📅 30 Gün',
-    banThisUser:'KULLANICIYI BANLA',allUsers:'Tüm Kullanıcılar',
-    banUser:'Banla',unbanUser:'Bandan Çıkar',banAdded:'Ban eklendi!',banRemoved:'Ban kaldırıldı!',
-    userBanned:'banlandı!',confirmBan:'Bu kullanıcıyı banlamak istediğinize emin misiniz?',
-    confirmUnban:'Bu kullanıcının banını kaldırmak istediğinize emin misiniz?',
-    noBans:'Aktif ban yok',bannedLabel:'BANLI',tempBanLabel:'GEÇİCİ BAN',
-    reportedBy:'Şikayet eden',reportedUser:'Şikayet edilen',
-    resolveReport:'Çözüldü',rejectReport:'Reddet',banFromReport:'Şikayetten Banla',unbanFromReport:'Banı Kaldır',
-    selectDuration:'Süre seçin'
+    banIp:'Banlanacak Kullanıcı Adı',banReason:'Sebep',activeBans:'Aktif Banlar',unban:'Affet',
+    clearChat:'🗑️ Chat Temizle',msgFrom:'Gönderen',msgAt:'Tarih',
+    banAdded:'Ban eklendi!',banRemoved:'Ban kaldırıldı!',userBanned:'kullanıcı banlandı!',
+    noBans:'Aktif ban yok'
   },
   en: {
-    loading:'Connecting...',store:'🏪 STORE',library:'📚 LIBRARY',kumbara:'🏆 PIGGY BANK',news:'📢 NEWS',users:'👥 USERS',profile:'👤 PROFILE',
+    loading:'Connecting...',store:'🏪 STORE',library:'📚 LIBRARY',news:'📢 NEWS',users:'👥 USERS',profile:'👤 PROFILE',
     storeTitle:'Store',storeSub:'Shared library',libraryTitle:'My Library',librarySub:'Your games',
-    kmTitle:'🏆 PIGGY BANK QUIZ',kmSub:'2-8 players • Live watch • Round-based quiz',
-    kmOpen:'Open Game',kmOpenDesc:'Open in new tab',
-    kmEmbed:'Embedded Play',kmEmbedDesc:'Play in launcher',
-    kmLiveRooms:'Live Games',kmNoLiveRooms:'No active games',
     newsTitle:'News',newsSub:'Updates',usersTitle:'Users',usersSub:'All players',
     searchPh:'🔍 Search...',adminBtn:'🔐 ADMIN',
     filters:'FILTERS',all:'All',fav:'Favorites',recent:'Played',free:'Free',bought:'Purchased',cats:'CATEGORIES',
@@ -1146,7 +1044,7 @@ const I18N = {
     about:'About',dev:'DEVELOPER',year:'YEAR',version:'VERSION',license:'LICENSE',contributors:'CONTRIBUTORS',donate:'Donate',
     adminLogin:'Admin Login',adminPanel:'ADMIN',passwordPh:'Password',loginBtn:'LOGIN',
     addGame:'Game',manageGames:'Manage',manageNews:'News',importExport:'I/O',
-    moderation:'Moderation',bans:'Bans',adminMessages:'Messages',reports:'Reports',
+    moderation:'Moderation',bans:'Bans',adminMessages:'Messages',reports:'Reports',chatMod:'Chat Mod',
     gameCover:'COVER',uploadCover:'🖼️ Upload',gameGallery:'GALLERY',uploadGallery:'📷 Add',
     gameTitle:'TITLE *',gameCategory:'CATEGORY',gameSubtitle:'SUBTITLE',gameDesc:'DESCRIPTION',
     gamePrice:'PRICE',gamePlayable:'STATUS',gameAge18:'🔞 +18',
@@ -1191,27 +1089,15 @@ const I18N = {
     errSave:'Error',errOnline:'Online required',
     reportTitle:'Report',reportReason:'Reason *',reportDetails:'Details',reportSubmit:'SUBMIT',reportSent:'Report sent!',
     adminMsgTitle:'Message to Admin',msgType:'Type',msgSubject:'Subject *',msgBody:'Message *',msgSend:'SEND',msgSent:'Sent!',
-    banned:'ACCOUNT BANNED',bannedText:'This account is blocked.',
-    banReason:'Reason',activeBans:'Active Bans',unban:'Unban',
-    msgFrom:'From',msgAt:'Date',
-    quickBan:'Quick Ban',selectUser:'Select User',banDuration:'Duration',
-    banPermanent:'♾️ Permanent',ban1h:'⏰ 1 Hour',ban1d:'📅 1 Day',ban7d:'📅 7 Days',ban30d:'📅 30 Days',
-    banThisUser:'BAN USER',allUsers:'All Users',
-    banUser:'Ban',unbanUser:'Unban',banAdded:'Ban added!',banRemoved:'Ban removed!',
-    userBanned:'banned!',confirmBan:'Ban this user?',
-    confirmUnban:'Unban this user?',
-    noBans:'No active bans',bannedLabel:'BANNED',tempBanLabel:'TEMP BAN',
-    reportedBy:'Reported by',reportedUser:'Reported user',
-    resolveReport:'Resolve',rejectReport:'Reject',banFromReport:'Ban',unbanFromReport:'Unban',
-    selectDuration:'Select duration'
+    banned:'ACCOUNT BANNED',bannedText:'This account is blocked from K-Moon.',
+    banIp:'Username to ban',banReason:'Reason',activeBans:'Active Bans',unban:'Unban',
+    clearChat:'🗑️ Clear Chat',msgFrom:'From',msgAt:'Date',
+    banAdded:'Ban added!',banRemoved:'Ban removed!',userBanned:'user banned!',
+    noBans:'No active bans'
   },
   ru: {
-    loading:'Подключение...',store:'🏪 МАГАЗИН',library:'📚 БИБЛИОТЕКА',kumbara:'🏆 КОПИЛКА',news:'📢 НОВОСТИ',users:'👥 ПОЛЬЗОВАТЕЛИ',profile:'👤 ПРОФИЛЬ',
+    loading:'Подключение...',store:'🏪 МАГАЗИН',library:'📚 БИБЛИОТЕКА',news:'📢 НОВОСТИ',users:'👥 ПОЛЬЗОВАТЕЛИ',profile:'👤 ПРОФИЛЬ',
     storeTitle:'Магазин',storeSub:'Общая библиотека',libraryTitle:'Моя библиотека',librarySub:'Ваши игры',
-    kmTitle:'🏆 ИГРА КОПИЛКА',kmSub:'2-8 игроков • Прямой просмотр',
-    kmOpen:'Открыть',kmOpenDesc:'В новой вкладке',
-    kmEmbed:'Встроенно',kmEmbedDesc:'В лаунчере',
-    kmLiveRooms:'Прямые игры',kmNoLiveRooms:'Нет активных',
     newsTitle:'Новости',newsSub:'Обновления',usersTitle:'Пользователи',usersSub:'Все игроки',
     searchPh:'🔍 Поиск...',adminBtn:'🔐 АДМИН',
     filters:'ФИЛЬТРЫ',all:'Все',fav:'Избранное',recent:'Сыграно',free:'Бесплатно',bought:'Куплено',cats:'КАТЕГОРИИ',
@@ -1220,7 +1106,7 @@ const I18N = {
     about:'О программе',dev:'РАЗРАБОТЧИК',year:'ГОД',version:'ВЕРСИЯ',license:'ЛИЦЕНЗИЯ',contributors:'АВТОРЫ',donate:'Поддержать',
     adminLogin:'Вход админа',adminPanel:'АДМИН',passwordPh:'Пароль',loginBtn:'ВОЙТИ',
     addGame:'Игра',manageGames:'Управление',manageNews:'Новости',importExport:'Импорт/Экспорт',
-    moderation:'Модерация',bans:'Баны',adminMessages:'Сообщения',reports:'Жалобы',
+    moderation:'Модерация',bans:'Баны',adminMessages:'Сообщения',reports:'Жалобы',chatMod:'Мод чата',
     gameCover:'ОБЛОЖКА',uploadCover:'🖼️ Загрузить',gameGallery:'ГАЛЕРЕЯ',uploadGallery:'📷 Добавить',
     gameTitle:'НАЗВАНИЕ *',gameCategory:'КАТЕГОРИЯ',gameSubtitle:'ПОДЗАГОЛОВОК',gameDesc:'ОПИСАНИЕ',
     gamePrice:'ЦЕНА',gamePlayable:'СТАТУС',gameAge18:'🔞 +18',
@@ -1266,25 +1152,818 @@ const I18N = {
     reportTitle:'Жалоба',reportReason:'Причина *',reportDetails:'Детали',reportSubmit:'ОТПРАВИТЬ',reportSent:'Жалоба отправлена!',
     adminMsgTitle:'Сообщение админу',msgType:'Тип',msgSubject:'Тема *',msgBody:'Сообщение *',msgSend:'ОТПРАВИТЬ',msgSent:'Отправлено!',
     banned:'АККАУНТ ЗАБАНЕН',bannedText:'Этот аккаунт заблокирован.',
-    banReason:'Причина',activeBans:'Активные баны',unban:'Разбанить',
-    msgFrom:'От',msgAt:'Дата',
-    quickBan:'Быстрый бан',selectUser:'Выбрать пользователя',banDuration:'Срок бана',
-    banPermanent:'♾️ Навсегда',ban1h:'⏰ 1 час',ban1d:'📅 1 день',ban7d:'📅 7 дней',ban30d:'📅 30 дней',
-    banThisUser:'ЗАБАНИТЬ',allUsers:'Все пользователи',
-    banUser:'Бан',unbanUser:'Разбан',banAdded:'Бан добавлен!',banRemoved:'Бан снят!',
-    userBanned:'забанен!',confirmBan:'Забанить?',
-    confirmUnban:'Снять бан?',
-    noBans:'Нет активных банов',bannedLabel:'ЗАБАНЕН',tempBanLabel:'ВРЕМ. БАН',
-    reportedBy:'Жалобщик',reportedUser:'Жалуемый',
-    resolveReport:'Решено',rejectReport:'Отклонить',banFromReport:'Забанить',unbanFromReport:'Разбанить',
-    selectDuration:'Выберите срок'
+    banIp:'Имя пользователя',banReason:'Причина',activeBans:'Активные баны',unban:'Разбанить',
+    clearChat:'🗑️ Очистить чат',msgFrom:'От',msgAt:'Дата',
+    banAdded:'Бан добавлен!',banRemoved:'Бан снят!',userBanned:'забанен!',
+    noBans:'Нет активных банов'
   },
-  ka: { loading:'დაკავშირება...',store:'🏪 მაღაზია',library:'📚 ბიბლიოთეკა',kumbara:'🏆 კუმბარა',news:'📢 სიახლეები',users:'👥 მომხმარებლები',profile:'👤 პროფილი',storeTitle:'მაღაზია',storeSub:'საერთო',libraryTitle:'ჩემი ბიბლიოთეკა',librarySub:'თქვენი თამაშები',kmTitle:'🏆 კუმბარა',kmSub:'2-8 მოთამაშე',kmOpen:'გახსნა',kmOpenDesc:'ახალ ტაბში',kmEmbed:'ჩაშენებული',kmEmbedDesc:'ლაუნჩერში',kmLiveRooms:'პირდაპირი',kmNoLiveRooms:'არაა',newsTitle:'სიახლეები',newsSub:'განახლებები',usersTitle:'მომხმარებლები',usersSub:'ყველა მოთამაშე',searchPh:'🔍 ძიება...',adminBtn:'🔐 ადმინი',filters:'ფილტრები',all:'ყველა',fav:'ფავორიტები',recent:'ბოლო',free:'უფასო',bought:'ნაყიდი',cats:'კატეგორიები',sortName:'სახელით',sortPrice:'ფასით',filter:'ფილტრი',ufAll:'ყველა',ufOnline:'ონლაინ',ufFriends:'მეგობრები',sorting:'სორტი',usName:'სახელით',usLevel:'დონით',about:'შესახებ',dev:'შემქმნელი',year:'წელი',version:'ვერსია',license:'ლიცენზია',contributors:'ავტორები',donate:'მხარდაჭერა',adminLogin:'ადმინი',adminPanel:'ადმინ პანელი',passwordPh:'პაროლი',loginBtn:'შესვლა',addGame:'დამატება',manageGames:'მართვა',manageNews:'სიახლეები',importExport:'იმპორტი',moderation:'მოდერაცია',bans:'ბანები',adminMessages:'შეტყობინებები',reports:'ჩივილები',gameCover:'ყდა',uploadCover:'🖼️ ატვირთვა',gameGallery:'გალერეა',uploadGallery:'📷 დამატება',gameTitle:'სათაური *',gameCategory:'კატეგორია',gameSubtitle:'ქვესათაური',gameDesc:'აღწერა',gamePrice:'ფასი',gamePlayable:'სტატუსი',gameAge18:'🔞 +18',gameHtml:'📄 HTML',uploadHtml:'HTML ფაილი',gameDemo:'🎮 დემო',uploadDemo:'დემო ფაილი',gameRules:'წესები',gameManual:'სახელმძღვანელო',save:'💾 შენახვა',cancel:'გაუქმება',newAnn:'📢 ახალი',annTitle:'სათაური *',annCategory:'კატეგორია',annPriority:'პრიორიტეტი',annContent:'შინაარსი *',annPublish:'📢 გამოქვეყნება',existingNews:'არსებული',exportData:'📤 ექსპორტი',exportDesc:'JSON.',exportBtn:'JSON',importData:'📥 იმპორტი',importDesc:'JSON-დან.',importBtn:'ფაილი',dangerZone:'⚠️ საშიში',wipeAll:'ყველაფრის წაშლა',tabOverview:'📖 მიმოხილვა',tabGallery:'🖼️ გალერეა',tabVideo:'📺 ვიდეო',tabRules:'📜 წესები',tabManual:'📘 სახელმძღვანელო',ageTitle:'ასაკი',ageText:'18+.<br>გაგრძელება?',ageYes:'✅ 18+',ageNo:'❌ არა',buyTitle:'💎 ყიდვა',buyOr:'— ან —',authTitle:'👤 ანგარიში',loginTab:'🔑 შესვლა',registerTab:'✨ რეგისტრაცია',importTab:'📥 იმპორტი',playerNamePh:'სახელი',password:'პაროლი',emailPh:'Email',registerBtn:'რეგისტრაცია',importDbDesc:'JSON.',fullscreen:'⛶ სრული',backBtn:'← უკან',inviteTitle:'🔔 მოწვევები',noInvite:'არა',accept:'✅ მიღება',decline:'❌ უარყოფა',noGames:'არაფერი',noNews:'არაფერი',noResult:'არაფერი',noUsers:'არაფერი',noAct:'არაფერი.',saved:'შენახულია!',updated:'განახლდა!',deleted:'წაიშალა!',annSaved:'გამოქვეყნდა!',annDeleted:'წაიშალა!',fill:'შეავსეთ!',exists:'დაკავებულია!',invalid:'შეცდომა!',confirmDel:'წაშლა?',exported:'ექსპორტი!',imported:'იმპორტი!',badFile:'შეცდომა!',balance:'ბალანსი',earned:'სულ',streak:'სერია',daily:'მიიღე',dailyDone:'მიღებული',calTitle:'📅 ყოველდღიური',calSub:'+0.10$ ყოველ დღე!',day:'დღე',badges:'🏆 მიღწევები',badSub:'შეასრულეთ!',acts:'აქტივობები',actsSub:'ბოლო',xp:'XP',played:'თამაში',plays:'სულ',ach:'მიღწევები',claim:'მიღება',claimed:'მიღებული',bonus:'🎉 ყველა! +20$',play:'▶ თამაში',buy:'💎 ყიდვა',demo:'🎮 დემო',buyBalance:'💰 ბალანსით',poor:'არაა!',purchased:'ნაყიდი!',favAdd:'დამატებული!',favDel:'წაშლილი!',ageDeny:'18+!',logout:'გასვლა',edit:'რედაქტირება',export:'ექსპორტი',online:'ონლაინ',member:'წევრი:',invite:'მოწვევა',addFriend:'⭐ დამატება',removeFriend:'⭐ წაშლა',reportUser:'⚠️ ჩივილი',you:'თქვენ',easy:'ადვილი',medium:'საშუალო',hard:'რთული',epic:'ეპიკური',legendary:'ლეგენდარული',noVideo:'არა',link:'🔗 ლინკი',savedProfile:'განახლდა!',welcome:'კეთილი',back:'კეთილი',loginFirst:'შესვლა საჭიროა',inviteSent:'📤 გაგზავნილი!',roomCode:'ოთახის კოდი',games:'თამაში',achievements:'მიღწევები',viewers:'მაყურებელი',wipeConfirm:'ყველაფერი წაიშლება?',wipeDone:'წაშლილია',errSave:'შეცდომა',errOnline:'ონლაინ რეჟიმი',reportTitle:'ჩივილი',reportReason:'მიზეზი *',reportDetails:'დეტალები',reportSubmit:'გაგზავნა',reportSent:'ჩივილი გაგზავნილია!',adminMsgTitle:'ადმინის შეტყობინება',msgType:'ტიპი',msgSubject:'თემა *',msgBody:'შეტყობინება *',msgSend:'გაგზავნა',msgSent:'გაგზავნილია!',banned:'ბანი',bannedText:'ეს ანგარიში დაბლოკილია.',banReason:'მიზეზი',activeBans:'აქტიური ბანები',unban:'ბანის მოხსნა',msgFrom:'ვისგან',msgAt:'თარიღი',quickBan:'სწრაფი ბანი',selectUser:'მომხმარებლის არჩევა',banDuration:'ბანის ვადა',banPermanent:'♾️ სამუდამო',ban1h:'⏰ 1 საათი',ban1d:'📅 1 დღე',ban7d:'📅 7 დღე',ban30d:'📅 30 დღე',banThisUser:'ბანი',allUsers:'ყველა მომხმარებელი',banUser:'ბანი',unbanUser:'ბანის მოხსნა',banAdded:'ბანი დაემატა!',banRemoved:'ბანი მოიხსნა!',userBanned:'დაბანილია!',confirmBan:'დაბანოთ?',confirmUnban:'ბანი მოვხსნათ?',noBans:'აქტიური ბანი არაა',bannedLabel:'ბანში',tempBanLabel:'დროებითი ბანი',reportedBy:'მომჩივანი',reportedUser:'დასაჩივრებული',resolveReport:'გადაწყვეტილი',rejectReport:'უარყოფილი',banFromReport:'ბანი',unbanFromReport:'ბანის მოხსნა',selectDuration:'ვადა აირჩიეთ' },
-  az: { loading:'Qoşulur...',store:'🏪 MAĞAZA',library:'📚 KİTABXANA',kumbara:'🏆 KUMBARA',news:'📢 XƏBƏRLƏR',users:'👥 İSTİFADƏÇİLƏR',profile:'👤 PROFİL',storeTitle:'Mağaza',storeSub:'Ortaq',libraryTitle:'Kitabxanam',librarySub:'Oyunlarınız',kmTitle:'🏆 KUMBARA',kmSub:'2-8 oyunçu',kmOpen:'Aç',kmOpenDesc:'Yeni tabda',kmEmbed:'Daxili',kmEmbedDesc:'Launcher-da',kmLiveRooms:'Canlı',kmNoLiveRooms:'Yox',newsTitle:'Xəbərlər',newsSub:'Yeniliklər',usersTitle:'İstifadəçilər',usersSub:'Bütün oyunçular',searchPh:'🔍 Axtar...',adminBtn:'🔐 ADMİN',filters:'FİLTRLƏR',all:'Hamısı',fav:'Sevimlilər',recent:'Son',free:'Pulsuz',bought:'Alınan',cats:'KATEQORİYALAR',sortName:'Ada görə',sortPrice:'Qiymətə',filter:'FİLTR',ufAll:'Hamısı',ufOnline:'Onlayn',ufFriends:'Dostlar',sorting:'SIRALAMA',usName:'Ada görə',usLevel:'Səviyyə',about:'Haqqında',dev:'YARADICI',year:'İL',version:'VERSİYA',license:'LİSENZİYA',contributors:'MÜƏLLİFLƏR',donate:'Dəstək',adminLogin:'Admin',adminPanel:'ADMİN PANEL',passwordPh:'Şifrə',loginBtn:'GİRİŞ',addGame:'Əlavə',manageGames:'İdarə',manageNews:'Xəbərlər',importExport:'İdxal',moderation:'Moderasiya',bans:'Banlar',adminMessages:'Mesajlar',reports:'Şikayətlər',gameCover:'QAPAQ',uploadCover:'🖼️ Yüklə',gameGallery:'QALERİYA',uploadGallery:'📷 Əlavə et',gameTitle:'BAŞLIK *',gameCategory:'KATEQORİYA',gameSubtitle:'ALT',gameDesc:'AÇIQLAMA',gamePrice:'QİYMƏT',gamePlayable:'STATUS',gameAge18:'🔞 +18',gameHtml:'📄 HTML',uploadHtml:'HTML faylı',gameDemo:'🎮 DEMO',uploadDemo:'Demo faylı',gameRules:'QAYDALAR',gameManual:'TƏLİMAT',save:'💾 SAXLA',cancel:'LƏĞV',newAnn:'📢 Yeni',annTitle:'BAŞLIQ *',annCategory:'KATEQORİYA',annPriority:'ÖNCELİK',annContent:'MƏZMUN *',annPublish:'📢 YAYIMLA',existingNews:'Mövcud',exportData:'📤 İxrac',exportDesc:'JSON.',exportBtn:'JSON',importData:'📥 İdxal',importDesc:'JSON-dan.',importBtn:'FAYL',dangerZone:'⚠️ Təhlükəli',wipeAll:'HAMISINI SİL',tabOverview:'📖 İcmal',tabGallery:'🖼️ Qaleriya',tabVideo:'📺 Video',tabRules:'📜 Qaydalar',tabManual:'📘 Təlimat',ageTitle:'Yaş',ageText:'18+.<br>Davam?',ageYes:'✅ 18+',ageNo:'❌ Xeyr',buyTitle:'💎 Al',buyOr:'— və ya —',authTitle:'👤 Hesab',loginTab:'🔑 Giriş',registerTab:'✨ Qeydiyyat',importTab:'📥 İdxal',playerNamePh:'Ad',password:'Şifrə',emailPh:'Email',registerBtn:'QEYDİYYAT',importDbDesc:'JSON.',fullscreen:'⛶ TAM',backBtn:'← GERİ',inviteTitle:'🔔 Dəvətlər',noInvite:'Yox',accept:'✅ Qəbul',decline:'❌ Rədd',noGames:'Yox',noNews:'Yox',noResult:'Yox',noUsers:'Yox',noAct:'Yox.',saved:'Saxlanıldı!',updated:'Yeniləndi!',deleted:'Silindi!',annSaved:'Yayınlandı!',annDeleted:'Silindi!',fill:'Doldurun!',exists:'Ad götürülüb!',invalid:'Səhv!',confirmDel:'Sil?',exported:'İxrac!',imported:'İdxal!',badFile:'Səhv!',balance:'Balans',earned:'Səl',streak:'Seriya',daily:'AL',dailyDone:'Alınıb',calTitle:'📅 Gündəlik',calSub:'+0.10$ hər gün!',day:'Gün',badges:'🏆 Nailiyyətlər',badSub:'Qazanın!',acts:'Fəaliyyətlər',actsSub:'Son',xp:'XP',played:'Oyun',plays:'Səl',ach:'Nailiyyət',claim:'AL',claimed:'ALINDI',bonus:'🎉 HAMISI! +20$',play:'▶ OYNA',buy:'💎 AL',demo:'🎮 DEMO',buyBalance:'💰 Balansla',poor:'Kifayət deyil!',purchased:'Alındı!',favAdd:'Əlavə!',favDel:'Silindi!',ageDeny:'18+!',logout:'Çıxış',edit:'Redaktə',export:'İxrac',online:'Onlayn',member:'Üzv:',invite:'Dəvət',addFriend:'⭐ Əlavə',removeFriend:'⭐ Sil',reportUser:'⚠️ Şikayət',you:'Sən',easy:'ASAN',medium:'ORTA',hard:'ÇƏTİN',epic:'EPOS',legendary:'ƏFSANƏ',noVideo:'Yox',link:'🔗 Link',savedProfile:'Yeniləndi!',welcome:'Xoş',back:'Xoş',loginFirst:'Giriş edin',inviteSent:'📤 Göndərildi!',roomCode:'Otaq kodu',games:'oyun',achievements:'nailiyyət',viewers:'izləyici',wipeConfirm:'HAMISI SİLİNƏCƏK!',wipeDone:'Silindi',errSave:'Xəta',errOnline:'Onlayn rejim',reportTitle:'Şikayət',reportReason:'Səbəb *',reportDetails:'Detallar',reportSubmit:'GÖNDƏR',reportSent:'Şikayət göndərildi!',adminMsgTitle:'Adminə mesaj',msgType:'Növ',msgSubject:'Mövzu *',msgBody:'Mesajınız *',msgSend:'GÖNDƏR',msgSent:'Göndərildi!',banned:'HESAB BANLANDI',bannedText:'Bu hesab bloklanıb.',banReason:'Səbəb',activeBans:'Aktiv banlar',unban:'Bağışla',msgFrom:'Göndərən',msgAt:'Tarix',quickBan:'Sürətli ban',selectUser:'İstifadəçi seç',banDuration:'Ban müddəti',banPermanent:'♾️ Daimi',ban1h:'⏰ 1 saat',ban1d:'📅 1 gün',ban7d:'📅 7 gün',ban30d:'📅 30 gün',banThisUser:'BANLA',allUsers:'Bütün istifadəçilər',banUser:'Banla',unbanUser:'Banı qaldır',banAdded:'Ban əlavə!',banRemoved:'Ban silindi!',userBanned:'banlandı!',confirmBan:'Banlayaq?',confirmUnban:'Banı qaldıraq?',noBans:'Aktiv ban yox',bannedLabel:'BANLI',tempBanLabel:'MÜVƏQQƏTİ BAN',reportedBy:'Şikayətçi',reportedUser:'Şikayət olunan',resolveReport:'Həll edildi',rejectReport:'Rədd',banFromReport:'Banla',unbanFromReport:'Banı qaldır',selectDuration:'Müddət seç' },
-  uk: { loading:'Підключення...',store:'🏪 МАГАЗИН',library:'📚 БІБЛІОТЕКА',kumbara:'🏆 СКАРБНИЧКА',news:'📢 НОВИНИ',users:'👥 КОРИСТУВАЧІ',profile:'👤 ПРОФІЛЬ',storeTitle:'Магазин',storeSub:'Спільна',libraryTitle:'Бібліотека',librarySub:'Ваші ігри',kmTitle:'🏆 СКАРБНИЧКА',kmSub:'2-8 гравців',kmOpen:'Відкрити',kmOpenDesc:'У новій вкладці',kmEmbed:'Вбудовано',kmEmbedDesc:'У лаунчері',kmLiveRooms:'Прямі',kmNoLiveRooms:'Немає',newsTitle:'Новини',newsSub:'Оновлення',usersTitle:'Користувачі',usersSub:'Всі гравці',searchPh:'🔍 Пошук...',adminBtn:'🔐 АДМІН',filters:'ФІЛЬТРИ',all:'Всі',fav:'Обрані',recent:'Недавні',free:'Безкоштовні',bought:'Куплені',cats:'КАТЕГОРІЇ',sortName:'Ім\'ям',sortPrice:'Ціною',filter:'ФІЛЬТР',ufAll:'Всі',ufOnline:'Онлайн',ufFriends:'Друзі',sorting:'СОРТ',usName:'Ім\'ям',usLevel:'Рівнем',about:'Про програму',dev:'РОЗРОБНИК',year:'РІК',version:'ВЕРСІЯ',license:'ЛІЦЕНЗІЯ',contributors:'АВТОРИ',donate:'Підтримати',adminLogin:'Адмін',adminPanel:'ПАНЕЛЬ',passwordPh:'Пароль',loginBtn:'УВІЙТИ',addGame:'Додати',manageGames:'Керувати',manageNews:'Новини',importExport:'Імпорт',moderation:'Модерація',bans:'Бани',adminMessages:'Повідомлення',reports:'Скарги',gameCover:'ОБКЛАДИНКА',uploadCover:'🖼️ Завантажити',gameGallery:'ГАЛЕРЕЯ',uploadGallery:'📷 Додати',gameTitle:'НАЗВА *',gameCategory:'КАТЕГОРІЯ',gameSubtitle:'ПІДЗАГОЛОВОК',gameDesc:'ОПИС',gamePrice:'ЦІНА',gamePlayable:'СТАТУС',gameAge18:'🔞 +18',gameHtml:'📄 HTML',uploadHtml:'HTML файл',gameDemo:'🎮 ДЕМО',uploadDemo:'Demo файл',gameRules:'ПРАВИЛА',gameManual:'ПОСІБНИК',save:'💾 ЗБЕРЕГТИ',cancel:'СКАСУВАТИ',newAnn:'📢 Нова',annTitle:'ЗАГОЛОВОК *',annCategory:'КАТЕГОРІЯ',annPriority:'ПРІОРИТЕТ',annContent:'ЗМІСТ *',annPublish:'📢 ОПУБЛІКУВАТИ',existingNews:'Існуючі',exportData:'📤 Експорт',exportDesc:'JSON.',exportBtn:'JSON',importData:'📥 Імпорт',importDesc:'З JSON.',importBtn:'ФАЙЛ',dangerZone:'⚠️ Небезпечно',wipeAll:'ВИДАЛИТИ ВСЕ',tabOverview:'📖 Огляд',tabGallery:'🖼️ Галерея',tabVideo:'📺 Відео',tabRules:'📜 Правила',tabManual:'📘 Посібник',ageTitle:'Вік',ageText:'18+.<br>Продовжити?',ageYes:'✅ 18+',ageNo:'❌ Ні',buyTitle:'💎 Купівля',buyOr:'— або —',authTitle:'👤 Акаунт',loginTab:'🔑 Увійти',registerTab:'✨ Реєстрація',importTab:'📥 Імпорт',playerNamePh:'Ім\'я',password:'Пароль',emailPh:'Email',registerBtn:'ЗАРЕЄСТРУВАТИСЬ',importDbDesc:'JSON.',fullscreen:'⛶ ПОВНИЙ',backBtn:'← НАЗАД',inviteTitle:'🔔 Запрошення',noInvite:'Немає',accept:'✅ Прийняти',decline:'❌ Відхилити',noGames:'Немає',noNews:'Немає',noResult:'Немає',noUsers:'Немає',noAct:'Немає.',saved:'Збережено!',updated:'Оновлено!',deleted:'Видалено!',annSaved:'Опубліковано!',annDeleted:'Видалено!',fill:'Заповніть!',exists:'Зайнято!',invalid:'Помилка!',confirmDel:'Видалити?',exported:'Експортовано!',imported:'Імпортовано!',badFile:'Помилка!',balance:'Баланс',earned:'Всього',streak:'Серія',daily:'ОТРИМАТИ',dailyDone:'Отримано',calTitle:'📅 Щоденні',calSub:'+0.10$ щодня!',day:'День',badges:'🏆 Досягнення',badSub:'Виконуйте!',acts:'Активність',actsSub:'Остання',xp:'XP',played:'Зіграно',plays:'Запусків',ach:'Досягнення',claim:'ОТРИМАТИ',claimed:'ОТРИМАНО',bonus:'🎉 ВСЕ! +20$',play:'▶ ГРАТИ',buy:'💎 КУПИТИ',demo:'🎮 ДЕМО',buyBalance:'💰 З балансу',poor:'Недостатньо!',purchased:'Куплено!',favAdd:'Додано!',favDel:'Видалено!',ageDeny:'18+!',logout:'Вийти',edit:'Редагувати',export:'Експорт',online:'Онлайн',member:'Учасник:',invite:'Запросити',addFriend:'⭐ Додати',removeFriend:'⭐ Видалити',reportUser:'⚠️ Скарга',you:'Ви',easy:'ЛЕГКО',medium:'СЕРЕДНЬО',hard:'СКЛАДНО',epic:'ЕПІЧНО',legendary:'ЛЕГЕНДА',noVideo:'Немає',link:'🔗 Посилання',savedProfile:'Оновлено!',welcome:'Ласкаво',back:'З поверненням',loginFirst:'Увійдіть',inviteSent:'📤 Надіслано!',roomCode:'Код кімнати',games:'ігор',achievements:'досягнень',viewers:'глядачів',wipeConfirm:'ВСЕ ВИДАЛИТИ?',wipeDone:'Видалено',errSave:'Помилка',errOnline:'Онлайн режим',reportTitle:'Скарга',reportReason:'Причина *',reportDetails:'Деталі',reportSubmit:'НАДІСЛАТИ',reportSent:'Скаргу надіслано!',adminMsgTitle:'Повідомлення адміну',msgType:'Тип',msgSubject:'Тема *',msgBody:'Повідомлення *',msgSend:'НАДІСЛАТИ',msgSent:'Надіслано!',banned:'АКАУНТ ЗАБАНЕНО',bannedText:'Цей акаунт заблоковано.',banReason:'Причина',activeBans:'Активні бани',unban:'Розбанити',msgFrom:'Від',msgAt:'Дата',quickBan:'Швидкий бан',selectUser:'Вибрати користувача',banDuration:'Тривалість бану',banPermanent:'♾️ Назавжди',ban1h:'⏰ 1 година',ban1d:'📅 1 день',ban7d:'📅 7 днів',ban30d:'📅 30 днів',banThisUser:'ЗАБАНИТИ',allUsers:'Всі користувачі',banUser:'Бан',unbanUser:'Розбан',banAdded:'Бан додано!',banRemoved:'Бан знято!',userBanned:'забанено!',confirmBan:'Забанити?',confirmUnban:'Зняти бан?',noBans:'Немає активних банів',bannedLabel:'ЗАБАНЕНИЙ',tempBanLabel:'ТИМЧАСОВИЙ БАН',reportedBy:'Скаржник',reportedUser:'Повідомлений',resolveReport:'Вирішено',rejectReport:'Відхилено',banFromReport:'Забанити',unbanFromReport:'Розбанити',selectDuration:'Виберіть строк' }
+  ka: {
+    loading:'დაკავშირება...',store:'🏪 მაღაზია',library:'📚 ბიბლიოთეკა',news:'📢 სიახლეები',users:'👥 მომხმარებლები',profile:'👤 პროფილი',
+    storeTitle:'მაღაზია',storeSub:'საერთო',libraryTitle:'ჩემი ბიბლიოთეკა',librarySub:'თქვენი თამაშები',
+    newsTitle:'სიახლეები',newsSub:'განახლებები',usersTitle:'მომხმარებლები',usersSub:'ყველა მოთამაშე',
+    searchPh:'🔍 ძიება...',adminBtn:'🔐 ადმინი',
+    filters:'ფილტრები',all:'ყველა',fav:'ფავორიტები',recent:'ბოლო',free:'უფასო',bought:'ნაყიდი',cats:'კატეგორიები',
+    sortName:'სახელით',sortPrice:'ფასით',filter:'ფილტრი',ufAll:'ყველა',ufOnline:'ონლაინ',ufFriends:'მეგობრები',
+    sorting:'სორტი',usName:'სახელით',usLevel:'დონით',
+    about:'შესახებ',dev:'შემქმნელი',year:'წელი',version:'ვერსია',license:'ლიცენზია',contributors:'ავტორები',donate:'მხარდაჭერა',
+    adminLogin:'ადმინი',adminPanel:'ადმინ პანელი',passwordPh:'პაროლი',loginBtn:'შესვლა',
+    addGame:'დამატება',manageGames:'მართვა',manageNews:'სიახლეები',importExport:'იმპორტი',
+    moderation:'მოდერაცია',bans:'ბანები',adminMessages:'შეტყობინებები',reports:'ჩივილები',chatMod:'ჩატის მოდი',
+    gameCover:'ყდა',uploadCover:'🖼️ ატვირთვა',gameGallery:'გალერეა',uploadGallery:'📷 დამატება',
+    gameTitle:'სათაური *',gameCategory:'კატეგორია',gameSubtitle:'ქვესათაური',gameDesc:'აღწერა',
+    gamePrice:'ფასი',gamePlayable:'სტატუსი',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'HTML ფაილი',gameDemo:'🎮 დემო',uploadDemo:'დემო ფაილი',
+    gameRules:'წესები',gameManual:'სახელმძღვანელო',save:'💾 შენახვა',cancel:'გაუქმება',
+    newAnn:'📢 ახალი',annTitle:'სათაური *',annCategory:'კატეგორია',annPriority:'პრიორიტეტი',annContent:'შინაარსი *',annPublish:'📢 გამოქვეყნება',existingNews:'არსებული',
+    exportData:'📤 ექსპორტი',exportDesc:'JSON.',exportBtn:'JSON',
+    importData:'📥 იმპორტი',importDesc:'JSON-დან.',importBtn:'ფაილი',
+    dangerZone:'⚠️ საშიში',wipeAll:'ყველაფრის წაშლა',
+    tabOverview:'📖 მიმოხილვა',tabGallery:'🖼️ გალერეა',tabVideo:'📺 ვიდეო',tabRules:'📜 წესები',tabManual:'📘 სახელმძღვანელო',
+    ageTitle:'ასაკი',ageText:'18+.<br>გაგრძელება?',ageYes:'✅ 18+',ageNo:'❌ არა',
+    buyTitle:'💎 ყიდვა',buyOr:'— ან —',
+    authTitle:'👤 ანგარიში',loginTab:'🔑 შესვლა',registerTab:'✨ რეგისტრაცია',importTab:'📥 იმპორტი',
+    playerNamePh:'სახელი',password:'პაროლი',emailPh:'Email',
+    registerBtn:'რეგისტრაცია',importDbDesc:'JSON.',
+    fullscreen:'⛶ სრული',backBtn:'← უკან',
+    inviteTitle:'🔔 მოწვევები',noInvite:'არა',accept:'✅ მიღება',decline:'❌ უარყოფა',
+    noGames:'არაფერი',noNews:'არაფერი',noResult:'არაფერი',noUsers:'არაფერი',noAct:'არაფერი.',
+    saved:'შენახულია!',updated:'განახლდა!',deleted:'წაიშალა!',
+    annSaved:'გამოქვეყნდა!',annDeleted:'წაიშალა!',
+    fill:'შეავსეთ!',exists:'დაკავებულია!',invalid:'შეცდომა!',
+    confirmDel:'წაშლა?',exported:'ექსპორტი!',imported:'იმპორტი!',badFile:'შეცდომა!',
+    balance:'ბალანსი',earned:'სულ',streak:'სერია',
+    daily:'მიიღე',dailyDone:'მიღებული',
+    calTitle:'📅 ყოველდღიური',calSub:'+0.10$ ყოველ დღე!',day:'დღე',
+    badges:'🏆 მიღწევები',badSub:'შეასრულეთ!',
+    acts:'აქტივობები',actsSub:'ბოლო',
+    xp:'XP',played:'თამაში',plays:'სულ',ach:'მიღწევები',
+    claim:'მიღება',claimed:'მიღებული',bonus:'🎉 ყველა! +20$',
+    play:'▶ თამაში',buy:'💎 ყიდვა',demo:'🎮 დემო',
+    buyBalance:'💰 ბალანსით',poor:'არაა!',purchased:'ნაყიდი!',
+    favAdd:'დამატებული!',favDel:'წაშლილი!',
+    ageDeny:'18+!',logout:'გასვლა',edit:'რედაქტირება',export:'ექსპორტი',
+    online:'ონლაინ',member:'წევრი:',
+    invite:'მოწვევა',addFriend:'⭐ დამატება',removeFriend:'⭐ წაშლა',reportUser:'⚠️ ჩივილი',you:'თქვენ',
+    easy:'ადვილი',medium:'საშუალო',hard:'რთული',epic:'ეპიკური',legendary:'ლეგენდარული',
+    noVideo:'არა',link:'🔗 ლინკი',savedProfile:'განახლდა!',
+    welcome:'კეთილი',back:'კეთილი',loginFirst:'შესვლა საჭიროა',
+    inviteSent:'📤 გაგზავნილი!',roomCode:'ოთახის კოდი',
+    games:'თამაში',achievements:'მიღწევები',viewers:'მაყურებელი',
+    wipeConfirm:'ყველაფერი წაიშლება?',wipeDone:'წაშლილია',
+    errSave:'შეცდომა',errOnline:'ონლაინ რეჟიმი',
+    reportTitle:'ჩივილი',reportReason:'მიზეზი *',reportDetails:'დეტალები',reportSubmit:'გაგზავნა',reportSent:'ჩივილი გაგზავნილია!',
+    adminMsgTitle:'ადმინის შეტყობინება',msgType:'ტიპი',msgSubject:'თემა *',msgBody:'შეტყობინება *',msgSend:'გაგზავნა',msgSent:'გაგზავნილია!',
+    banned:'ბანი',bannedText:'ეს ანგარიში დაბლოკილია.',
+    banIp:'მომხმარებლის სახელი',banReason:'მიზეზი',activeBans:'აქტიური ბანები',unban:'ბანის მოხსნა',
+    clearChat:'🗑️ ჩატის გასუფთავება',msgFrom:'ვისგან',msgAt:'თარიღი',
+    banAdded:'ბანი დაემატა!',banRemoved:'ბანი მოიხსნა!',userBanned:'დაბანილია!',
+    noBans:'აქტიური ბანი არაა'
+  },
+  az: {
+    loading:'Qoşulur...',store:'🏪 MAĞAZA',library:'📚 KİTABXANA',news:'📢 XƏBƏRLƏR',users:'👥 İSTİFADƏÇİLƏR',profile:'👤 PROFİL',
+    storeTitle:'Mağaza',storeSub:'Ortaq',libraryTitle:'Kitabxanam',librarySub:'Oyunlarınız',
+    newsTitle:'Xəbərlər',newsSub:'Yeniliklər',usersTitle:'İstifadəçilər',usersSub:'Bütün oyunçular',
+    searchPh:'🔍 Axtar...',adminBtn:'🔐 ADMİN',
+    filters:'FİLTRLƏR',all:'Hamısı',fav:'Sevimlilər',recent:'Son',free:'Pulsuz',bought:'Alınan',cats:'KATEQORİYALAR',
+    sortName:'Ada görə',sortPrice:'Qiymətə',filter:'FİLTR',ufAll:'Hamısı',ufOnline:'Onlayn',ufFriends:'Dostlar',
+    sorting:'SIRALAMA',usName:'Ada görə',usLevel:'Səviyyə',
+    about:'Haqqında',dev:'YARADICI',year:'İL',version:'VERSİYA',license:'LİSENZİYA',contributors:'MÜƏLLİFLƏR',donate:'Dəstək',
+    adminLogin:'Admin',adminPanel:'ADMİN PANEL',passwordPh:'Şifrə',loginBtn:'GİRİŞ',
+    addGame:'Əlavə',manageGames:'İdarə',manageNews:'Xəbərlər',importExport:'İdxal',
+    moderation:'Moderasiya',bans:'Banlar',adminMessages:'Mesajlar',reports:'Şikayətlər',chatMod:'Chat mod',
+    gameCover:'QAPAQ',uploadCover:'🖼️ Yüklə',gameGallery:'QALERİYA',uploadGallery:'📷 Əlavə et',
+    gameTitle:'BAŞLIQ *',gameCategory:'KATEQORİYA',gameSubtitle:'ALT',gameDesc:'AÇIQLAMA',
+    gamePrice:'QİYMƏT',gamePlayable:'STATUS',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'HTML faylı',gameDemo:'🎮 DEMO',uploadDemo:'Demo faylı',
+    gameRules:'QAYDALAR',gameManual:'TƏLİMAT',save:'💾 SAXLA',cancel:'LƏĞV',
+    newAnn:'📢 Yeni',annTitle:'BAŞLIQ *',annCategory:'KATEQORİYA',annPriority:'ÖNCELİK',annContent:'MƏZMUN *',annPublish:'📢 YAYIMLA',existingNews:'Mövcud',
+    exportData:'📤 İxrac',exportDesc:'JSON.',exportBtn:'JSON',
+    importData:'📥 İdxal',importDesc:'JSON-dan.',importBtn:'FAYL',
+    dangerZone:'⚠️ Təhlükəli',wipeAll:'HAMISINI SİL',
+    tabOverview:'📖 İcmal',tabGallery:'🖼️ Qaleriya',tabVideo:'📺 Video',tabRules:'📜 Qaydalar',tabManual:'📘 Təlimat',
+    ageTitle:'Yaş',ageText:'18+.<br>Davam?',ageYes:'✅ 18+',ageNo:'❌ Xeyr',
+    buyTitle:'💎 Al',buyOr:'— və ya —',
+    authTitle:'👤 Hesab',loginTab:'🔑 Giriş',registerTab:'✨ Qeydiyyat',importTab:'📥 İdxal',
+    playerNamePh:'Ad',password:'Şifrə',emailPh:'Email',
+    registerBtn:'QEYDİYYAT',importDbDesc:'JSON.',
+    fullscreen:'⛶ TAM',backBtn:'← GERİ',
+    inviteTitle:'🔔 Dəvətlər',noInvite:'Yox',accept:'✅ Qəbul',decline:'❌ Rədd',
+    noGames:'Yox',noNews:'Yox',noResult:'Yox',noUsers:'Yox',noAct:'Yox.',
+    saved:'Saxlanıldı!',updated:'Yeniləndi!',deleted:'Silindi!',
+    annSaved:'Yayınlandı!',annDeleted:'Silindi!',
+    fill:'Doldurun!',exists:'Ad götürülüb!',invalid:'Səhv!',
+    confirmDel:'Sil?',exported:'İxrac!',imported:'İdxal!',badFile:'Səhv!',
+    balance:'Balans',earned:'Səl',streak:'Seriya',
+    daily:'AL',dailyDone:'Alınıb',
+    calTitle:'📅 Gündəlik',calSub:'+0.10$ hər gün!',day:'Gün',
+    badges:'🏆 Nailiyyətlər',badSub:'Qazanın!',
+    acts:'Fəaliyyətlər',actsSub:'Son',
+    xp:'XP',played:'Oyun',plays:'Səl',ach:'Nailiyyət',
+    claim:'AL',claimed:'ALINDI',bonus:'🎉 HAMISI! +20$',
+    play:'▶ OYNA',buy:'💎 AL',demo:'🎮 DEMO',
+    buyBalance:'💰 Balansla',poor:'Kifayət deyil!',purchased:'Alındı!',
+    favAdd:'Əlavə!',favDel:'Silindi!',
+    ageDeny:'18+!',logout:'Çıxış',edit:'Redaktə',export:'İxrac',
+    online:'Onlayn',member:'Üzv:',
+    invite:'Dəvət',addFriend:'⭐ Əlavə',removeFriend:'⭐ Sil',reportUser:'⚠️ Şikayət',you:'Sən',
+    easy:'ASAN',medium:'ORTA',hard:'ÇƏTİN',epic:'EPOS',legendary:'ƏFSANƏ',
+    noVideo:'Yox',link:'🔗 Link',savedProfile:'Yeniləndi!',
+    welcome:'Xoş',back:'Xoş',loginFirst:'Giriş edin',
+    inviteSent:'📤 Göndərildi!',roomCode:'Otaq kodu',
+    games:'oyun',achievements:'nailiyyət',viewers:'izləyici',
+    wipeConfirm:'HAMISI SİLİNƏCƏK!',wipeDone:'Silindi',
+    errSave:'Xəta',errOnline:'Onlayn rejim',
+    reportTitle:'Şikayət',reportReason:'Səbəb *',reportDetails:'Detallar',reportSubmit:'GÖNDƏR',reportSent:'Şikayət göndərildi!',
+    adminMsgTitle:'Adminə mesaj',msgType:'Növ',msgSubject:'Mövzu *',msgBody:'Mesajınız *',msgSend:'GÖNDƏR',msgSent:'Göndərildi!',
+    banned:'HESAB BANLANDI',bannedText:'Bu hesab bloklanıb.',
+    banIp:'İstifadəçi adı',banReason:'Səbəb',activeBans:'Aktiv banlar',unban:'Bağışla',
+    clearChat:'🗑️ Chatı təmizlə',msgFrom:'Göndərən',msgAt:'Tarix',
+    banAdded:'Ban əlavə!',banRemoved:'Ban silindi!',userBanned:'banlandı!',
+    noBans:'Aktiv ban yoxdur'
+  },
+  uk: {
+    loading:'Підключення...',store:'🏪 МАГАЗИН',library:'📚 БІБЛІОТЕКА',news:'📢 НОВИНИ',users:'👥 КОРИСТУВАЧІ',profile:'👤 ПРОФІЛЬ',
+    storeTitle:'Магазин',storeSub:'Спільна',libraryTitle:'Бібліотека',librarySub:'Ваші ігри',
+    newsTitle:'Новини',newsSub:'Оновлення',usersTitle:'Користувачі',usersSub:'Всі гравці',
+    searchPh:'🔍 Пошук...',adminBtn:'🔐 АДМІН',
+    filters:'ФІЛЬТРИ',all:'Всі',fav:'Обрані',recent:'Недавні',free:'Безкоштовні',bought:'Куплені',cats:'КАТЕГОРІЇ',
+    sortName:'Ім\'ям',sortPrice:'Ціною',filter:'ФІЛЬТР',ufAll:'Всі',ufOnline:'Онлайн',ufFriends:'Друзі',
+    sorting:'СОРТ',usName:'Ім\'ям',usLevel:'Рівнем',
+    about:'Про програму',dev:'РОЗРОБНИК',year:'РІК',version:'ВЕРСІЯ',license:'ЛІЦЕНЗІЯ',contributors:'АВТОРИ',donate:'Підтримати',
+    adminLogin:'Адмін',adminPanel:'ПАНЕЛЬ',passwordPh:'Пароль',loginBtn:'УВІЙТИ',
+    addGame:'Додати',manageGames:'Керувати',manageNews:'Новини',importExport:'Імпорт',
+    moderation:'Модерація',bans:'Бани',adminMessages:'Повідомлення',reports:'Скарги',chatMod:'Мод чату',
+    gameCover:'ОБКЛАДИНКА',uploadCover:'🖼️ Завантажити',gameGallery:'ГАЛЕРЕЯ',uploadGallery:'📷 Додати',
+    gameTitle:'НАЗВА *',gameCategory:'КАТЕГОРІЯ',gameSubtitle:'ПІДЗАГОЛОВОК',gameDesc:'ОПИС',
+    gamePrice:'ЦІНА',gamePlayable:'СТАТУС',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'HTML файл',gameDemo:'🎮 ДЕМО',uploadDemo:'Demo файл',
+    gameRules:'ПРАВИЛА',gameManual:'ПОСІБНИК',save:'💾 ЗБЕРЕГТИ',cancel:'СКАСУВАТИ',
+    newAnn:'📢 Нова',annTitle:'ЗАГОЛОВОК *',annCategory:'КАТЕГОРІЯ',annPriority:'ПРІОРИТЕТ',annContent:'ЗМІСТ *',annPublish:'📢 ОПУБЛІКУВАТИ',existingNews:'Існуючі',
+    exportData:'📤 Експорт',exportDesc:'JSON.',exportBtn:'JSON',
+    importData:'📥 Імпорт',importDesc:'З JSON.',importBtn:'ФАЙЛ',
+    dangerZone:'⚠️ Небезпечно',wipeAll:'ВИДАЛИТИ ВСЕ',
+    tabOverview:'📖 Огляд',tabGallery:'🖼️ Галерея',tabVideo:'📺 Відео',tabRules:'📜 Правила',tabManual:'📘 Посібник',
+    ageTitle:'Вік',ageText:'18+.<br>Продовжити?',ageYes:'✅ 18+',ageNo:'❌ Ні',
+    buyTitle:'💎 Купівля',buyOr:'— або —',
+    authTitle:'👤 Акаунт',loginTab:'🔑 Увійти',registerTab:'✨ Реєстрація',importTab:'📥 Імпорт',
+    playerNamePh:'Ім\'я',password:'Пароль',emailPh:'Email',
+    registerBtn:'ЗАРЕЄСТРУВАТИСЬ',importDbDesc:'JSON.',
+    fullscreen:'⛶ ПОВНИЙ',backBtn:'← НАЗАД',
+    inviteTitle:'🔔 Запрошення',noInvite:'Немає',accept:'✅ Прийняти',decline:'❌ Відхилити',
+    noGames:'Немає',noNews:'Немає',noResult:'Немає',noUsers:'Немає',noAct:'Немає.',
+    saved:'Збережено!',updated:'Оновлено!',deleted:'Видалено!',
+    annSaved:'Опубліковано!',annDeleted:'Видалено!',
+    fill:'Заповніть!',exists:'Зайнято!',invalid:'Помилка!',
+    confirmDel:'Видалити?',exported:'Експортовано!',imported:'Імпортовано!',badFile:'Помилка!',
+    balance:'Баланс',earned:'Всього',streak:'Серія',
+    daily:'ОТРИМАТИ',dailyDone:'Отримано',
+    calTitle:'📅 Щоденні',calSub:'+0.10$ щодня!',day:'День',
+    badges:'🏆 Досягнення',badSub:'Виконуйте!',
+    acts:'Активність',actsSub:'Остання',
+    xp:'XP',played:'Зіграно',plays:'Запусків',ach:'Досягнення',
+    claim:'ОТРИМАТИ',claimed:'ОТРИМАНО',bonus:'🎉 ВСЕ! +20$',
+    play:'▶ ГРАТИ',buy:'💎 КУПИТИ',demo:'🎮 ДЕМО',
+    buyBalance:'💰 З балансу',poor:'Недостатньо!',purchased:'Куплено!',
+    favAdd:'Додано!',favDel:'Видалено!',
+    ageDeny:'18+!',logout:'Вийти',edit:'Редагувати',export:'Експорт',
+    online:'Онлайн',member:'Учасник:',
+    invite:'Запросити',addFriend:'⭐ Додати',removeFriend:'⭐ Видалити',reportUser:'⚠️ Скарга',you:'Ви',
+    easy:'ЛЕГКО',medium:'СЕРЕДНЬО',hard:'СКЛАДНО',epic:'ЕПІЧНО',legendary:'ЛЕГЕНДА',
+    noVideo:'Немає',link:'🔗 Посилання',savedProfile:'Оновлено!',
+    welcome:'Ласкаво',back:'З поверненням',loginFirst:'Увійдіть',
+    inviteSent:'📤 Надіслано!',roomCode:'Код кімнати',
+    games:'ігор',achievements:'досягнень',viewers:'глядачів',
+    wipeConfirm:'ВСЕ ВИДАЛИТИ?',wipeDone:'Видалено',
+    errSave:'Помилка',errOnline:'Онлайн режим',
+    reportTitle:'Скарга',reportReason:'Причина *',reportDetails:'Деталі',reportSubmit:'НАДІСЛАТИ',reportSent:'Скаргу надіслано!',
+    adminMsgTitle:'Повідомлення адміну',msgType:'Тип',msgSubject:'Тема *',msgBody:'Повідомлення *',msgSend:'НАДІСЛАТИ',msgSent:'Надіслано!',
+    banned:'АКАУНТ ЗАБАНЕНО',bannedText:'Цей акаунт заблоковано.',
+    banIp:'Ім\'я користувача',banReason:'Причина',activeBans:'Активні бани',unban:'Розбанити',
+    clearChat:'🗑️ Очистити чат',msgFrom:'Від',msgAt:'Дата',
+    banAdded:'Бан додано!',banRemoved:'Бан знято!',userBanned:'забанено!',
+    noBans:'Немає активних банів'
+  },
+  hi: {
+    loading:'कनेक्ट...',store:'🏪 स्टोर',library:'📚 लाइब्रेरी',news:'📢 समाचार',users:'👥 उपयोगकर्ता',profile:'👤 प्रोफ़ाइल',
+    storeTitle:'स्टोर',storeSub:'साझा',libraryTitle:'मेरी लाइब्रेरी',librarySub:'आपके खेल',
+    newsTitle:'समाचार',newsSub:'अपडेट',usersTitle:'उपयोगकर्ता',usersSub:'सभी खिलाड़ी',
+    searchPh:'🔍 खोजें...',adminBtn:'🔐 एडमिन',
+    filters:'फ़िल्टर',all:'सभी',fav:'पसंदीदा',recent:'खेला',free:'मुफ़्त',bought:'खरीदा',cats:'श्रेणियाँ',
+    sortName:'नाम',sortPrice:'मूल्य',filter:'फ़िल्टर',ufAll:'सभी',ufOnline:'ऑनलाइन',ufFriends:'दोस्त',
+    sorting:'क्रम',usName:'नाम',usLevel:'स्तर',
+    about:'बारे में',dev:'डेवलपर',year:'वर्ष',version:'संस्करण',license:'लाइसेंस',contributors:'योगदानकर्ता',donate:'समर्थन',
+    adminLogin:'एडमिन लॉगिन',adminPanel:'एडमिन',passwordPh:'पासवर्ड',loginBtn:'लॉगिन',
+    addGame:'खेल',manageGames:'प्रबंधन',manageNews:'समाचार',importExport:'आयात/निर्यात',
+    moderation:'मॉडरेशन',bans:'प्रतिबंध',adminMessages:'संदेश',reports:'शिकायतें',chatMod:'चैट मॉड',
+    gameCover:'कवर',uploadCover:'🖼️ अपलोड',gameGallery:'गैलरी',uploadGallery:'📷 जोड़ें',
+    gameTitle:'शीर्षक *',gameCategory:'श्रेणी',gameSubtitle:'उपशीर्षक',gameDesc:'विवरण',
+    gamePrice:'मूल्य',gamePlayable:'स्थिति',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'चुनें',gameDemo:'🎮 डेमो',uploadDemo:'डेमो',
+    gameRules:'नियम',gameManual:'मैनुअल',save:'💾 सहेजें',cancel:'रद्द',
+    newAnn:'📢 नया',annTitle:'शीर्षक *',annCategory:'श्रेणी',annPriority:'प्राथमिकता',annContent:'सामग्री *',annPublish:'📢 प्रकाशित',existingNews:'मौजूदा',
+    exportData:'📤 निर्यात',exportDesc:'JSON डाउनलोड।',exportBtn:'JSON',
+    importData:'📥 आयात',importDesc:'JSON लोड।',importBtn:'फ़ाइल',
+    dangerZone:'⚠️ खतरनाक',wipeAll:'सब हटाएं',
+    tabOverview:'📖 अवलोकन',tabGallery:'🖼️ गैलरी',tabVideo:'📺 वीडियो',tabRules:'📜 नियम',tabManual:'📘 मैनुअल',
+    ageTitle:'आयु सत्यापन',ageText:'18+ सामग्री।<br>क्या आप 18+ हैं?',ageYes:'✅ हाँ, 18+',ageNo:'❌ नहीं',
+    buyTitle:'💎 खरीदें',buyOr:'— या —',
+    authTitle:'👤 खाता',loginTab:'🔑 लॉगिन',registerTab:'✨ पंजीकरण',importTab:'📥 आयात',
+    playerNamePh:'खिलाड़ी का नाम',password:'पासवर्ड',emailPh:'ईमेल',
+    registerBtn:'पंजीकरण',importDbDesc:'JSON लोड करें।',
+    fullscreen:'⛶ पूर्ण',backBtn:'← पीछे',
+    inviteTitle:'🔔 आमंत्रण',noInvite:'कोई नहीं',accept:'✅ स्वीकार',decline:'❌ अस्वीकार',
+    noGames:'कोई खेल नहीं',noNews:'कोई समाचार नहीं',noResult:'नहीं मिला',noUsers:'कोई नहीं',noAct:'कोई गतिविधि नहीं।',
+    saved:'सहेजा!',updated:'अपडेट!',deleted:'हटाया!',
+    annSaved:'प्रकाशित!',annDeleted:'हटाया!',
+    fill:'सब भरें!',exists:'नाम लिया गया!',invalid:'गलत!',
+    confirmDel:'पक्का?',exported:'निर्यात!',imported:'आयात!',badFile:'गलत फ़ाइल!',
+    balance:'बैलेंस',earned:'कुल कमाई',streak:'स्ट्रीक',
+    daily:'दैनिक',dailyDone:'प्राप्त',
+    calTitle:'📅 दैनिक पुरस्कार',calSub:'+0.10$ प्रतिदिन!',day:'दिन',
+    badges:'🏆 उपलब्धियाँ',badSub:'कार्य पूरे करें!',
+    acts:'गतिविधियाँ',actsSub:'इतिहास',
+    xp:'XP',played:'खेला',plays:'कुल',ach:'उपलब्धियाँ',
+    claim:'प्राप्त',claimed:'प्राप्त',bonus:'🎉 सब पूरा +20$',
+    play:'▶ खेलें',buy:'💎 खरीदें',demo:'🎮 डेमो',
+    buyBalance:'💰 बैलेंस से',poor:'अपर्याप्त!',purchased:'खरीदा!',
+    favAdd:'जोड़ा!',favDel:'हटाया!',
+    ageDeny:'18+!',logout:'लॉगआउट',edit:'संपादित',export:'निर्यात',
+    online:'ऑनलाइन',member:'सदस्य:',
+    invite:'आमंत्रित',addFriend:'⭐ जोड़ें',removeFriend:'⭐ हटाएं',reportUser:'⚠️ शिकायत',you:'आप',
+    easy:'आसान',medium:'मध्यम',hard:'कठिन',epic:'महाकाव्य',legendary:'पौराणिक',
+    noVideo:'कोई वीडियो नहीं',link:'🔗 लिंक',savedProfile:'अपडेट!',
+    welcome:'स्वागत',back:'वापस स्वागत',loginFirst:'पहले लॉगिन करें',
+    inviteSent:'📤 भेजा!',roomCode:'कमरा कोड',
+    games:'खेल',achievements:'उपलब्धि',viewers:'दर्शक',
+    wipeConfirm:'सब हटाएं?',wipeDone:'हटाया',
+    errSave:'त्रुटि',errOnline:'ऑनलाइन मोड चाहिए',
+    reportTitle:'शिकायत',reportReason:'कारण *',reportDetails:'विवरण',reportSubmit:'भेजें',reportSent:'शिकायत भेजी!',
+    adminMsgTitle:'एडमिन को संदेश',msgType:'प्रकार',msgSubject:'विषय *',msgBody:'संदेश *',msgSend:'भेजें',msgSent:'भेजा!',
+    banned:'खाता प्रतिबंधित',bannedText:'यह खाता अवरुद्ध है।',
+    banIp:'उपयोगकर्ता नाम',banReason:'कारण',activeBans:'सक्रिय प्रतिबंध',unban:'माफ़ करें',
+    clearChat:'🗑️ चैट साफ़ करें',msgFrom:'से',msgAt:'तारीख',
+    banAdded:'प्रतिबंध जोड़ा!',banRemoved:'प्रतिबंध हटाया!',userBanned:'प्रतिबंधित!',
+    noBans:'कोई सक्रिय प्रतिबंध नहीं'
+  },
+  he: {
+    loading:'מתחבר...',store:'🏪 חנות',library:'📚 ספרייה',news:'📢 חדשות',users:'👥 משתמשים',profile:'👤 פרופיל',
+    storeTitle:'חנות',storeSub:'משותף',libraryTitle:'הספרייה שלי',librarySub:'המשחקים שלך',
+    newsTitle:'חדשות',newsSub:'עדכונים',usersTitle:'משתמשים',usersSub:'כל השחקנים',
+    searchPh:'🔍 חפש...',adminBtn:'🔐 מנהל',
+    filters:'מסננים',all:'הכל',fav:'מועדפים',recent:'שוחק',free:'חינם',bought:'נקנה',cats:'קטגוריות',
+    sortName:'שם',sortPrice:'מחיר',filter:'מסנן',ufAll:'הכל',ufOnline:'מחובר',ufFriends:'חברים',
+    sorting:'מיון',usName:'שם',usLevel:'רמה',
+    about:'אודות',dev:'מפתח',year:'שנה',version:'גרסה',license:'רישיון',contributors:'תורמים',donate:'תרום',
+    adminLogin:'כניסת מנהל',adminPanel:'מנהל',passwordPh:'סיסמה',loginBtn:'כניסה',
+    addGame:'משחק',manageGames:'ניהול',manageNews:'חדשות',importExport:'ייבוא/ייצוא',
+    moderation:'ניהול',bans:'חסימות',adminMessages:'הודעות',reports:'תלונות',chatMod:'ניהול צ\'אט',
+    gameCover:'כריכה',uploadCover:'🖼️ העלה',gameGallery:'גלריה',uploadGallery:'📷 הוסף',
+    gameTitle:'כותרת *',gameCategory:'קטגוריה',gameSubtitle:'כותרת משנה',gameDesc:'תיאור',
+    gamePrice:'מחיר',gamePlayable:'סטטוס',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'בחר',gameDemo:'🎮 דמו',uploadDemo:'דמו',
+    gameRules:'כללים',gameManual:'מדריך',save:'💾 שמור',cancel:'ביטול',
+    newAnn:'📢 חדש',annTitle:'כותרת *',annCategory:'קטגוריה',annPriority:'עדיפות',annContent:'תוכן *',annPublish:'📢 פרסם',existingNews:'קיים',
+    exportData:'📤 ייצוא',exportDesc:'JSON.',exportBtn:'JSON',
+    importData:'📥 ייבוא',importDesc:'JSON.',importBtn:'קובץ',
+    dangerZone:'⚠️ מסוכן',wipeAll:'מחק הכל',
+    tabOverview:'📖 סקירה',tabGallery:'🖼️ גלריה',tabVideo:'📺 וידאו',tabRules:'📜 כללים',tabManual:'📘 מדריך',
+    ageTitle:'אימות גיל',ageText:'18+.<br>האם אתה 18+?',ageYes:'✅ כן, 18+',ageNo:'❌ לא',
+    buyTitle:'💎 קנה',buyOr:'— או —',
+    authTitle:'👤 חשבון',loginTab:'🔑 כניסה',registerTab:'✨ הרשמה',importTab:'📥 ייבוא',
+    playerNamePh:'שם שחקן',password:'סיסמה',emailPh:'אימייל',
+    registerBtn:'הרשמה',importDbDesc:'JSON.',
+    fullscreen:'⛶ מלא',backBtn:'← חזרה',
+    inviteTitle:'🔔 הזמנות',noInvite:'אין',accept:'✅ קבל',decline:'❌ דחה',
+    noGames:'אין משחקים',noNews:'אין חדשות',noResult:'לא נמצא',noUsers:'אין',noAct:'אין פעילות.',
+    saved:'נשמר!',updated:'עודכן!',deleted:'נמחק!',
+    annSaved:'פורסם!',annDeleted:'נמחק!',
+    fill:'מלא הכל!',exists:'שם תפוס!',invalid:'שגוי!',
+    confirmDel:'בטוח?',exported:'יוצא!',imported:'יובא!',badFile:'קובץ שגוי!',
+    balance:'יתרה',earned:'סה"כ הרווח',streak:'רצף',
+    daily:'יומי',dailyDone:'נלקח',
+    calTitle:'📅 פרסים יומיים',calSub:'+0.10$ כל יום!',day:'יום',
+    badges:'🏆 הישגים',badSub:'השלם משימות!',
+    acts:'פעילות',actsSub:'היסטוריה',
+    xp:'XP',played:'שוחק',plays:'סה"כ',ach:'הישגים',
+    claim:'קבל',claimed:'התקבל',bonus:'🎉 הכל +20$',
+    play:'▶ שחק',buy:'💎 קנה',demo:'🎮 דמו',
+    buyBalance:'💰 עם יתרה',poor:'לא מספיק!',purchased:'נקנה!',
+    favAdd:'נוסף!',favDel:'הוסר!',
+    ageDeny:'18+!',logout:'יציאה',edit:'ערוך',export:'ייצוא',
+    online:'מחובר',member:'חבר:',
+    invite:'הזמן',addFriend:'⭐ הוסף',removeFriend:'⭐ הסר',reportUser:'⚠️ תלונה',you:'אתה',
+    easy:'קל',medium:'בינוני',hard:'קשה',epic:'אפי',legendary:'אגדי',
+    noVideo:'אין',link:'🔗 קישור',savedProfile:'עודכן!',
+    welcome:'ברוך הבא',back:'ברוך הבא',loginFirst:'התחבר קודם',
+    inviteSent:'📤 נשלח!',roomCode:'קוד חדר',
+    games:'משחקים',achievements:'הישגים',viewers:'צופים',
+    wipeConfirm:'למחוק הכל?',wipeDone:'נמחק',
+    errSave:'שגיאה',errOnline:'נדרש מצב מקוון',
+    reportTitle:'תלונה',reportReason:'סיבה *',reportDetails:'פרטים',reportSubmit:'שלח',reportSent:'תלונה נשלחה!',
+    adminMsgTitle:'הודעה למנהל',msgType:'סוג',msgSubject:'נושא *',msgBody:'הודעה *',msgSend:'שלח',msgSent:'נשלח!',
+    banned:'חשבון נחסם',bannedText:'חשבון זה חסום.',
+    banIp:'שם משתמש',banReason:'סיבה',activeBans:'חסימות פעילות',unban:'בטל חסימה',
+    clearChat:'🗑️ נקה צ\'אט',msgFrom:'מאת',msgAt:'תאריך',
+    banAdded:'חסימה נוספה!',banRemoved:'חסימה בוטלה!',userBanned:'נחסם!',
+    noBans:'אין חסימות פעילות'
+  },
+  ja: {
+    loading:'接続中...',store:'🏪 ストア',library:'📚 ライブラリ',news:'📢 ニュース',users:'👥 ユーザー',profile:'👤 プロフィール',
+    storeTitle:'ストア',storeSub:'共有',libraryTitle:'マイライブラリ',librarySub:'あなたのゲーム',
+    newsTitle:'ニュース',newsSub:'更新',usersTitle:'ユーザー',usersSub:'全プレイヤー',
+    searchPh:'🔍 検索...',adminBtn:'🔐 管理者',
+    filters:'フィルター',all:'全て',fav:'お気に入り',recent:'プレイ済み',free:'無料',bought:'購入済み',cats:'カテゴリ',
+    sortName:'名前',sortPrice:'価格',filter:'フィルター',ufAll:'全て',ufOnline:'オンライン',ufFriends:'友達',
+    sorting:'ソート',usName:'名前',usLevel:'レベル',
+    about:'概要',dev:'開発者',year:'年',version:'バージョン',license:'ライセンス',contributors:'貢献者',donate:'寄付',
+    adminLogin:'管理者ログイン',adminPanel:'管理者',passwordPh:'パスワード',loginBtn:'ログイン',
+    addGame:'ゲーム',manageGames:'管理',manageNews:'ニュース',importExport:'インポート/エクスポート',
+    moderation:'モデレーション',bans:'BAN',adminMessages:'メッセージ',reports:'通報',chatMod:'チャット管理',
+    gameCover:'カバー',uploadCover:'🖼️ アップロード',gameGallery:'ギャラリー',uploadGallery:'📷 追加',
+    gameTitle:'タイトル *',gameCategory:'カテゴリ',gameSubtitle:'サブタイトル',gameDesc:'説明',
+    gamePrice:'価格',gamePlayable:'状態',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'選択',gameDemo:'🎮 デモ',uploadDemo:'デモ',
+    gameRules:'ルール',gameManual:'マニュアル',save:'💾 保存',cancel:'キャンセル',
+    newAnn:'📢 新規',annTitle:'タイトル *',annCategory:'カテゴリ',annPriority:'優先度',annContent:'内容 *',annPublish:'📢 公開',existingNews:'既存',
+    exportData:'📤 エクスポート',exportDesc:'JSONダウンロード。',exportBtn:'JSON',
+    importData:'📥 インポート',importDesc:'JSON読み込み。',importBtn:'ファイル',
+    dangerZone:'⚠️ 危険',wipeAll:'全て削除',
+    tabOverview:'📖 概要',tabGallery:'🖼️ ギャラリー',tabVideo:'📺 動画',tabRules:'📜 ルール',tabManual:'📘 マニュアル',
+    ageTitle:'年齢確認',ageText:'18+コンテンツ。<br>18歳以上ですか？',ageYes:'✅ はい、18+',ageNo:'❌ いいえ',
+    buyTitle:'💎 購入',buyOr:'— または —',
+    authTitle:'👤 アカウント',loginTab:'🔑 ログイン',registerTab:'✨ 登録',importTab:'📥 インポート',
+    playerNamePh:'プレイヤー名',password:'パスワード',emailPh:'メール',
+    registerBtn:'登録',importDbDesc:'JSONを読み込む。',
+    fullscreen:'⛶ 全画面',backBtn:'← 戻る',
+    inviteTitle:'🔔 招待',noInvite:'なし',accept:'✅ 承認',decline:'❌ 拒否',
+    noGames:'ゲームなし',noNews:'ニュースなし',noResult:'見つかりません',noUsers:'なし',noAct:'アクティビティなし。',
+    saved:'保存!',updated:'更新!',deleted:'削除!',
+    annSaved:'公開!',annDeleted:'削除!',
+    fill:'全て入力!',exists:'名前使用中!',invalid:'無効!',
+    confirmDel:'よろしいですか?',exported:'エクスポート!',imported:'インポート!',badFile:'無効なファイル!',
+    balance:'残高',earned:'総獲得',streak:'連続',
+    daily:'毎日',dailyDone:'取得済み',
+    calTitle:'📅 毎日報酬',calSub:'+0.10$毎日!',day:'日',
+    badges:'🏆 実績',badSub:'タスクを完了!',
+    acts:'アクティビティ',actsSub:'履歴',
+    xp:'XP',played:'プレイ',plays:'合計',ach:'実績',
+    claim:'取得',claimed:'取得済',bonus:'🎉 全て完了 +20$',
+    play:'▶ プレイ',buy:'💎 購入',demo:'🎮 デモ',
+    buyBalance:'💰 残高で',poor:'不足!',purchased:'購入!',
+    favAdd:'追加!',favDel:'削除!',
+    ageDeny:'18+!',logout:'ログアウト',edit:'編集',export:'エクスポート',
+    online:'オンライン',member:'メンバー:',
+    invite:'招待',addFriend:'⭐ 追加',removeFriend:'⭐ 削除',reportUser:'⚠️ 通報',you:'あなた',
+    easy:'簡単',medium:'普通',hard:'難しい',epic:'エピック',legendary:'伝説',
+    noVideo:'なし',link:'🔗 リンク',savedProfile:'更新!',
+    welcome:'ようこそ',back:'おかえり',loginFirst:'まずログイン',
+    inviteSent:'📤 送信!',roomCode:'ルームコード',
+    games:'ゲーム',achievements:'実績',viewers:'視聴者',
+    wipeConfirm:'全て削除?',wipeDone:'削除',
+    errSave:'エラー',errOnline:'オンライン必要',
+    reportTitle:'通報',reportReason:'理由 *',reportDetails:'詳細',reportSubmit:'送信',reportSent:'通報送信!',
+    adminMsgTitle:'管理者へ',msgType:'タイプ',msgSubject:'件名 *',msgBody:'メッセージ *',msgSend:'送信',msgSent:'送信!',
+    banned:'アカウントBAN',bannedText:'このアカウントはブロックされています。',
+    banIp:'ユーザー名',banReason:'理由',activeBans:'有効なBAN',unban:'解除',
+    clearChat:'🗑️ チャットクリア',msgFrom:'送信者',msgAt:'日付',
+    banAdded:'BAN追加!',banRemoved:'BAN解除!',userBanned:'BANされた!',
+    noBans:'有効なBANなし'
+  },
+  zh: {
+    loading:'连接中...',store:'🏪 商店',library:'📚 库',news:'📢 新闻',users:'👥 用户',profile:'👤 资料',
+    storeTitle:'商店',storeSub:'共享',libraryTitle:'我的库',librarySub:'你的游戏',
+    newsTitle:'新闻',newsSub:'更新',usersTitle:'用户',usersSub:'所有玩家',
+    searchPh:'🔍 搜索...',adminBtn:'🔐 管理员',
+    filters:'筛选',all:'全部',fav:'收藏',recent:'已玩',free:'免费',bought:'已购',cats:'分类',
+    sortName:'名称',sortPrice:'价格',filter:'筛选',ufAll:'全部',ufOnline:'在线',ufFriends:'好友',
+    sorting:'排序',usName:'名称',usLevel:'等级',
+    about:'关于',dev:'开发者',year:'年份',version:'版本',license:'许可',contributors:'贡献者',donate:'捐赠',
+    adminLogin:'管理员登录',adminPanel:'管理员',passwordPh:'密码',loginBtn:'登录',
+    addGame:'游戏',manageGames:'管理',manageNews:'新闻',importExport:'导入/导出',
+    moderation:'管理',bans:'封禁',adminMessages:'消息',reports:'举报',chatMod:'聊天管理',
+    gameCover:'封面',uploadCover:'🖼️ 上传',gameGallery:'图库',uploadGallery:'📷 添加',
+    gameTitle:'标题 *',gameCategory:'分类',gameSubtitle:'副标题',gameDesc:'描述',
+    gamePrice:'价格',gamePlayable:'状态',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'选择',gameDemo:'🎮 演示',uploadDemo:'演示',
+    gameRules:'规则',gameManual:'手册',save:'💾 保存',cancel:'取消',
+    newAnn:'📢 新',annTitle:'标题 *',annCategory:'分类',annPriority:'优先级',annContent:'内容 *',annPublish:'📢 发布',existingNews:'现有',
+    exportData:'📤 导出',exportDesc:'下载JSON。',exportBtn:'JSON',
+    importData:'📥 导入',importDesc:'加载JSON。',importBtn:'文件',
+    dangerZone:'⚠️ 危险',wipeAll:'删除全部',
+    tabOverview:'📖 概览',tabGallery:'🖼️ 图库',tabVideo:'📺 视频',tabRules:'📜 规则',tabManual:'📘 手册',
+    ageTitle:'年龄验证',ageText:'18+内容。<br>你18+吗？',ageYes:'✅ 是,18+',ageNo:'❌ 否',
+    buyTitle:'💎 购买',buyOr:'— 或 —',
+    authTitle:'👤 账户',loginTab:'🔑 登录',registerTab:'✨ 注册',importTab:'📥 导入',
+    playerNamePh:'玩家名',password:'密码',emailPh:'邮箱',
+    registerBtn:'注册',importDbDesc:'加载JSON。',
+    fullscreen:'⛶ 全屏',backBtn:'← 返回',
+    inviteTitle:'🔔 邀请',noInvite:'无',accept:'✅ 接受',decline:'❌ 拒绝',
+    noGames:'无游戏',noNews:'无新闻',noResult:'未找到',noUsers:'无',noAct:'无活动。',
+    saved:'已保存!',updated:'已更新!',deleted:'已删除!',
+    annSaved:'已发布!',annDeleted:'已删除!',
+    fill:'填写全部!',exists:'名称已用!',invalid:'无效!',
+    confirmDel:'确定?',exported:'已导出!',imported:'已导入!',badFile:'无效文件!',
+    balance:'余额',earned:'总收入',streak:'连续',
+    daily:'每日',dailyDone:'已领取',
+    calTitle:'📅 每日奖励',calSub:'+0.10$每日!',day:'天',
+    badges:'🏆 成就',badSub:'完成任务!',
+    acts:'活动',actsSub:'历史',
+    xp:'XP',played:'已玩',plays:'总计',ach:'成就',
+    claim:'领取',claimed:'已领取',bonus:'🎉 全部完成 +20$',
+    play:'▶ 玩',buy:'💎 购买',demo:'🎮 演示',
+    buyBalance:'💰 余额支付',poor:'不足!',purchased:'已购买!',
+    favAdd:'已添加!',favDel:'已移除!',
+    ageDeny:'18+!',logout:'登出',edit:'编辑',export:'导出',
+    online:'在线',member:'成员:',
+    invite:'邀请',addFriend:'⭐ 添加',removeFriend:'⭐ 移除',reportUser:'⚠️ 举报',you:'你',
+    easy:'简单',medium:'中等',hard:'困难',epic:'史诗',legendary:'传奇',
+    noVideo:'无',link:'🔗 链接',savedProfile:'已更新!',
+    welcome:'欢迎',back:'欢迎回来',loginFirst:'先登录',
+    inviteSent:'📤 已发送!',roomCode:'房间代码',
+    games:'游戏',achievements:'成就',viewers:'观众',
+    wipeConfirm:'删除全部?',wipeDone:'已删除',
+    errSave:'错误',errOnline:'需要在线',
+    reportTitle:'举报',reportReason:'原因 *',reportDetails:'详情',reportSubmit:'提交',reportSent:'举报已提交!',
+    adminMsgTitle:'给管理员',msgType:'类型',msgSubject:'主题 *',msgBody:'消息 *',msgSend:'发送',msgSent:'已发送!',
+    banned:'账户被封',bannedText:'此账户被封。',
+    banIp:'用户名',banReason:'原因',activeBans:'活跃封禁',unban:'解封',
+    clearChat:'🗑️ 清空聊天',msgFrom:'来自',msgAt:'日期',
+    banAdded:'封禁已添加!',banRemoved:'封禁已移除!',userBanned:'被封!',
+    noBans:'无活跃封禁'
+  },
+  el: {
+    loading:'Σύνδεση...',store:'🏪 ΚΑΤΑΣΤΗΜΑ',library:'📚 ΒΙΒΛΙΟΘΗΚΗ',news:'📢 ΝΕΑ',users:'👥 ΧΡΗΣΤΕΣ',profile:'👤 ΠΡΟΦΙΛ',
+    storeTitle:'Κατάστημα',storeSub:'Κοινόχρηστο',libraryTitle:'Η βιβλιοθήκη μου',librarySub:'Τα παιχνίδια σου',
+    newsTitle:'Νέα',newsSub:'Ενημερώσεις',usersTitle:'Χρήστες',usersSub:'Όλοι οι παίκτες',
+    searchPh:'🔍 Αναζήτηση...',adminBtn:'🔐 ΔΙΑΧΕΙΡΙΣΤΗΣ',
+    filters:'ΦΙΛΤΡΑ',all:'Όλα',fav:'Αγαπημένα',recent:'Παίχτηκε',free:'Δωρεάν',bought:'Αγορασμένα',cats:'ΚΑΤΗΓΟΡΙΕΣ',
+    sortName:'Όνομα',sortPrice:'Τιμή',filter:'ΦΙΛΤΡΟ',ufAll:'Όλα',ufOnline:'Σε σύνδεση',ufFriends:'Φίλοι',
+    sorting:'ΤΑΞΙΝΟΜΗΣΗ',usName:'Όνομα',usLevel:'Επίπεδο',
+    about:'Σχετικά',dev:'ΔΗΜΙΟΥΡΓΟΣ',year:'ΕΤΟΣ',version:'ΕΚΔΟΣΗ',license:'ΑΔΕΙΑ',contributors:'ΣΥΝΤΕΛΕΣΤΕΣ',donate:'Δωρεά',
+    adminLogin:'Σύνδεση διαχειριστή',adminPanel:'ΔΙΑΧΕΙΡΙΣΤΗΣ',passwordPh:'Κωδικός',loginBtn:'ΣΥΝΔΕΣΗ',
+    addGame:'Παιχνίδι',manageGames:'Διαχείριση',manageNews:'Νέα',importExport:'Εισαγωγή/Εξαγωγή',
+    moderation:'Συντονισμός',bans:'Απαγορεύσεις',adminMessages:'Μηνύματα',reports:'Αναφορές',chatMod:'Διαχείριση chat',
+    gameCover:'ΕΞΩΦΥΛΛΟ',uploadCover:'🖼️ Ανέβασμα',gameGallery:'ΓΚΑΛΕΡΙ',uploadGallery:'📷 Προσθήκη',
+    gameTitle:'ΤΙΤΛΟΣ *',gameCategory:'ΚΑΤΗΓΟΡΙΑ',gameSubtitle:'ΥΠΟΤΙΤΛΟΣ',gameDesc:'ΠΕΡΙΓΡΑΦΗ',
+    gamePrice:'ΤΙΜΗ',gamePlayable:'ΚΑΤΑΣΤΑΣΗ',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'Επιλογή',gameDemo:'🎮 DEMO',uploadDemo:'Demo',
+    gameRules:'ΚΑΝΟΝΕΣ',gameManual:'ΕΓΧΕΙΡΙΔΙΟ',save:'💾 ΑΠΟΘΗΚΕΥΣΗ',cancel:'ΑΚΥΡΟ',
+    newAnn:'📢 Νέο',annTitle:'ΤΙΤΛΟΣ *',annCategory:'ΚΑΤΗΓΟΡΙΑ',annPriority:'ΠΡΟΤΕΡΑΙΟΤΗΤΑ',annContent:'ΠΕΡΙΕΧΟΜΕΝΟ *',annPublish:'📢 ΔΗΜΟΣΙΕΥΣΗ',existingNews:'Υπάρχοντα',
+    exportData:'📤 Εξαγωγή',exportDesc:'Λήψη JSON.',exportBtn:'JSON',
+    importData:'📥 Εισαγωγή',importDesc:'Φόρτωση JSON.',importBtn:'ΑΡΧΕΙΟ',
+    dangerZone:'⚠️ Κίνδυνος',wipeAll:'ΔΙΑΓΡΑΦΗ ΟΛΩΝ',
+    tabOverview:'📖 Επισκόπηση',tabGallery:'🖼️ Γκαλερί',tabVideo:'📺 Βίντεο',tabRules:'📜 Κανόνες',tabManual:'📘 Εγχειρίδιο',
+    ageTitle:'Επαλήθευση ηλικίας',ageText:'Περιεχόμενο 18+.<br>Είσαι 18+;',ageYes:'✅ Ναι, 18+',ageNo:'❌ Όχι',
+    buyTitle:'💎 Αγορά',buyOr:'— ή —',
+    authTitle:'👤 Λογαριασμός',loginTab:'🔑 Σύνδεση',registerTab:'✨ Εγγραφή',importTab:'📥 Εισαγωγή',
+    playerNamePh:'Όνομα παίκτη',password:'Κωδικός',emailPh:'Email',
+    registerBtn:'ΕΓΓΡΑΦΗ',importDbDesc:'Φόρτωσε JSON.',
+    fullscreen:'⛶ ΠΛΗΡΗΣ',backBtn:'← ΠΙΣΩ',
+    inviteTitle:'🔔 Προσκλήσεις',noInvite:'Καμία',accept:'✅ Αποδοχή',decline:'❌ Απόρριψη',
+    noGames:'Κανένα',noNews:'Κανένα',noResult:'Δεν βρέθηκε',noUsers:'Κανένας',noAct:'Καμία δραστηριότητα.',
+    saved:'Αποθηκεύτηκε!',updated:'Ενημερώθηκε!',deleted:'Διαγράφηκε!',
+    annSaved:'Δημοσιεύτηκε!',annDeleted:'Διαγράφηκε!',
+    fill:'Συμπλήρωσε!',exists:'Όνομα κατειλημμένο!',invalid:'Άκυρο!',
+    confirmDel:'Σίγουρα;',exported:'Εξήχθη!',imported:'Εισήχθη!',badFile:'Άκυρο αρχείο!',
+    balance:'Υπόλοιπο',earned:'Σύνολο',streak:'Σειρά',
+    daily:'ΚΑΘΗΜΕΡΙΝΑ',dailyDone:'Ελήφθη',
+    calTitle:'📅 Καθημερινές ανταμοιβές',calSub:'+0.10$ καθημερινά!',day:'Ημέρα',
+    badges:'🏆 Επιτεύγματα',badSub:'Ολοκλήρωσε εργασίες!',
+    acts:'Δραστηριότητα',actsSub:'Ιστορικό',
+    xp:'XP',played:'Παίχτηκε',plays:'Σύνολο',ach:'Επιτεύγματα',
+    claim:'ΛΗΨΗ',claimed:'ΕΛΗΦΘΗ',bonus:'🎉 ΟΛΑ +20$',
+    play:'▶ ΠΑΙΞΕ',buy:'💎 ΑΓΟΡΑ',demo:'🎮 DEMO',
+    buyBalance:'💰 Με υπόλοιπο',poor:'Ανεπαρκές!',purchased:'Αγοράστηκε!',
+    favAdd:'Προστέθηκε!',favDel:'Αφαιρέθηκε!',
+    ageDeny:'18+!',logout:'Αποσύνδεση',edit:'Επεξεργασία',export:'Εξαγωγή',
+    online:'Σε σύνδεση',member:'Μέλος:',
+    invite:'Πρόσκληση',addFriend:'⭐ Προσθήκη',removeFriend:'⭐ Αφαίρεση',reportUser:'⚠️ Αναφορά',you:'Εσύ',
+    easy:'Εύκολο',medium:'Μέτριο',hard:'Δύσκολο',epic:'Επικό',legendary:'Θρυλικό',
+    noVideo:'Κανένα',link:'🔗 Σύνδεσμος',savedProfile:'Ενημερώθηκε!',
+    welcome:'Καλωσόρισες',back:'Καλωσόρισες ξανά',loginFirst:'Συνδέσου πρώτα',
+    inviteSent:'📤 Εστάλη!',roomCode:'Κωδικός δωματίου',
+    games:'παιχνίδια',achievements:'επιτεύγματα',viewers:'θεατές',
+    wipeConfirm:'ΔΙΑΓΡΑΦΗ ΟΛΩΝ;',wipeDone:'Διαγράφηκε',
+    errSave:'Σφάλμα',errOnline:'Απαιτείται σύνδεση',
+    reportTitle:'Αναφορά',reportReason:'Λόγος *',reportDetails:'Λεπτομέρειες',reportSubmit:'ΥΠΟΒΟΛΗ',reportSent:'Υποβλήθηκε!',
+    adminMsgTitle:'Μήνυμα σε διαχειριστή',msgType:'Τύπος',msgSubject:'Θέμα *',msgBody:'Μήνυμα *',msgSend:'ΑΠΟΣΤΟΛΗ',msgSent:'Εστάλη!',
+    banned:'ΛΟΓΑΡΙΑΣΜΟΣ ΑΠΑΓΟΡΕΥΜΕΝΟΣ',bannedText:'Αυτός ο λογαριασμός έχει μπλοκαριστεί.',
+    banIp:'Όνομα χρήστη',banReason:'Λόγος',activeBans:'Ενεργές απαγορεύσεις',unban:'Άρση',
+    clearChat:'🗑️ Εκκαθάριση chat',msgFrom:'Από',msgAt:'Ημερομηνία',
+    banAdded:'Προστέθηκε!',banRemoved:'Αφαιρέθηκε!',userBanned:'Απαγορεύτηκε!',
+    noBans:'Καμία ενεργή απαγόρευση'
+  },
+  hy: {
+    loading:'Միացում...',store:'🏪 Խdelays',library:'📚 Գdelays',news:'📢 Նdelays',users:'👥 Delays',profile:'👤 Delays',
+    storeTitle:'Խdelays',storeSub:'Delays',libraryTitle:'Իմ delays',librarySub:'Delays',
+    newsTitle:'Delays',newsSub:'Delays',usersTitle:'Delays',usersSub:'Delays',
+    searchPh:'🔍 Delays...',adminBtn:'🔐 Delays',
+    filters:'Delays',all:'Delays',fav:'Delays',recent:'Delays',free:'Delays',bought:'Delays',cats:'Delays',
+    sortName:'Delays',sortPrice:'Delays',filter:'Delays',ufAll:'Delays',ufOnline:'Delays',ufFriends:'Delays',
+    sorting:'Delays',usName:'Delays',usLevel:'Delays',
+    about:'Delays',dev:'Delays',year:'Delays',version:'Delays',license:'Delays',contributors:'Delays',donate:'Delays',
+    adminLogin:'Delays',adminPanel:'Delays',passwordPh:'Delays',loginBtn:'Delays',
+    addGame:'Delays',manageGames:'Delays',manageNews:'Delays',importExport:'Delays',
+    moderation:'Delays',bans:'Delays',adminMessages:'Delays',reports:'Delays',chatMod:'Delays',
+    gameCover:'Delays',uploadCover:'🖼️ Delays',gameGallery:'Delays',uploadGallery:'📷 Delays',
+    gameTitle:'Delays *',gameCategory:'Delays',gameSubtitle:'Delays',gameDesc:'Delays',
+    gamePrice:'Delays',gamePlayable:'Delays',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'Delays',gameDemo:'🎮 Delays',uploadDemo:'Delays',
+    gameRules:'Delays',gameManual:'Delays',save:'💾 Delays',cancel:'Delays',
+    newAnn:'📢 Delays',annTitle:'Delays *',annCategory:'Delays',annPriority:'Delays',annContent:'Delays *',annPublish:'📢 Delays',existingNews:'Delays',
+    exportData:'📤 Delays',exportDesc:'Delays.',exportBtn:'JSON',
+    importData:'📥 Delays',importDesc:'Delays.',importBtn:'Delays',
+    dangerZone:'⚠️ Delays',wipeAll:'Delays',
+    tabOverview:'📖 Delays',tabGallery:'🖼️ Delays',tabVideo:'📺 Delays',tabRules:'📜 Delays',tabManual:'📘 Delays',
+    ageTitle:'Delays',ageText:'18+.<br>18+?',ageYes:'✅ Delays, 18+',ageNo:'❌ Delays',
+    buyTitle:'💎 Delays',buyOr:'— delays —',
+    authTitle:'👤 Delays',loginTab:'🔑 Delays',registerTab:'✨ Delays',importTab:'📥 Delays',
+    playerNamePh:'Delays',password:'Delays',emailPh:'Email',
+    registerBtn:'Delays',importDbDesc:'Delays.',
+    fullscreen:'⛶ Delays',backBtn:'← Delays',
+    inviteTitle:'🔔 Delays',noInvite:'Delays',accept:'✅ Delays',decline:'❌ Delays',
+    noGames:'Delays',noNews:'Delays',noResult:'Delays',noUsers:'Delays',noAct:'Delays.',
+    saved:'Delays!',updated:'Delays!',deleted:'Delays!',
+    annSaved:'Delays!',annDeleted:'Delays!',
+    fill:'Delays!',exists:'Delays!',invalid:'Delays!',
+    confirmDel:'Delays?',exported:'Delays!',imported:'Delays!',badFile:'Delays!',
+    balance:'Delays',earned:'Delays',streak:'Delays',
+    daily:'Delays',dailyDone:'Delays',
+    calTitle:'📅 Delays',calSub:'+0.10$ delays!',day:'Delays',
+    badges:'🏆 Delays',badSub:'Delays!',
+    acts:'Delays',actsSub:'Delays',
+    xp:'XP',played:'Delays',plays:'Delays',ach:'Delays',
+    claim:'Delays',claimed:'Delays',bonus:'🎉 Delays +20$',
+    play:'▶ Delays',buy:'💎 Delays',demo:'🎮 Delays',
+    buyBalance:'💰 Delays',poor:'Delays!',purchased:'Delays!',
+    favAdd:'Delays!',favDel:'Delays!',
+    ageDeny:'18+!',logout:'Delays',edit:'Delays',export:'Delays',
+    online:'Delays',member:'Delays:',
+    invite:'Delays',addFriend:'⭐ Delays',removeFriend:'⭐ Delays',reportUser:'⚠️ Delays',you:'Delays',
+    easy:'Delays',medium:'Delays',hard:'Delays',epic:'Delays',legendary:'Delays',
+    noVideo:'Delays',link:'🔗 Delays',savedProfile:'Delays!',
+    welcome:'Delays',back:'Delays',loginFirst:'Delays',
+    inviteSent:'📤 Delays!',roomCode:'Delays',
+    games:'delays',achievements:'delays',viewers:'delays',
+    wipeConfirm:'Delays?',wipeDone:'Delays',
+    errSave:'Delays',errOnline:'Delays',
+    reportTitle:'Delays',reportReason:'Delays *',reportDetails:'Delays',reportSubmit:'Delays',reportSent:'Delays!',
+    adminMsgTitle:'Delays',msgType:'Delays',msgSubject:'Delays *',msgBody:'Delays *',msgSend:'Delays',msgSent:'Delays!',
+    banned:'Delays',bannedText:'Delays.',
+    banIp:'Delays',banReason:'Delays',activeBans:'Delays',unban:'Delays',
+    clearChat:'🗑️ Delays',msgFrom:'Delays',msgAt:'Delays',
+    banAdded:'Delays!',banRemoved:'Delays!',userBanned:'Delays!',
+    noBans:'Delays'
+  },
+  ko: {
+    loading:'연결 중...',store:'🏪 상점',library:'📚 라이브러리',news:'📢 뉴스',users:'👥 사용자',profile:'👤 프로필',
+    storeTitle:'상점',storeSub:'공유',libraryTitle:'내 라이브러리',librarySub:'내 게임',
+    newsTitle:'뉴스',newsSub:'업데이트',usersTitle:'사용자',usersSub:'모든 플레이어',
+    searchPh:'🔍 검색...',adminBtn:'🔐 관리자',
+    filters:'필터',all:'전체',fav:'즐겨찾기',recent:'플레이',free:'무료',bought:'구매',cats:'카테고리',
+    sortName:'이름',sortPrice:'가격',filter:'필터',ufAll:'전체',ufOnline:'온라인',ufFriends:'친구',
+    sorting:'정렬',usName:'이름',usLevel:'레벨',
+    about:'정보',dev:'개발자',year:'연도',version:'버전',license:'라이선스',contributors:'기여자',donate:'후원',
+    adminLogin:'관리자 로그인',adminPanel:'관리자',passwordPh:'비밀번호',loginBtn:'로그인',
+    addGame:'게임',manageGames:'관리',manageNews:'뉴스',importExport:'가져오기/내보내기',
+    moderation:'관리',bans:'차단',adminMessages:'메시지',reports:'신고',chatMod:'채팅 관리',
+    gameCover:'표지',uploadCover:'🖼️ 업로드',gameGallery:'갤러리',uploadGallery:'📷 추가',
+    gameTitle:'제목 *',gameCategory:'카테고리',gameSubtitle:'부제목',gameDesc:'설명',
+    gamePrice:'가격',gamePlayable:'상태',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'선택',gameDemo:'🎮 데모',uploadDemo:'데모',
+    gameRules:'규칙',gameManual:'매뉴얼',save:'💾 저장',cancel:'취소',
+    newAnn:'📢 새',annTitle:'제목 *',annCategory:'카테고리',annPriority:'우선순위',annContent:'내용 *',annPublish:'📢 게시',existingNews:'기존',
+    exportData:'📤 내보내기',exportDesc:'JSON 다운로드.',exportBtn:'JSON',
+    importData:'📥 가져오기',importDesc:'JSON 로드.',importBtn:'파일',
+    dangerZone:'⚠️ 위험',wipeAll:'전체 삭제',
+    tabOverview:'📖 개요',tabGallery:'🖼️ 갤러리',tabVideo:'📺 비디오',tabRules:'📜 규칙',tabManual:'📘 매뉴얼',
+    ageTitle:'연령 확인',ageText:'18+ 콘텐츠.<br>18세 이상입니까?',ageYes:'✅ 예, 18+',ageNo:'❌ 아니오',
+    buyTitle:'💎 구매',buyOr:'— 또는 —',
+    authTitle:'👤 계정',loginTab:'🔑 로그인',registerTab:'✨ 등록',importTab:'📥 가져오기',
+    playerNamePh:'플레이어 이름',password:'비밀번호',emailPh:'이메일',
+    registerBtn:'등록',importDbDesc:'JSON 로드.',
+    fullscreen:'⛶ 전체화면',backBtn:'← 뒤로',
+    inviteTitle:'🔔 초대',noInvite:'없음',accept:'✅ 수락',decline:'❌ 거부',
+    noGames:'없음',noNews:'없음',noResult:'없음',noUsers:'없음',noAct:'활동 없음.',
+    saved:'저장!',updated:'업데이트!',deleted:'삭제!',
+    annSaved:'게시!',annDeleted:'삭제!',
+    fill:'모두 입력!',exists:'이름 사용 중!',invalid:'잘못됨!',
+    confirmDel:'확실합니까?',exported:'내보내기!',imported:'가져오기!',badFile:'잘못된 파일!',
+    balance:'잔액',earned:'총 수입',streak:'연속',
+    daily:'매일',dailyDone:'받음',
+    calTitle:'📅 매일 보상',calSub:'+0.10$ 매일!',day:'일',
+    badges:'🏆 업적',badSub:'작업 완료!',
+    acts:'활동',actsSub:'기록',
+    xp:'XP',played:'플레이',plays:'총계',ach:'업적',
+    claim:'받기',claimed:'받음',bonus:'🎉 모두 완료 +20$',
+    play:'▶ 플레이',buy:'💎 구매',demo:'🎮 데모',
+    buyBalance:'💰 잔액으로',poor:'부족!',purchased:'구매!',
+    favAdd:'추가!',favDel:'제거!',
+    ageDeny:'18+!',logout:'로그아웃',edit:'편집',export:'내보내기',
+    online:'온라인',member:'멤버:',
+    invite:'초대',addFriend:'⭐ 추가',removeFriend:'⭐ 제거',reportUser:'⚠️ 신고',you:'나',
+    easy:'쉬움',medium:'보통',hard:'어려움',epic:'에픽',legendary:'전설',
+    noVideo:'없음',link:'🔗 링크',savedProfile:'업데이트!',
+    welcome:'환영합니다',back:'다시 환영',loginFirst:'먼저 로그인',
+    inviteSent:'📤 전송!',roomCode:'방 코드',
+    games:'게임',achievements:'업적',viewers:'시청자',
+    wipeConfirm:'전체 삭제?',wipeDone:'삭제됨',
+    errSave:'오류',errOnline:'온라인 필요',
+    reportTitle:'신고',reportReason:'사유 *',reportDetails:'상세',reportSubmit:'전송',reportSent:'신고 전송!',
+    adminMsgTitle:'관리자에게',msgType:'유형',msgSubject:'제목 *',msgBody:'메시지 *',msgSend:'전송',msgSent:'전송!',
+    banned:'계정 차단됨',bannedText:'이 계정은 차단되었습니다.',
+    banIp:'사용자 이름',banReason:'사유',activeBans:'활성 차단',unban:'차단 해제',
+    clearChat:'🗑️ 채팅 지우기',msgFrom:'보낸이',msgAt:'날짜',
+    banAdded:'차단 추가!',banRemoved:'차단 해제!',userBanned:'차단됨!',
+    noBans:'활성 차단 없음'
+  },
+  th: {
+    loading:'กำลังเชื่อมต่อ...',store:'🏪 ร้าน',library:'📚 คลัง',news:'📢 ข่าว',users:'👥 ผู้ใช้',profile:'👤 โปรไฟล์',
+    storeTitle:'ร้าน',storeSub:'ร่วม',libraryTitle:'คลังของฉัน',librarySub:'เกมของคุณ',
+    newsTitle:'ข่าว',newsSub:'อัปเดต',usersTitle:'ผู้ใช้',usersSub:'ผู้เล่นทั้งหมด',
+    searchPh:'🔍 ค้นหา...',adminBtn:'🔐 แอดมิน',
+    filters:'ตัวกรอง',all:'ทั้งหมด',fav:'รายการโปรด',recent:'เล่นแล้ว',free:'ฟรี',bought:'ซื้อแล้ว',cats:'หมวดหมู่',
+    sortName:'ชื่อ',sortPrice:'ราคา',filter:'ตัวกรอง',ufAll:'ทั้งหมด',ufOnline:'ออนไลน์',ufFriends:'เพื่อน',
+    sorting:'เรียง',usName:'ชื่อ',usLevel:'ระดับ',
+    about:'เกี่ยวกับ',dev:'ผู้พัฒนา',year:'ปี',version:'เวอร์ชัน',license:'ใบอนุญาต',contributors:'ผู้มีส่วนร่วม',donate:'บริจาค',
+    adminLogin:'เข้าสู่ระบบแอดมิน',adminPanel:'แอดมิน',passwordPh:'รหัสผ่าน',loginBtn:'เข้าสู่ระบบ',
+    addGame:'เกม',manageGames:'จัดการ',manageNews:'ข่าว',importExport:'นำเข้า/ส่งออก',
+    moderation:'ดูแล',bans:'แบน',adminMessages:'ข้อความ',reports:'รายงาน',chatMod:'ดูแลแชท',
+    gameCover:'ปก',uploadCover:'🖼️ อัปโหลด',gameGallery:'แกลเลอรี',uploadGallery:'📷 เพิ่ม',
+    gameTitle:'ชื่อ *',gameCategory:'หมวดหมู่',gameSubtitle:'คำบรรยาย',gameDesc:'คำอธิบาย',
+    gamePrice:'ราคา',gamePlayable:'สถานะ',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'เลือก',gameDemo:'🎮 เดโม',uploadDemo:'เดโม',
+    gameRules:'กฎ',gameManual:'คู่มือ',save:'💾 บันทึก',cancel:'ยกเลิก',
+    newAnn:'📢 ใหม่',annTitle:'ชื่อ *',annCategory:'หมวดหมู่',annPriority:'ลำดับความสำคัญ',annContent:'เนื้อหา *',annPublish:'📢 เผยแพร่',existingNews:'ที่มีอยู่',
+    exportData:'📤 ส่งออก',exportDesc:'ดาวน์โหลด JSON',exportBtn:'JSON',
+    importData:'📥 นำเข้า',importDesc:'โหลด JSON',importBtn:'ไฟล์',
+    dangerZone:'⚠️ อันตราย',wipeAll:'ลบทั้งหมด',
+    tabOverview:'📖 ภาพรวม',tabGallery:'🖼️ แกลเลอรี',tabVideo:'📺 วิดีโอ',tabRules:'📜 กฎ',tabManual:'📘 คู่มือ',
+    ageTitle:'ยืนยันอายุ',ageText:'เนื้อหา 18+<br>คุณอายุ 18+ หรือไม่?',ageYes:'✅ ใช่ 18+',ageNo:'❌ ไม่',
+    buyTitle:'💎 ซื้อ',buyOr:'— หรือ —',
+    authTitle:'👤 บัญชี',loginTab:'🔑 เข้าสู่ระบบ',registerTab:'✨ ลงทะเบียน',importTab:'📥 นำเข้า',
+    playerNamePh:'ชื่อผู้เล่น',password:'รหัสผ่าน',emailPh:'อีเมล',
+    registerBtn:'ลงทะเบียน',importDbDesc:'โหลด JSON',
+    fullscreen:'⛶ เต็มจอ',backBtn:'← กลับ',
+    inviteTitle:'🔔 คำเชิญ',noInvite:'ไม่มี',accept:'✅ ยอมรับ',decline:'❌ ปฏิเสธ',
+    noGames:'ไม่มี',noNews:'ไม่มี',noResult:'ไม่พบ',noUsers:'ไม่มี',noAct:'ไม่มีกิจกรรม',
+    saved:'บันทึก!',updated:'อัปเดต!',deleted:'ลบ!',
+    annSaved:'เผยแพร่!',annDeleted:'ลบ!',
+    fill:'กรอกทั้งหมด!',exists:'ชื่อถูกใช้!',invalid:'ไม่ถูกต้อง!',
+    confirmDel:'แน่ใจ?',exported:'ส่งออก!',imported:'นำเข้า!',badFile:'ไฟล์ไม่ถูกต้อง!',
+    balance:'ยอดเงิน',earned:'รายได้รวม',streak:'ต่อเนื่อง',
+    daily:'รายวัน',dailyDone:'รับแล้ว',
+    calTitle:'📅 รางวัลรายวัน',calSub:'+0.10$ ทุกวัน!',day:'วัน',
+    badges:'🏆 ความสำเร็จ',badSub:'ทำภารกิจ!',
+    acts:'กิจกรรม',actsSub:'ประวัติ',
+    xp:'XP',played:'เล่น',plays:'รวม',ach:'ความสำเร็จ',
+    claim:'รับ',claimed:'รับแล้ว',bonus:'🎉 ทั้งหมด +20$',
+    play:'▶ เล่น',buy:'💎 ซื้อ',demo:'🎮 เดโม',
+    buyBalance:'💰 ด้วยยอดเงิน',poor:'ไม่พอ!',purchased:'ซื้อแล้ว!',
+    favAdd:'เพิ่ม!',favDel:'ลบ!',
+    ageDeny:'18+!',logout:'ออกจากระบบ',edit:'แก้ไข',export:'ส่งออก',
+    online:'ออนไลน์',member:'สมาชิก:',
+    invite:'เชิญ',addFriend:'⭐ เพิ่ม',removeFriend:'⭐ ลบ',reportUser:'⚠️ รายงาน',you:'คุณ',
+    easy:'ง่าย',medium:'ปานกลาง',hard:'ยาก',epic:'มหากาพย์',legendary:'ตำนาน',
+    noVideo:'ไม่มี',link:'🔗 ลิงก์',savedProfile:'อัปเดต!',
+    welcome:'ยินดีต้อนรับ',back:'ยินดีต้อนรับกลับ',loginFirst:'เข้าสู่ระบบก่อน',
+    inviteSent:'📤 ส่งแล้ว!',roomCode:'รหัสห้อง',
+    games:'เกม',achievements:'ความสำเร็จ',viewers:'ผู้ชม',
+    wipeConfirm:'ลบทั้งหมด?',wipeDone:'ลบแล้ว',
+    errSave:'ข้อผิดพลาด',errOnline:'ต้องการโหมดออนไลน์',
+    reportTitle:'รายงาน',reportReason:'เหตุผล *',reportDetails:'รายละเอียด',reportSubmit:'ส่ง',reportSent:'รายงานส่งแล้ว!',
+    adminMsgTitle:'ข้อความถึงแอดมิน',msgType:'ประเภท',msgSubject:'หัวข้อ *',msgBody:'ข้อความ *',msgSend:'ส่ง',msgSent:'ส่งแล้ว!',
+    banned:'บัญชีถูกแบน',bannedText:'บัญชีนี้ถูกบล็อก',
+    banIp:'ชื่อผู้ใช้',banReason:'เหตุผล',activeBans:'แบนที่ใช้งาน',unban:'ปลดแบน',
+    clearChat:'🗑️ ล้างแชท',msgFrom:'จาก',msgAt:'วันที่',
+    banAdded:'เพิ่มแบน!',banRemoved:'ลบแบน!',userBanned:'ถูกแบน!',
+    noBans:'ไม่มีแบนที่ใช้งาน'
+  },
+  ar: {
+    loading:'جاري الاتصال...',store:'🏪 المتجر',library:'📚 المكتبة',news:'📢 أخبار',users:'👥 المستخدمون',profile:'👤 الملف',
+    storeTitle:'المتجر',storeSub:'مشترك',libraryTitle:'مكتبتي',librarySub:'ألعابك',
+    newsTitle:'الأخبار',newsSub:'تحديثات',usersTitle:'المستخدمون',usersSub:'جميع اللاعبين',
+    searchPh:'🔍 بحث...',adminBtn:'🔐 المشرف',
+    filters:'مرشحات',all:'الكل',fav:'المفضلة',recent:'مُلعب',free:'مجاني',bought:'مُشترى',cats:'فئات',
+    sortName:'الاسم',sortPrice:'السعر',filter:'مرشح',ufAll:'الكل',ufOnline:'متصل',ufFriends:'أصدقاء',
+    sorting:'ترتيب',usName:'الاسم',usLevel:'المستوى',
+    about:'حول',dev:'المطور',year:'السنة',version:'الإصدار',license:'الرخصة',contributors:'المساهمون',donate:'تبرع',
+    adminLogin:'دخول المشرف',adminPanel:'المشرف',passwordPh:'كلمة المرور',loginBtn:'دخول',
+    addGame:'لعبة',manageGames:'إدارة',manageNews:'أخبار',importExport:'استيراد/تصدير',
+    moderation:'إشراف',bans:'حظر',adminMessages:'رسائل',reports:'بلاغات',chatMod:'إدارة الدردشة',
+    gameCover:'غلاف',uploadCover:'🖼️ رفع',gameGallery:'معرض',uploadGallery:'📷 إضافة',
+    gameTitle:'العنوان *',gameCategory:'فئة',gameSubtitle:'عنوان فرعي',gameDesc:'وصف',
+    gamePrice:'السعر',gamePlayable:'حالة',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'اختيار',gameDemo:'🎮 عرض',uploadDemo:'عرض',
+    gameRules:'قواعد',gameManual:'دليل',save:'💾 حفظ',cancel:'إلغاء',
+    newAnn:'📢 جديد',annTitle:'العنوان *',annCategory:'فئة',annPriority:'أولوية',annContent:'محتوى *',annPublish:'📢 نشر',existingNews:'موجود',
+    exportData:'📤 تصدير',exportDesc:'تنزيل JSON.',exportBtn:'JSON',
+    importData:'📥 استيراد',importDesc:'تحميل JSON.',importBtn:'ملف',
+    dangerZone:'⚠️ خطر',wipeAll:'حذف الكل',
+    tabOverview:'📖 نظرة عامة',tabGallery:'🖼️ معرض',tabVideo:'📺 فيديو',tabRules:'📜 قواعد',tabManual:'📘 دليل',
+    ageTitle:'التحقق من العمر',ageText:'محتوى 18+.<br>هل أنت 18+؟',ageYes:'✅ نعم، 18+',ageNo:'❌ لا',
+    buyTitle:'💎 شراء',buyOr:'— أو —',
+    authTitle:'👤 الحساب',loginTab:'🔑 دخول',registerTab:'✨ تسجيل',importTab:'📥 استيراد',
+    playerNamePh:'اسم اللاعب',password:'كلمة المرور',emailPh:'البريد',
+    registerBtn:'تسجيل',importDbDesc:'حمّل JSON.',
+    fullscreen:'⛶ كامل',backBtn:'← رجوع',
+    inviteTitle:'🔔 دعوات',noInvite:'لا يوجد',accept:'✅ قبول',decline:'❌ رفض',
+    noGames:'لا يوجد',noNews:'لا يوجد',noResult:'غير موجود',noUsers:'لا يوجد',noAct:'لا نشاط.',
+    saved:'حُفظ!',updated:'حُدث!',deleted:'حُذف!',
+    annSaved:'نُشر!',annDeleted:'حُذف!',
+    fill:'املأ الكل!',exists:'الاسم مستخدم!',invalid:'غير صحيح!',
+    confirmDel:'متأكد؟',exported:'صُدّر!',imported:'استورد!',badFile:'ملف غير صحيح!',
+    balance:'الرصيد',earned:'الإجمالي',streak:'متتابع',
+    daily:'يومي',dailyDone:'مأخوذ',
+    calTitle:'📅 مكافآت يومية',calSub:'+0.10$ يومياً!',day:'يوم',
+    badges:'🏆 إنجازات',badSub:'أكمل المهام!',
+    acts:'نشاطات',actsSub:'سجل',
+    xp:'XP',played:'مُلعب',plays:'إجمالي',ach:'إنجازات',
+    claim:'استلام',claimed:'مستلم',bonus:'🎉 الكل +20$',
+    play:'▶ العب',buy:'💎 اشتر',demo:'🎮 عرض',
+    buyBalance:'💰 بالرصيد',poor:'غير كاف!',purchased:'مُشترى!',
+    favAdd:'أُضيف!',favDel:'أُزيل!',
+    ageDeny:'18+!',logout:'خروج',edit:'تعديل',export:'تصدير',
+    online:'متصل',member:'عضو:',
+    invite:'دعوة',addFriend:'⭐ إضافة',removeFriend:'⭐ إزالة',reportUser:'⚠️ بلاغ',you:'أنت',
+    easy:'سهل',medium:'متوسط',hard:'صعب',epic:'ملحمي',legendary:'أسطوري',
+    noVideo:'لا يوجد',link:'🔗 رابط',savedProfile:'حُدث!',
+    welcome:'أهلاً',back:'أهلاً بعودتك',loginFirst:'سجل دخول أولاً',
+    inviteSent:'📤 أُرسل!',roomCode:'رمز الغرفة',
+    games:'ألعاب',achievements:'إنجازات',viewers:'مشاهدون',
+    wipeConfirm:'حذف الكل؟',wipeDone:'حُذف',
+    errSave:'خطأ',errOnline:'مطلوب وضع متصل',
+    reportTitle:'بلاغ',reportReason:'السبب *',reportDetails:'تفاصيل',reportSubmit:'إرسال',reportSent:'أُرسل البلاغ!',
+    adminMsgTitle:'رسالة للمشرف',msgType:'نوع',msgSubject:'الموضوع *',msgBody:'الرسالة *',msgSend:'إرسال',msgSent:'أُرسل!',
+    banned:'حُظر الحساب',bannedText:'هذا الحساب محظور.',
+    banIp:'اسم المستخدم',banReason:'السبب',activeBans:'حظر نشط',unban:'إلغاء الحظر',
+    clearChat:'🗑️ مسح الدردشة',msgFrom:'من',msgAt:'التاريخ',
+    banAdded:'أُضيف الحظر!',banRemoved:'أُلغي الحظر!',userBanned:'محظور!',
+    noBans:'لا حظر نشط'
+  },
+  fa: {
+    loading:'در حال اتصال...',store:'🏪 فروشگاه',library:'📚 کتابخانه',news:'📢 اخبار',users:'👥 کاربران',profile:'👤 پروفایل',
+    storeTitle:'فروشگاه',storeSub:'مشترک',libraryTitle:'کتابخانه من',librarySub:'بازی‌های شما',
+    newsTitle:'اخبار',newsSub:'به‌روزرسانی‌ها',usersTitle:'کاربران',usersSub:'همه بازیکنان',
+    searchPh:'🔍 جستجو...',adminBtn:'🔐 مدیر',
+    filters:'فیلترها',all:'همه',fav:'مورد علاقه',recent:'بازی شده',free:'رایگان',bought:'خریداری شده',cats:'دسته‌ها',
+    sortName:'نام',sortPrice:'قیمت',filter:'فیلتر',ufAll:'همه',ufOnline:'آنلاین',ufFriends:'دوستان',
+    sorting:'مرتب‌سازی',usName:'نام',usLevel:'سطح',
+    about:'درباره',dev:'توسعه‌دهنده',year:'سال',version:'نسخه',license:'مجوز',contributors:'مشارکت‌کنندگان',donate:'حمایت',
+    adminLogin:'ورود مدیر',adminPanel:'مدیر',passwordPh:'رمز عبور',loginBtn:'ورود',
+    addGame:'بازی',manageGames:'مدیریت',manageNews:'اخبار',importExport:'واردات/صادرات',
+    moderation:'مدیریت',bans:'مسدود',adminMessages:'پیام‌ها',reports:'گزارش‌ها',chatMod:'مدیریت چت',
+    gameCover:'جلد',uploadCover:'🖼️ بارگذاری',gameGallery:'گالری',uploadGallery:'📷 افزودن',
+    gameTitle:'عنوان *',gameCategory:'دسته',gameSubtitle:'زیرعنوان',gameDesc:'توضیحات',
+    gamePrice:'قیمت',gamePlayable:'وضعیت',gameAge18:'🔞 +18',
+    gameHtml:'📄 HTML',uploadHtml:'انتخاب',gameDemo:'🎮 دمو',uploadDemo:'دمو',
+    gameRules:'قوانین',gameManual:'راهنما',save:'💾 ذخیره',cancel:'لغو',
+    newAnn:'📢 جدید',annTitle:'عنوان *',annCategory:'دسته',annPriority:'اولویت',annContent:'محتوا *',annPublish:'📢 انتشار',existingNews:'موجود',
+    exportData:'📤 صادرات',exportDesc:'دانلود JSON.',exportBtn:'JSON',
+    importData:'📥 واردات',importDesc:'بارگذاری JSON.',importBtn:'فایل',
+    dangerZone:'⚠️ خطرناک',wipeAll:'حذف همه',
+    tabOverview:'📖 مرور',tabGallery:'🖼️ گالری',tabVideo:'📺 ویدیو',tabRules:'📜 قوانین',tabManual:'📘 راهنما',
+    ageTitle:'تأیید سن',ageText:'محتوای 18+. <br>آیا 18+ هستید؟',ageYes:'✅ بله، 18+',ageNo:'❌ خیر',
+    buyTitle:'💎 خرید',buyOr:'— یا —',
+    authTitle:'👤 حساب',loginTab:'🔑 ورود',registerTab:'✨ ثبت‌نام',importTab:'📥 واردات',
+    playerNamePh:'نام بازیکن',password:'رمز عبور',emailPh:'ایمیل',
+    registerBtn:'ثبت‌نام',importDbDesc:'JSON بارگذاری کنید.',
+    fullscreen:'⛶ تمام صفحه',backBtn:'← بازگشت',
+    inviteTitle:'🔔 دعوت‌ها',noInvite:'ندارد',accept:'✅ قبول',decline:'❌ رد',
+    noGames:'ندارد',noNews:'ندارد',noResult:'یافت نشد',noUsers:'ندارد',noAct:'فعالیتی نیست.',
+    saved:'ذخیره!',updated:'به‌روز شد!',deleted:'حذف شد!',
+    annSaved:'منتشر شد!',annDeleted:'حذف شد!',
+    fill:'همه را پر کنید!',exists:'نام استفاده شده!',invalid:'نامعتبر!',
+    confirmDel:'مطمئنید؟',exported:'صادر شد!',imported:'وارد شد!',badFile:'فایل نامعتبر!',
+    balance:'موجودی',earned:'کل درآمد',streak:'پیاپی',
+    daily:'روزانه',dailyDone:'دریافت شد',
+    calTitle:'📅 جوایز روزانه',calSub:'+0.10$ هر روز!',day:'روز',
+    badges:'🏆 دستاوردها',badSub:'وظایف را کامل کنید!',
+    acts:'فعالیت‌ها',actsSub:'تاریخچه',
+    xp:'XP',played:'بازی شده',plays:'کل',ach:'دستاوردها',
+    claim:'دریافت',claimed:'دریافت شد',bonus:'🎉 همه +20$',
+    play:'▶ بازی',buy:'💎 خرید',demo:'🎮 دمو',
+    buyBalance:'💰 با موجودی',poor:'ناکافی!',purchased:'خریداری شد!',
+    favAdd:'اضافه شد!',favDel:'حذف شد!',
+    ageDeny:'18+!',logout:'خروج',edit:'ویرایش',export:'صادرات',
+    online:'آنلاین',member:'عضو:',
+    invite:'دعوت',addFriend:'⭐ افزودن',removeFriend:'⭐ حذف',reportUser:'⚠️ گزارش',you:'شما',
+    easy:'آسان',medium:'متوسط',hard:'سخت',epic:'حماسی',legendary:'افسانه‌ای',
+    noVideo:'ندارد',link:'🔗 پیوند',savedProfile:'به‌روز شد!',
+    welcome:'خوش آمدید',back:'خوش برگشتید',loginFirst:'ابتدا وارد شوید',
+    inviteSent:'📤 ارسال شد!',roomCode:'کد اتاق',
+    games:'بازی',achievements:'دستاورد',viewers:'بیننده',
+    wipeConfirm:'همه حذف شود؟',wipeDone:'حذف شد',
+    errSave:'خطا',errOnline:'حالت آنلاین لازم است',
+    reportTitle:'گزارش',reportReason:'دلیل *',reportDetails:'جزئیات',reportSubmit:'ارسال',reportSent:'گزارش ارسال شد!',
+    adminMsgTitle:'پیام به مدیر',msgType:'نوع',msgSubject:'موضوع *',msgBody:'پیام *',msgSend:'ارسال',msgSent:'ارسال شد!',
+    banned:'حساب مسدود شد',bannedText:'این حساب مسدود است.',
+    banIp:'نام کاربری',banReason:'دلیل',activeBans:'مسدودهای فعال',unban:'لغو مسدودیت',
+    clearChat:'🗑️ پاک کردن چت',msgFrom:'از',msgAt:'تاریخ',
+    banAdded:'مسدود اضافه شد!',banRemoved:'مسدود لغو شد!',userBanned:'مسدود شد!',
+    noBans:'مسدود فعالی نیست'
+  }
 };
-// Diğer diller için EN taban
-['hi','he','ja','zh','el','hy','ko','th','ar','fa'].forEach(l => I18N[l] = I18N.en);
 
 let lang = localStorage.getItem('km_lang') || 'tr';
 function t(k){return (I18N[lang]||I18N.en)[k]||I18N.en[k]||k;}
@@ -1295,15 +1974,11 @@ function applyLanguage(){
     const k=el.dataset.t,v=t(k);
     if(v){if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')el.placeholder=v;else el.textContent=v;}
   });
-  document.querySelectorAll('select option[data-t]').forEach(opt=>{
-    const k=opt.dataset.t,v=t(k);
-    if(v)opt.textContent=v;
-  });
 }
 function setLang(l){lang=l;localStorage.setItem('km_lang',l);applyLanguage();renderAll();}
 
 /* ============================================================
-   STATE
+   STATE - GLOBAL
    ============================================================ */
 let games=[], news=[], allUsers=[];
 let account=null, profile=defaultProfile();
@@ -1313,13 +1988,17 @@ let coverImg=null, galleryImgs=[], regAvatar=null;
 let filter='all', catFilter=null, userFilter='all';
 let pendingInvites=[];
 let inviteListener=null;
+let chatListener=null;
 let reportsListener=null;
 let messagesListener=null;
 let bansListener=null;
+let presenceRef=null;
 let reportTargetUser=null;
+let chatMessages=[];
 let onlineUsers={};
+
+// ✅ BAN SİSTEMİ İÇİN GLOBAL DEĞİŞKEN
 let allBans = [];
-let bannedUsersMap = {};
 
 function defaultProfile(){
  return {gamesPlayed:{},favorites:[],purchased:[],activities:[],balance:0,
@@ -1395,22 +2074,8 @@ function subscribeNews(){
 async function subscribeUsers(){
  if(ONLINE && db){
   db.collection('users').onSnapshot(snap=>{
-   allUsers=[];
-   bannedUsersMap = {};
-   snap.forEach(d=>{
-    const data = {id:d.id,...d.data()};
-    allUsers.push(data);
-    if(data.banned){
-     bannedUsersMap[data.account?.name?.toLowerCase()] = {
-      reason: data.banReason || 'Banlandı',
-      at: data.banAt,
-      by: data.banBy,
-      expires: data.banExpires || null
-     };
-    }
-   });
+   allUsers=[];snap.forEach(d=>allUsers.push({id:d.id,...d.data()}));
    renderUsers();
-   renderAllUsersBanList();
   });
  }else{
   allUsers=[];
@@ -1421,7 +2086,6 @@ async function subscribeUsers(){
    }
   }
   renderUsers();
-  renderAllUsersBanList();
  }
 }
 async function writeGame(g){
@@ -1450,390 +2114,166 @@ async function removeNews(id){
 }
 
 /* ============================================================
-   KUMBARA - Canlı odaları dinle
+   ✅ BAN SİSTEMİ - DÜZELTİLMİŞ
    ============================================================ */
-function subscribeKumbaraRooms(){
- if(!ONLINE || !rtdb) return;
- rtdb.ref('kumbara/rooms').on('value', snap=>{
-  const data = snap.val() || {};
-  const rooms = Object.entries(data)
-   .map(([code, r]) => ({code, ...r}))
-   .filter(r => r.public !== false && r.status !== 'finished')
-   .sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-  renderKumbaraLiveRooms(rooms);
- });
-}
 
-function renderKumbaraLiveRooms(rooms){
- const el = document.getElementById('kumbaraLiveRooms');
- if(!el) return;
- 
- if(rooms.length === 0){
-  el.innerHTML = `<div class="empty"><div class="empty-icon">📺</div><div>${t('kmNoLiveRooms')}</div></div>`;
-  return;
- }
- 
- el.innerHTML = rooms.map(r => {
-  const pc = r.players ? Object.keys(r.players).length : 0;
-  const vc = r.viewers ? Object.keys(r.viewers).length : 0;
-  const status = r.status === 'playing' ? '🔴 CANLI' : '⏳ Bekliyor';
-  return `
-   <div class="room-item">
-    <div class="room-info">
-     <div class="room-name">${escapeHtml(r.name || 'Oda')} • ${status}</div>
-     <div class="room-meta">
-      <span>👤 ${pc}/${r.maxPlayers||8}</span>
-      <span>👁 ${vc} izleyici</span>
-      <span>🎯 ${r.host}</span>
-      <span>🏆 ₺${(r.piggyBank||0).toLocaleString()}</span>
-     </div>
-    </div>
-    <button class="btn primary" style="width:auto;padding:8px 16px" onclick="watchKumbara('${r.code}')">👁 İzle</button>
-   </div>
-  `;
- }).join('');
-}
-
-function openKumbara(){
- if(account){
-  localStorage.setItem('km_session', account.name);
-  const key = 'km_user_' + account.name.toLowerCase().replace(/[^a-z0-9_]/g,'_');
-  localStorage.setItem(key, JSON.stringify({account, profile}));
- }
- window.open('kumbara.html', '_blank');
-}
-
-function openKumbaraEmbed(){
- if(account){
-  localStorage.setItem('km_session', account.name);
-  const key = 'km_user_' + account.name.toLowerCase().replace(/[^a-z0-9_]/g,'_');
-  localStorage.setItem(key, JSON.stringify({account, profile}));
- }
- document.getElementById('kumbaraEmbed').style.display = 'block';
- document.getElementById('kumbaraFrame').src = 'kumbara.html';
-}
-
-function watchKumbara(code){
- if(account){
-  localStorage.setItem('km_session', account.name);
-  const key = 'km_user_' + account.name.toLowerCase().replace(/[^a-z0-9_]/g,'_');
-  localStorage.setItem(key, JSON.stringify({account, profile}));
- }
- window.open('kumbara.html?room=' + code + '&view=1', '_blank');
-}
-
-/* ============================================================
-   BAN SİSTEMİ - TAM DÜZELTİLMİŞ
-   ============================================================ */
+// Banları dinle - gerçek zamanlı
 function subscribeBans(){
  if(!ONLINE||!db||!isAdmin)return;
- if(bansListener) return;
+ if(bansListener) return; // Zaten dinleniyor, tekrar başlatma
  bansListener=db.collection('bans').onSnapshot(snap=>{
   allBans=[];
   snap.forEach(d=>allBans.push({id:d.id,...d.data()}));
-  cleanupExpiredBans();
-  renderBans();
-  updateBanCount();
-  renderAllUsersBanList();
+  renderBans(); // Otomatik render
  }, err => {
   console.error('Ban subscribe error:', err);
  });
 }
 
-async function cleanupExpiredBans(){
- const now = Date.now();
- for(const ban of allBans){
-  if(ban.expires && ban.expires < now){
-   try{await removeBan(ban.id, true);}catch(e){}
-  }
- }
-}
-
-function updateBanCount(){
- const activeBans = allBans.filter(b => !b.expires || b.expires > Date.now());
- const el = document.getElementById('banCount');
- if(el) el.textContent = activeBans.length;
- const el2 = document.getElementById('activeBansCount');
- if(el2) el2.textContent = activeBans.length;
-}
-
+// Banları göster
 function renderBans(){
  const el=document.getElementById('bansList');
  if(!el)return;
- const activeBans = allBans.filter(b => !b.expires || b.expires > Date.now());
- if(activeBans.length===0){
+ if(allBans.length===0){
   el.innerHTML=`<div class="empty"><div class="empty-icon">✅</div><div>${t('noBans')}</div></div>`;
   return;
  }
- el.innerHTML=activeBans.map(b=>{
-  const isUser = b.type === 'user';
-  const isExpired = b.expires && b.expires < Date.now();
-  const expiresText = b.expires 
-   ? (isExpired ? '⌛ Süresi doldu' : '⏰ ' + new Date(b.expires).toLocaleString())
-   : '♾️ ' + t('banPermanent');
+ el.innerHTML=allBans.map(b=>{
+  const isUser = b.type === 'user' || (b.target && !b.target.match(/^\d+\.\d+\.\d+\.\d+$/));
   return `
-  <div class="mod-card banned">
+  <div class="mod-card">
    <div class="mod-head">
-    <div class="mod-title">🚫 ${escapeHtml(b.target||b.id)} ${isUser?'👤':'🌐'}</div>
-    <div class="mod-meta">${b.at?new Date(b.at).toLocaleString():'?'} • ${expiresText}</div>
+    <div class="mod-title">🚫 ${escapeHtml(b.target||b.id)}</div>
+    <div class="mod-meta">${b.at?new Date(b.at).toLocaleString():'?'} • ${isUser?'👤':'🌐'}</div>
    </div>
    <div class="mod-body">
     <div><b>${t('banReason')}:</b> ${escapeHtml(b.reason||'-')}</div>
     ${b.by?`<div><b>${t('msgFrom')}:</b> ${escapeHtml(b.by)}</div>`:''}
    </div>
    <div class="mod-actions">
-    <button class="icon-btn green" onclick="removeBan('${b.id}')">✅ ${t('unban')}</button>
+    <button class="icon-btn" onclick="removeBan('${b.id}')">✅ ${t('unban')}</button>
    </div>
   </div>
   `;
  }).join('');
 }
 
-function renderAllUsersBanList(){
- const el = document.getElementById('allUsersBanList');
- const select = document.getElementById('banUserSelect');
- if(!el && !select) return;
+// Kullanıcıyı banla (şikayet panelinden)
+async function banUser(username){
+ if(!confirm(username+' '+t('userBanned')))return;
+ const reason=prompt(t('banReason')+':','Kural ihlali');
+ if(!reason)return;
  
- const users = allUsers.filter(u => u.account);
- 
- if(select){
-  const currentValue = select.value;
-  select.innerHTML = '<option value="">-- ' + t('selectUser') + ' --</option>' + 
-   users.map(u => `<option value="${escapeHtml(u.account.name)}">${escapeHtml(u.account.name)} ${u.banned?'🚫':''}</option>`).join('');
-  select.value = currentValue;
- }
- 
- if(el){
-  document.getElementById('allUsersCount').textContent = users.length;
-  if(users.length === 0){
-   el.innerHTML = `<div class="empty"><div class="empty-icon">👥</div><div>${t('noUsers')}</div></div>`;
-   return;
-  }
-  el.innerHTML = users.map(u => {
-   const name = u.account.name;
-   const avatar = u.account.avatar;
-   const isBanned = u.banned;
-   const banInfo = bannedUsersMap[name.toLowerCase()];
-   const banFromBansCol = allBans.find(b => b.type === 'user' && b.target?.toLowerCase() === name.toLowerCase());
-   const hasBan = isBanned || banFromBansCol;
-   
-   let banBadge = '';
-   let expiresText = '';
-   if(hasBan){
-    const b = banFromBansCol || banInfo;
-    if(b && b.expires && b.expires > Date.now()){
-     banBadge = `<span class="ban-badge temporary">${t('tempBanLabel')}</span>`;
-     expiresText = ` • ${new Date(b.expires).toLocaleString()}`;
-    }else{
-     banBadge = `<span class="ban-badge">${t('bannedLabel')}</span>`;
-    }
-   }
-   
-   return `
-    <div class="ban-user-item ${hasBan?'is-banned':''}">
-     <div class="ban-user-avatar">${avatar?`<img src="${avatar}">`:'🎮'}</div>
-     <div class="ban-user-info">
-      <div class="ban-user-name">${escapeHtml(name)} ${banBadge}</div>
-      <div class="ban-user-meta">
-       ${u.account.email||''} • LV ${getUserLevel(u)}
-       ${hasBan && banInfo ? ` • ${t('banReason')}: ${escapeHtml(banInfo.reason||'-')}${expiresText}` : ''}
-      </div>
-     </div>
-     <div class="ban-user-actions">
-      ${hasBan 
-       ? `<button class="btn-sm success" onclick="unbanUserDirect('${name.replace(/'/g,"\\'")}')">✅ ${t('unbanUser')}</button>`
-       : `<button class="btn-sm danger" onclick="quickBanFromList('${name.replace(/'/g,"\\'")}')">🚫 ${t('banUser')}</button>`
-      }
-     </div>
-    </div>
-   `;
-  }).join('');
- }
+ try{
+  // 1) Users koleksiyonunu güncelle (kullanıcı giriş yapamasın)
+  await db.collection('users').doc(username.toLowerCase()).update({
+   banned:true,
+   banReason:reason,
+   banAt:Date.now(),
+   banBy:account.name
+  });
+  
+  // 2) Bans koleksiyonuna da ekle (admin panelinde görünsün)
+  const banKey='user_'+username.toLowerCase();
+  await db.collection('bans').doc(banKey).set({
+   target:username,
+   type:'user',
+   reason:reason,
+   by:account.name,
+   at:Date.now(),
+   permanent:true
+  });
+  
+  toast(username+' '+t('userBanned'));
+ }catch(e){toast('Hata: '+e.message,'error');}
 }
 
-async function quickBanUser(){
+// Admin panelinden ban ekle
+async function addBan(){
  if(!isAdmin)return;
- const name = document.getElementById('banUserSelect').value;
- if(!name){toast(t('selectUser'),'warning');return;}
- const reason = document.getElementById('banReason').value.trim() || 'Kural ihlali';
- const duration = document.getElementById('banDuration').value;
+ const target=document.getElementById('banInput').value.trim();
+ const reason=document.getElementById('banReason').value.trim()||'Kural ihlali';
+ if(!target){toast(t('fill'),'error');return;}
  
- if(!confirm(`${name} ${t('confirmBan')}`))return;
- 
- await performBan(name, reason, duration);
- 
- document.getElementById('banUserSelect').value = '';
- document.getElementById('banReason').value = '';
- document.getElementById('banDuration').value = 'permanent';
-}
-
-async function quickBanFromList(name){
- if(!isAdmin)return;
- const reason = prompt(t('banReason') + ':', 'Kural ihlali');
- if(!reason) return;
- 
- const durationStr = prompt(t('selectDuration') + '\n\n1 = 1 saat\n24 = 1 gün\n7 = 7 gün\n30 = 30 gün\n0 = Kalıcı', '0');
- if(durationStr === null) return;
- 
- let duration;
- if(durationStr === '0' || durationStr === ''){
-  duration = 'permanent';
- }else{
-  const days = parseInt(durationStr);
-  if(isNaN(days) || days <= 0){
-   duration = 'permanent';
+ try{
+  let banKey, banTarget, banType;
+  
+  if(target.startsWith('@')){
+   const username=target.slice(1);
+   // Kullanıcı varsa users koleksiyonunu da güncelle
+   try {
+    await db.collection('users').doc(username.toLowerCase()).update({
+     banned:true,banReason:reason,banAt:Date.now(),banBy:account.name
+    });
+   } catch(e) { console.log('User update skipped:', e.message); }
+   banKey='user_'+username.toLowerCase();
+   banTarget=username;
+   banType='user';
   }else{
-   duration = String(days * 86400000);
+   banKey='ip_'+target;
+   banTarget=target;
+   banType='ip';
   }
- }
- 
- await performBan(name, reason, duration);
+  
+  await db.collection('bans').doc(banKey).set({
+   target:banTarget,
+   type:banType,
+   reason:reason,
+   by:account.name,
+   at:Date.now(),
+   permanent:true
+  });
+  
+  document.getElementById('banInput').value='';
+  document.getElementById('banReason').value='';
+  toast(t('banAdded'));
+  // renderBans() artık subscribeBans() sayesinde otomatik çağrılacak
+ }catch(e){toast('Hata: '+e.message,'error');}
 }
 
-async function performBan(username, reason, duration){
+// Banı kaldır
+async function removeBan(id){
+ if(!confirm(t('confirmDel')))return;
  try{
-  const now = Date.now();
-  let expires = null;
-  
-  if(duration !== 'permanent'){
-   const ms = parseInt(duration);
-   if(!isNaN(ms) && ms > 0){
-    expires = now + ms;
-   }
-  }
-  
-  const banKey = 'user_' + username.toLowerCase();
-  const banData = {
-   target: username,
-   type: 'user',
-   reason: reason,
-   by: account.name,
-   at: now,
-   expires: expires,
-   permanent: duration === 'permanent'
-  };
-  
-  await db.collection('bans').doc(banKey).set(banData);
-  
-  const userUpdate = {
-   banned: true,
-   banReason: reason,
-   banAt: now,
-   banBy: account.name
-  };
-  if(expires){
-   userUpdate.banExpires = expires;
-  }else{
-   userUpdate.banExpires = null;
-  }
-  
-  try{
-   await db.collection('users').doc(username.toLowerCase()).update(userUpdate);
-  }catch(e){
-   console.log('User update:', e.message);
-  }
-  
-  toast(username + ' ' + t('userBanned'));
- }catch(e){
-  toast('Hata: ' + e.message, 'error');
- }
-}
-
-async function unbanUserDirect(username){
- if(!isAdmin)return;
- if(!confirm(`${username} ${t('confirmUnban')}`))return;
- 
- const banKey = 'user_' + username.toLowerCase();
- 
- try{
-  try{
-   await db.collection('bans').doc(banKey).delete();
-  }catch(e){console.log('Ban delete:', e.message);}
-  
-  try{
-   await db.collection('users').doc(username.toLowerCase()).update({
-    banned: false,
-    banReason: firebase.firestore.FieldValue.delete(),
-    banAt: firebase.firestore.FieldValue.delete(),
-    banBy: firebase.firestore.FieldValue.delete(),
-    banExpires: firebase.firestore.FieldValue.delete()
-   });
-  }catch(e){console.log('User unban:', e.message);}
-  
-  toast(t('banRemoved'));
- }catch(e){
-  toast('Hata: ' + e.message, 'error');
- }
-}
-
-async function removeBan(id, silent=false){
- if(!silent && !confirm(t('confirmUnban')))return;
- 
- try{
+  // Ban bilgisini al
   const ban = allBans.find(b => b.id === id);
-  if(!ban){
-   if(!silent) toast('Ban bulunamadı', 'error');
-   return;
-  }
   
+  // 1) Bans koleksiyonundan sil
   await db.collection('bans').doc(id).delete();
   
-  if(ban.type === 'user' && ban.target){
-   try{
+  // 2) Eğer kullanıcı banıysa, users koleksiyonundaki banned işaretini de kaldır
+  if(ban && ban.type === 'user' && ban.target){
+   try {
     await db.collection('users').doc(ban.target.toLowerCase()).update({
-     banned: false,
+     banned:false,
      banReason: firebase.firestore.FieldValue.delete(),
      banAt: firebase.firestore.FieldValue.delete(),
-     banBy: firebase.firestore.FieldValue.delete(),
-     banExpires: firebase.firestore.FieldValue.delete()
+     banBy: firebase.firestore.FieldValue.delete()
     });
-   }catch(e){console.log('User unban:', e.message);}
+   } catch(e) { console.log('User unban skipped:', e.message); }
   }
   
-  if(!silent) toast(t('banRemoved'));
- }catch(e){
-  if(!silent) toast('Hata: ' + e.message, 'error');
- }
+  toast(t('banRemoved'));
+  // renderBans() otomatik çağrılacak
+ }catch(e){toast('Hata: '+e.message,'error');}
 }
 
+// Ban kontrolü (giriş sırasında)
 async function checkBanOnLogin(username){
  if(!ONLINE || !db) return false;
  try{
   const userSnap = await db.collection('users').doc(username.toLowerCase()).get();
-  if(userSnap.exists){
-   const data = userSnap.data();
-   if(data.banned){
-    if(data.banExpires && data.banExpires < Date.now()){
-     await db.collection('users').doc(username.toLowerCase()).update({
-      banned: false,
-      banReason: firebase.firestore.FieldValue.delete(),
-      banAt: firebase.firestore.FieldValue.delete(),
-      banBy: firebase.firestore.FieldValue.delete(),
-      banExpires: firebase.firestore.FieldValue.delete()
-     });
-     try{
-      await db.collection('bans').doc('user_' + username.toLowerCase()).delete();
-     }catch(e){}
-     return false;
-    }
-    showBanScreen(data.banReason || 'Kural ihlali', data.banExpires);
-    return true;
-   }
+  if(userSnap.exists && userSnap.data().banned){
+   const banData = userSnap.data();
+   showBanScreen(banData.banReason || 'Kural ihlali');
+   return true;
   }
   return false;
  }catch(e){return false;}
 }
 
-function showBanScreen(reason, expires){
- document.getElementById('banReason').textContent = t('banReason') + ': ' + reason;
- const expiryEl = document.getElementById('banExpiry');
- if(expires){
-  expiryEl.textContent = t('banExpiry') + ': ' + new Date(expires).toLocaleString();
-  expiryEl.style.display = 'block';
- }else{
-  expiryEl.textContent = '♾️ ' + t('banPermanent');
-  expiryEl.style.display = 'block';
- }
+function showBanScreen(reason){
+ document.getElementById('banReason').textContent = t('banReason')+': ' + reason;
  document.getElementById('banScreen').style.display = 'flex';
  document.getElementById('app').style.display = 'none';
 }
@@ -1923,7 +2363,7 @@ function getUserLevel(user){
 }
 function renderUsers(){
  const search=(document.getElementById('userSearch')?.value||'').toLowerCase();
- let list=allUsers.filter(u=>u.account);
+ let list=allUsers.filter(u=>u.account && !u.banned);
  
  if(search)list=list.filter(u=>u.account.name.toLowerCase().includes(search));
  if(userFilter==='online')list=list.filter(u=>isUserOnline(u));
@@ -1933,7 +2373,7 @@ function renderUsers(){
  if(sort==='name')list.sort((a,b)=>a.account.name.localeCompare(b.account.name));
  if(sort==='level')list.sort((a,b)=>getUserLevel(b)-getUserLevel(a));
  
- document.getElementById('ucAll').textContent=allUsers.filter(u=>u.account).length;
+ document.getElementById('ucAll').textContent=allUsers.filter(u=>u.account&&!u.banned).length;
  document.getElementById('ucOnline').textContent=allUsers.filter(u=>u.account&&isUserOnline(u)).length;
  document.getElementById('ucFriends').textContent=(profile.friends||[]).length;
  
@@ -1947,10 +2387,9 @@ function renderUsers(){
   const level=getUserLevel(u);
   const isFriend=profile.friends?.includes(name);
   const isMe=account?.name===name;
-  const isBanned=u.banned;
   
   return `
-   <div class="user-card ${isBanned?'banned':''}">
+   <div class="user-card">
     <div class="user-avatar">
      ${avatar?`<img src="${avatar}">`:'🎮'}
      <div class="user-status ${online?'online':'offline'}"></div>
@@ -1959,7 +2398,6 @@ function renderUsers(){
      <div class="user-name">
       ${name}
       <span class="user-level">LV ${level}</span>
-      ${isBanned?'<span class="ban-badge">🚫 BAN</span>':''}
       ${online?`<span style="font-size:9px;color:#27c93f">● ${t('online')}</span>`:''}
      </div>
      <div class="user-stats">
@@ -2050,48 +2488,32 @@ function renderReports(reports){
   return;
  }
  const reasonLabels={spam:'🚫 Spam',harassment:'😡 Taciz',cheating:'🎭 Hile',inappropriate:'🔞 Uygunsuz',other:'❓ Diğer'};
- el.innerHTML=reports.map(r=>{
-  const targetUser = allUsers.find(u => u.account?.name === r.to);
-  const isBanned = targetUser?.banned;
-  
-  return `
+ el.innerHTML=reports.map(r=>`
   <div class="mod-card report">
    <div class="mod-head">
     <div class="mod-title">${reasonLabels[r.reason]||r.reason}</div>
     <div class="mod-meta">${new Date(r.timestamp).toLocaleString()} • ${r.status==='pending'?'⏳':r.status==='resolved'?'✅':'🚫'}</div>
    </div>
    <div class="mod-body">
-    <div><b>${t('reportedBy')}:</b> ${r.from}</div>
-    <div><b>${t('reportedUser')}:</b> ${r.to} ${isBanned?'<span class="ban-badge">🚫 BANLI</span>':''}</div>
+    <div><b>${t('msgFrom')}:</b> ${r.from}</div>
+    <div><b>${t('reportUser')}:</b> ${r.to}</div>
     ${r.details?`<div style="margin-top:6px"><b>${t('reportDetails')}:</b> ${escapeHtml(r.details)}</div>`:''}
    </div>
    <div class="mod-actions">
     ${r.status==='pending'?`
-     <button class="icon-btn green" onclick="resolveReport('${r.id}','resolved')">✅ ${t('resolveReport')}</button>
-     ${!isBanned?`<button class="icon-btn warn" onclick="banFromReport('${r.to}')">🚫 ${t('banFromReport')}</button>`
-               :`<button class="icon-btn green" onclick="unbanFromReport('${r.to}')">✅ ${t('unbanFromReport')}</button>`}
-     <button class="icon-btn red" onclick="resolveReport('${r.id}','rejected')">❌ ${t('rejectReport')}</button>
+     <button class="icon-btn" onclick="resolveReport('${r.id}','resolved')">✅</button>
+     <button class="icon-btn warn" onclick="banUser('${r.to}')">🚫 Ban</button>
+     <button class="icon-btn red" onclick="resolveReport('${r.id}','rejected')">❌</button>
     `:''}
    </div>
   </div>
- `;
- }).join('');
+ `).join('');
 }
 async function resolveReport(id,status){
  try{
   await db.collection('reports').doc(id).update({status,statusBy:account.name,statusAt:Date.now()});
   toast('✓');
  }catch(e){toast('Hata','error');}
-}
-async function banFromReport(username){
- if(!isAdmin)return;
- const reason = prompt(t('banReason') + ':', 'Şikayet nedeniyle ban');
- if(!reason) return;
- await performBan(username, reason, 'permanent');
-}
-async function unbanFromReport(username){
- if(!isAdmin)return;
- await unbanUserDirect(username);
 }
 
 /* ============================================================
@@ -2192,7 +2614,6 @@ function go(page){
  if(page==='library')renderLibrary();
  if(page==='news')renderNews();
  if(page==='users')renderUsers();
- if(page==='kumbara')subscribeKumbaraRooms();
  if(window.innerWidth<=768){
   document.getElementById('mobileMenu').classList.remove('show');
   document.getElementById('hamburger').classList.remove('active');
@@ -2268,7 +2689,7 @@ document.querySelectorAll('.tab[data-ap]').forEach(tb=>tb.onclick=()=>{
  document.querySelectorAll('#adminMain > .panel').forEach(p=>p.classList.toggle('active',p.id==='ap-'+tb.dataset.ap));
  if(tb.dataset.ap==='manage')renderAdminGames();
  if(tb.dataset.ap==='news')renderAdminNews();
- if(tb.dataset.ap==='bans'){renderBans();renderAllUsersBanList();updateBanCount();}
+ if(tb.dataset.ap==='bans')renderBans();
 });
 document.querySelectorAll('.tab[data-gp]').forEach(tb=>tb.onclick=()=>{
  document.querySelectorAll('.tab[data-gp]').forEach(x=>x.classList.toggle('active',x===tb));
@@ -2474,6 +2895,7 @@ async function login(){
  const pass=document.getElementById('loginPass').value;
  if(!name||!pass){toast(t('invalid'),'error');return;}
  
+ // ✅ BAN KONTROLÜ
  const isBanned = await checkBanOnLogin(name);
  if(isBanned) return;
  
@@ -2683,12 +3105,10 @@ function openAdmin(){
  if(isAdmin){
   subscribeReports();
   subscribeAdminMessages();
-  subscribeBans();
+  subscribeBans(); // ✅ Banları dinle
   renderAdminGames();
   renderAdminNews();
-  renderBans();
-  renderAllUsersBanList();
-  updateBanCount();
+  renderBans(); // ✅ Banları göster
  }
 }
 function adminLogin(){
@@ -2698,8 +3118,8 @@ function adminLogin(){
  document.getElementById('adminMain').classList.add('active');
  subscribeReports();
  subscribeAdminMessages();
- subscribeBans();
- renderAdminGames();renderAdminNews();renderBans();renderAllUsersBanList();updateBanCount();
+ subscribeBans(); // ✅ Banları dinle
+ renderAdminGames();renderAdminNews();renderBans(); // ✅ Banları göster
  toast('🔐 OK');
 }
 function compressImage(file,max=800,q=.75){
@@ -2727,18 +3147,15 @@ async function uploadCover(e){
  document.getElementById('coverPh').style.display='none';
 }
 async function uploadGallery(e){
- const thumbs = document.getElementById('galleryThumbs');
  for(const f of Array.from(e.target.files)){
   const img=await compressImage(f,600,.7);
   galleryImgs.push(img);
  }
- thumbs.innerHTML=galleryImgs.map((im,i)=>
-  `<div style="aspect-ratio:1;border-radius:6px;background-size:cover;background-position:center;position:relative;background-image:url('${im}')"><button style="position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#ff5f57;color:#fff;border:none;cursor:pointer;font-size:11px" onclick="galleryImgs.splice(${i},1);uploadGallery_refresh()">×</button></div>`).join('');
+ renderThumbs();
 }
-function uploadGallery_refresh(){
- const thumbs = document.getElementById('galleryThumbs');
- thumbs.innerHTML=galleryImgs.map((im,i)=>
-  `<div style="aspect-ratio:1;border-radius:6px;background-size:cover;background-position:center;position:relative;background-image:url('${im}')"><button style="position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#ff5f57;color:#fff;border:none;cursor:pointer;font-size:11px" onclick="galleryImgs.splice(${i},1);uploadGallery_refresh()">×</button></div>`).join('');
+function renderThumbs(){
+ document.getElementById('galleryThumbs').innerHTML=galleryImgs.map((im,i)=>
+  `<div class="thumb" style="background-image:url('${im}')"><button onclick="galleryImgs.splice(${i},1);renderThumbs()">×</button></div>`).join('');
 }
 function readHTML(e,type){
  const f=e.target.files[0];if(!f)return;
@@ -2821,7 +3238,7 @@ function editGame(id){
  document.getElementById('coverPreview').src=g.cover;
  document.getElementById('coverPreview').style.display='block';
  document.getElementById('coverPh').style.display='none';
- uploadGallery_refresh();
+ renderThumbs();
  document.querySelector('.tab[data-ap="add"]').click();
 }
 async function delGame(id){
@@ -2871,7 +3288,7 @@ function escapeHtml(s){
    IMPORT / EXPORT
    ============================================================ */
 function exportAll(){
- const data={version:'12.0.0',date:new Date().toISOString(),account,profile,games,news};
+ const data={version:'11.1.0',date:new Date().toISOString(),account,profile,games,news};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),a=document.createElement('a');
  a.href=url;a.download='kmoon-'+(account?.name||'backup')+'-'+Date.now()+'.json';
@@ -2941,34 +3358,19 @@ async function wipeGlobal(){
 
  await loadSession();
  
+ // ✅ Banlı kullanıcı kontrolü
  if(account){
   const u=await getUser(account.name);
   if(u?.banned){
-   if(u.banExpires && u.banExpires < Date.now()){
-    if(ONLINE && db){
-     try{
-      await db.collection('users').doc(account.name.toLowerCase()).update({
-       banned: false,
-       banReason: firebase.firestore.FieldValue.delete(),
-       banAt: firebase.firestore.FieldValue.delete(),
-       banBy: firebase.firestore.FieldValue.delete(),
-       banExpires: firebase.firestore.FieldValue.delete()
-      });
-      await db.collection('bans').doc('user_' + account.name.toLowerCase()).delete();
-     }catch(e){}
-    }
-   }else{
-    showBanScreen(u.banReason || 'Banlandı', u.banExpires);
-    account=null;profile=defaultProfile();saveSession();
-    return;
-   }
- }
+   showBanScreen(u.banReason || 'Banlandı');
+   account=null;profile=defaultProfile();saveSession();
+   return;
+  }
  }
  
  subscribeGames();
  subscribeNews();
  subscribeUsers();
- subscribeKumbaraRooms();
  if(account)subscribeInvitations();
  updateTop();
 
